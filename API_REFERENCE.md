@@ -222,7 +222,7 @@ Use Tailwind's directional utilities:
 
 ```tsx
 // In CSS/CSS-in-JS
-import '@aibos/design-system/css';
+import 'aibos-design-system/css';
 
 const style = {
   backgroundColor: 'var(--color-paper)',
@@ -231,7 +231,7 @@ const style = {
 };
 
 // In TypeScript/JavaScript
-import tokens from '@aibos/design-system/tokens';
+import tokens from 'aibos-design-system/tokens';
 
 const style = {
   backgroundColor: tokens.color.paper,
@@ -285,19 +285,19 @@ const style = {
 
 ```typescript
 // CSS (main export)
-import '@aibos/design-system/css';
+import 'aibos-design-system/css';
 
 // Tokens (JSON)
-import tokens from '@aibos/design-system/tokens';
+import tokens from 'aibos-design-system/tokens';
 
 // Tokens (TypeScript)
-import type { DesignTokens } from '@aibos/design-system/tokens/typescript';
+import type { DesignTokens } from 'aibos-design-system/tokens/typescript';
 ```
 
 ### Access Token Values
 
 ```typescript
-import tokens from '@aibos/design-system/tokens';
+import tokens from 'aibos-design-system/tokens';
 
 // Colors
 tokens.color.void        // '#09090b'
@@ -322,7 +322,7 @@ tokens.radius.panel     // '1rem'
 ### Using in Components
 
 ```tsx
-import tokens from '@aibos/design-system/tokens';
+import tokens from 'aibos-design-system/tokens';
 
 export function CustomButton() {
   return (
