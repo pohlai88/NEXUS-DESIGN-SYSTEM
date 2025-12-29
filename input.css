@@ -1,6 +1,8 @@
+/* stylelint-disable-next-line */
 @import "tailwindcss";
 
 /* Make sure Tailwind v4 scans your dashboard templates */
+/* stylelint-disable-next-line */
 @source "./**/*.{html,js}";
 
 /* -----------------------------------------
@@ -452,6 +454,9 @@
       background-position: 200% 0;
     }
   }
+
+  /* --- Semantic Component Widths (High Governance) --- */
+  --w-search-bar: 30rem; /* 480px - Fixed width for search/filter inputs */
 }
 
 /* -----------------------------------------
@@ -1455,7 +1460,8 @@
   }
 
   .na-search {
-    @apply relative w-full max-w-[480px];
+    @apply relative w-full;
+    max-width: var(--w-search-bar);
   }
 
   @media (width <= 768px) {

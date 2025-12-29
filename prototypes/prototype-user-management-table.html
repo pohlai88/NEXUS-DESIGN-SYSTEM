@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo-Analog User Management Table</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Using Neo-Analog design tokens from input.css */
+    :root {
+      /* Figma-sourced overrides for light table theme */
+      --table-font-primary: #25213B;
+      --table-font-variant: #6E6893;
+      --table-font-icon: #8B83BA;
+      --table-font-stroke: #C6C2DE;
+      --table-bg-parent: #F2F0F9;
+      --table-bg-stripe: #F4F2FF;
+      --table-bg-primary: #FFFFFF;
+      --table-bg-divider: #D9D5EC;
+      --table-primary: #6D5BD0;
+      
+      /* Status colors from Figma */
+      --table-status-active-bg: #E6E6F2;
+      --table-status-active-fg: #4A4AFF;
+      --table-status-inactive-bg: #F2F0F9;
+      --table-status-inactive-fg: #6E6893;
+      --table-status-paid-bg: #CDFFCD;
+      --table-status-paid-fg: #007F00;
+      --table-status-unpaid-bg: #FFECCC;
+      --table-status-unpaid-fg: #965E00;
+      --table-status-overdue-bg: #FFE0E0;
+      --table-status-overdue-fg: #D30000;
+    }
+
+    body {
+      font-family: var(--font-family-sans);
+      background: var(--table-bg-parent);
+      color: var(--table-font-primary);
+      margin: 0;
+      padding: 50px 100px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #dt-app {
+      max-width: 1100px;
+      margin: 0 var(--spacing-12) var(--spacing-24);
+      font-size: var(--font-size-sm);
+      line-height: 1.5;
+    }
+
+    .table-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Page title using Neo-Analog metadata pattern */
+    .table-title {
+      font-size: var(--metadata-size);
+      font-weight: var(--font-weight-bold);
+      color: var(--table-font-variant);
+      text-transform: var(--metadata-transform);
+      letter-spacing: var(--metadata-tracking);
+      margin: 0 0 var(--spacing-6) 0;
+    }
+
+    .table-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-3);
+    }
+
+    .table-summary {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--table-font-variant);
+    }
+
+    .table-summary .amount {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--table-primary);
+    }
+
+    .table-summary .currency {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-normal);
+      color: var(--table-font-variant);
+    }
+
+    /* Tabs */
+    .table-tabs {
+      display: flex;
+      gap: var(--spacing-5);
+      border-bottom: 1px solid var(--table-font-stroke);
+      padding-bottom: 1px;
+      margin-bottom: var(--spacing-6);
+      position: relative;
+    }
+
+    .table-tab {
+      background: none;
+      border: none;
+      font: inherit;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--table-font-variant);
+      padding: var(--spacing-2) var(--spacing-2_5);
+      cursor: pointer;
+      position: relative;
+      transition: color var(--duration-150) var(--ease-out);
+    }
+
+    .table-tab.active {
+      color: var(--table-font-primary);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .table-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--table-font-primary);
+    }
+
+    .table-tab:hover:not(.active) {
+      color: var(--table-font-primary);
+    }
+
+    /* Toolbar */
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-3);
+    }
+
+    .table-toolbar-left {
+      display: flex;
+      gap: var(--spacing-5);
+      align-items: center;
+    }
+
+    .table-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-2_5);
+      padding: var(--spacing-2_5) var(--spacing-5);
+      height: 40px;
+      border: 1px solid var(--table-font-stroke);
+      border-radius: var(--radius-md);
+      background: var(--table-bg-primary);
+      color: var(--table-font-primary);
+      font: inherit;
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      transition: all var(--duration-150) var(--ease-out);
+    }
+
+    .table-btn:hover {
+      background: var(--table-bg-stripe);
+    }
+
+    .table-btn-primary {
+      background: var(--table-primary);
+      color: white;
+      border-color: var(--table-primary);
+      text-transform: uppercase;
+      font-weight: var(--font-weight-semibold);
+      padding: var(--spacing-2_5) var(--spacing-4);
+      height: 39px;
+    }
+
+    .table-btn-primary:hover {
+      opacity: var(--opacity-hover);
+    }
+
+    .table-search-wrapper {
+      position: relative;
+      width: 392px;
+    }
+
+    .table-search {
+      width: 100%;
+      padding: var(--spacing-2_5) var(--spacing-2_5) var(--spacing-2_5) 40px;
+      height: 40px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--table-bg-stripe);
+      font: inherit;
+      font-size: var(--font-size-xs);
+      color: var(--table-font-primary);
+    }
+
+    .table-search::placeholder {
+      color: var(--table-font-variant);
+    }
+
+    .table-search-icon {
+      position: absolute;
+      left: var(--spacing-2_5);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    /* Table wrapper */
+    .table-wrapper {
+      background: var(--table-bg-primary);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 20px 20px 200px 150px 150px 1fr 20px;
+      gap: var(--spacing-2_5);
+      align-items: center;
+      padding: var(--spacing-3_5) var(--spacing-5);
+      background: var(--table-bg-primary);
+      border-bottom: 1px solid var(--table-bg-divider);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--table-font-variant);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 20px 20px 200px 150px 150px 1fr 20px;
+      gap: var(--spacing-2_5);
+      align-items: center;
+      padding: var(--spacing-5);
+      border-bottom: 1px solid var(--table-bg-divider);
+      transition: background var(--duration-150) var(--ease-out);
+    }
+
+    .table-row.even {
+      background: var(--table-bg-stripe);
+    }
+
+    .table-row:hover {
+      background: color-mix(in oklab, var(--table-bg-stripe) 80%, var(--table-primary) 5%);
+    }
+
+    .table-row.expanded {
+      border-bottom: none;
+    }
+
+    /* Cell components */
+    .table-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--table-font-icon);
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      position: relative;
+      transition: all var(--duration-150) var(--ease-out);
+    }
+
+    .table-checkbox.checked {
+      background: var(--table-primary);
+      border-color: var(--table-primary);
+    }
+
+    .table-checkbox.checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .table-cell-icon {
+      width: 15px;
+      height: 15px;
+      border-radius: var(--radius-full);
+      background: var(--table-font-stroke);
+      display: inline-block;
+    }
+
+    .table-cell-user {
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .table-user-name {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--table-font-primary);
+    }
+
+    .table-user-email {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-normal);
+      color: var(--table-font-variant);
+      letter-spacing: 0.7px;
+    }
+
+    .table-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding: var(--spacing-1_5) var(--spacing-3);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      width: fit-content;
+    }
+
+    .table-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+    }
+
+    .table-status-badge.active {
+      background: var(--table-status-active-bg);
+      color: var(--table-status-active-fg);
+    }
+
+    .table-status-badge.active .table-status-dot {
+      background: var(--table-status-active-fg);
+    }
+
+    .table-status-badge.inactive {
+      background: var(--table-status-inactive-bg);
+      color: var(--table-status-inactive-fg);
+    }
+
+    .table-status-badge.inactive .table-status-dot {
+      background: var(--table-status-inactive-fg);
+    }
+
+    .table-status-badge.paid {
+      background: var(--table-status-paid-bg);
+      color: var(--table-status-paid-fg);
+    }
+
+    .table-status-badge.paid .table-status-dot {
+      background: var(--table-status-paid-fg);
+    }
+
+    .table-status-badge.unpaid {
+      background: var(--table-status-unpaid-bg);
+      color: var(--table-status-unpaid-fg);
+    }
+
+    .table-status-badge.unpaid .table-status-dot {
+      background: var(--table-status-unpaid-fg);
+    }
+
+    .table-status-badge.overdue {
+      background: var(--table-status-overdue-bg);
+      color: var(--table-status-overdue-fg);
+    }
+
+    .table-status-badge.overdue .table-status-dot {
+      background: var(--table-status-overdue-fg);
+    }
+
+    .table-cell-status {
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .table-status-detail {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--table-font-primary);
+    }
+
+    .table-cell-amount {
+      text-align: right;
+      display: grid;
+      gap: var(--spacing-1);
+      justify-items: end;
+    }
+
+    .table-amount-value {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--table-font-primary);
+      text-transform: uppercase;
+    }
+
+    .table-amount-currency {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-normal);
+      color: var(--table-font-variant);
+      letter-spacing: 0.6px;
+    }
+
+    .table-cell-more {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: background var(--duration-150) var(--ease-out);
+    }
+
+    .table-cell-more:hover {
+      background: var(--table-bg-stripe);
+    }
+
+    /* Expanded row */
+    .table-expanded-content {
+      display: grid;
+      border-bottom: 1px solid var(--table-bg-divider);
+      background: var(--table-bg-stripe);
+    }
+
+    .table-expanded-header {
+      display: grid;
+      grid-template-columns: 100px 250px 1fr;
+      gap: var(--spacing-5);
+      padding: var(--spacing-3_5) 95px;
+      background: var(--table-bg-primary);
+      border-top: 1px solid var(--table-bg-divider);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--table-font-variant);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .table-expanded-row {
+      display: grid;
+      grid-template-columns: 100px 250px 1fr;
+      gap: var(--spacing-5);
+      padding: var(--spacing-3) 95px;
+      font-size: var(--font-size-sm);
+      background: var(--table-bg-stripe);
+      border-bottom: 1px solid var(--table-bg-divider);
+    }
+
+    .table-expanded-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-expanded-date {
+      color: var(--table-font-variant);
+      letter-spacing: 0.7px;
+    }
+
+    .table-expanded-activity {
+      color: var(--table-font-primary);
+    }
+
+    .table-expanded-detail {
+      color: var(--table-font-primary);
+    }
+
+    /* Pagination */
+    .table-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-3_5) var(--spacing-5);
+      background: var(--table-bg-primary);
+      border-top: 1px solid var(--table-bg-divider);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--table-font-variant);
+      letter-spacing: 0.6px;
+    }
+
+    .table-pagination-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+    }
+
+    .table-rows-per-page {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .table-rows-select {
+      padding: var(--spacing-1) var(--spacing-2);
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font: inherit;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--table-font-variant);
+      cursor: pointer;
+    }
+
+    .table-pagination-right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .table-pagination-nav {
+      display: flex;
+      gap: var(--spacing-3);
+      align-items: center;
+    }
+
+    .table-pagination-btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: background var(--duration-150) var(--ease-out);
+    }
+
+    .table-pagination-btn:hover:not(:disabled) {
+      background: var(--table-bg-stripe);
+    }
+
+    .table-pagination-btn:disabled {
+      opacity: var(--opacity-disabled);
+      cursor: not-allowed;
+    }
+  </style>
+
+  <body>
+  <div id="dt-app">
+    <!-- Page Header -->
+    <h1 class="table-title">Table Heading</h1>
+
+    <div class="table-summary-row">
+      <div></div>
+      <div class="table-summary">
+        <span style="font-weight: var(--font-weight-medium);">Total payable amount:</span>
+        <span class="amount">$900.00</span>
+        <span class="currency">USD</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="table-tabs">
+      <button class="table-tab active" data-filter="all">All</button>
+      <button class="table-tab" data-filter="paid">Paid</button>
+      <button class="table-tab" data-filter="unpaid">Unpaid</button>
+      <button class="table-tab" data-filter="overdue">Overdue</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="table-toolbar-left">
+        <button class="table-btn" id="filter-btn">
+          <svg class="table-icon" viewBox="0 0 20 20" style="color: var(--table-font-icon);">
+            <path d="M3 4h14M6 10h8M8 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Filter
+        </button>
+        <div class="table-search-wrapper">
+          <svg class="table-search-icon" viewBox="0 0 20 20" style="color: var(--table-font-icon);">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" class="table-search" placeholder="Search Users by Name, Email or Date" id="search-input">
+        </div>
+      </div>
+      <button class="table-btn-primary" id="pay-dues-btn">Pay Dues</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <!-- Table Header -->
+      <div class="table-header">
+        <div class="table-checkbox" id="select-all"></div>
+        <div></div>
+        <div>Name</div>
+        <div>User Status</div>
+        <div>Payment Status</div>
+        <div style="text-align: right;">Amount</div>
+        <div>
+          <svg class="table-icon" viewBox="0 0 20 20" style="width: 20px; height: 20px;">
+            <circle cx="10" cy="5" r="2" fill="var(--table-font-icon)"/>
+            <circle cx="10" cy="10" r="2" fill="var(--table-font-icon)"/>
+            <circle cx="10" cy="15" r="2" fill="var(--table-font-icon)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Table Body -->
+      <div id="table-body"></div>
+
+      <!-- Pagination -->
+      <div class="table-pagination">
+        <div class="table-pagination-left">
+          <div class="table-rows-per-page">
+            <span>Rows per page:</span>
+            <select class="table-rows-select" id="rows-per-page">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <svg style="width: 8px; height: 5px; fill: var(--table-font-icon); margin-left: -12px; pointer-events: none;">
+              <path d="M0 0l4 5 4-5z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="table-pagination-right">
+          <div id="pagination-info">1-10 of 276</div>
+          <div class="table-pagination-nav">
+            <button class="table-pagination-btn" id="prev-page">
+              <svg style="width: 6px; height: 10px; fill: var(--table-font-icon);">
+                <path d="M5 0L0 5l5 5V0z"/>
+              </svg>
+            </button>
+            <button class="table-pagination-btn" id="next-page">
+              <svg style="width: 6px; height: 10px; fill: var(--table-font-icon);">
+                <path d="M0 0v10l5-5-5-5z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== DATA =====
+    const users = [
+      { id: 1, name: "Justin Septimus", email: "example@email.com", userStatus: "active", paymentStatus: "paid", amount: 200, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [
+        { date: "12/APR/2020", activity: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultricies.", detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus, sed purus eu semper morbi id nunc, adipiscing vitae. Ultricies suspendisse vestibulum." }
+      ]},
+      { id: 2, name: "Anika Rhiel Madsen", email: "example@email.com", userStatus: "active", paymentStatus: "overdue", amount: 300, dueDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 3, name: "Miracle Vaccaro", email: "example@email.com", userStatus: "active", paymentStatus: "paid", amount: 250, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 4, name: "Erin Levin", email: "example@email.com", userStatus: "active", paymentStatus: "unpaid", amount: 200, dueDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 5, name: "Mira Herwitz", email: "example@email.com", userStatus: "inactive", paymentStatus: "paid", amount: 200, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 6, name: "Jaxson Siphron", email: "example@email.com", userStatus: "inactive", paymentStatus: "paid", amount: 750, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 7, name: "Mira Levin", email: "example@email.com", userStatus: "active", paymentStatus: "unpaid", amount: 200, dueDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 8, name: "Lincoln Levin", email: "example@email.com", userStatus: "active", paymentStatus: "paid", amount: 370, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 9, name: "Phillip Saris", email: "example@email.com", userStatus: "inactive", paymentStatus: "unpaid", amount: 200, dueDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      { id: 10, name: "Cheyenne Ekstrom Bothman", email: "example@email.com", userStatus: "inactive", paymentStatus: "paid", amount: 150, paidDate: "15/APR/2020", lastLogin: "14/APR/2020", activities: [] },
+      // Add more sample users to reach 276 total for pagination demo
+      ...Array.from({ length: 266 }, (_, i) => ({
+        id: i + 11,
+        name: `User ${i + 11}`,
+        email: "example@email.com",
+        userStatus: ["active", "inactive"][Math.floor(Math.random() * 2)],
+        paymentStatus: ["paid", "unpaid", "overdue"][Math.floor(Math.random() * 3)],
+        amount: Math.floor(Math.random() * 500) + 100,
+        paidDate: "15/APR/2020",
+        dueDate: "15/APR/2020",
+        lastLogin: "14/APR/2020",
+        activities: []
+      }))
+    ];
+
+    // ===== STATE =====
+    let currentFilter = 'all';
+    let currentSearch = '';
+    let currentPage = 0;
+    let rowsPerPage = 10;
+    let selectedRows = new Set();
+    let expandedRows = new Set();
+
+    // ===== UTILITIES =====
+    function getFilteredUsers() {
+      return users.filter(user => {
+        const matchesFilter = currentFilter === 'all' || user.paymentStatus === currentFilter;
+        const matchesSearch = !currentSearch || 
+          user.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          user.email.toLowerCase().includes(currentSearch.toLowerCase());
+        return matchesFilter && matchesSearch;
+      });
+    }
+
+    function getPaginatedUsers() {
+      const filtered = getFilteredUsers();
+      const start = currentPage * rowsPerPage;
+      const end = start + rowsPerPage;
+      return filtered.slice(start, end);
+    }
+
+    function renderUser(user, index) {
+      const isExpanded = expandedRows.has(user.id);
+      const isSelected = selectedRows.has(user.id);
+      const isEven = index % 2 === 1;
+      
+      const paymentDetail = user.paymentStatus === 'paid' 
+        ? `Paid on ${user.paidDate}`
+        : `Due${user.paymentStatus === 'overdue' ? 'd' : 's'} on ${user.dueDate}`;
+
+      const userStatusDetail = `Last login: ${user.lastLogin}`;
+
+      let html = `
+        <div class="table-row ${isEven ? 'even' : ''} ${isExpanded ? 'expanded' : ''}" data-id="${user.id}">
+          <div class="table-checkbox ${isSelected ? 'checked' : ''}" data-action="select" data-id="${user.id}"></div>
+          <div class="table-cell-icon"></div>
+          <div class="table-cell-user">
+            <div class="table-user-name">${user.name}</div>
+            <div class="table-user-email">${user.email}</div>
+          </div>
+          <div class="table-cell-status">
+            <div class="table-status-badge ${user.userStatus}">
+              <span class="table-status-dot"></span>
+              ${user.userStatus.charAt(0).toUpperCase() + user.userStatus.slice(1)}
+            </div>
+            <div class="table-status-detail">${userStatusDetail}</div>
+          </div>
+          <div class="table-cell-status">
+            <div class="table-status-badge ${user.paymentStatus}">
+              <span class="table-status-dot"></span>
+              ${user.paymentStatus.charAt(0).toUpperCase() + user.paymentStatus.slice(1)}
+            </div>
+            <div class="table-status-detail">${paymentDetail}</div>
+          </div>
+          <div class="table-cell-amount">
+            <div class="table-amount-value">$${user.amount}</div>
+            <div class="table-amount-currency">USD</div>
+          </div>
+          <div class="table-cell-more" data-action="menu" data-id="${user.id}">
+            <svg class="table-icon" viewBox="0 0 20 20" style="color: var(--table-font-icon);">
+              <circle cx="10" cy="5" r="2" fill="currentColor"/>
+              <circle cx="10" cy="10" r="2" fill="currentColor"/>
+              <circle cx="10" cy="15" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+      `;
+
+      if (isExpanded && user.activities.length > 0) {
+        html += `
+          <div class="table-expanded-content">
+            <div class="table-expanded-header">
+              <div>Date</div>
+              <div>User Activity</div>
+              <div>Detail</div>
+            </div>
+            ${user.activities.map(activity => `
+              <div class="table-expanded-row">
+                <div class="table-expanded-date">${activity.date}</div>
+                <div class="table-expanded-activity">${activity.activity}</div>
+                <div class="table-expanded-detail">${activity.detail}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      return html;
+    }
+
+    function render() {
+      const body = document.getElementById('table-body');
+      const users = getPaginatedUsers();
+      body.innerHTML = users.map((user, i) => renderUser(user, i)).join('');
+      renderPagination();
+      updateSelectAll();
+    }
+
+    function renderPagination() {
+      const filtered = getFilteredUsers();
+      const total = filtered.length;
+      const start = currentPage * rowsPerPage + 1;
+      const end = Math.min((currentPage + 1) * rowsPerPage, total);
+      
+      document.getElementById('pagination-info').textContent = `${start}-${end} of ${total}`;
+      document.getElementById('prev-page').disabled = currentPage === 0;
+      document.getElementById('next-page').disabled = end >= total;
+    }
+
+    function updateSelectAll() {
+      const paginatedUsers = getPaginatedUsers();
+      const allSelected = paginatedUsers.length > 0 && paginatedUsers.every(u => selectedRows.has(u.id));
+      const selectAllEl = document.getElementById('select-all');
+      if (allSelected) {
+        selectAllEl.classList.add('checked');
+      } else {
+        selectAllEl.classList.remove('checked');
+      }
+    }
+
+    // ===== EVENT HANDLERS =====
+    document.getElementById('table-body').addEventListener('click', e => {
+      const target = e.target.closest('[data-action]');
+      if (!target) return;
+
+      const action = target.dataset.action;
+      const id = parseInt(target.dataset.id, 10);
+
+      if (action === 'select') {
+        if (selectedRows.has(id)) {
+          selectedRows.delete(id);
+        } else {
+          selectedRows.add(id);
+        }
+        render();
+      } else if (action === 'menu') {
+        // Toggle expanded view
+        if (expandedRows.has(id)) {
+          expandedRows.delete(id);
+        } else {
+          expandedRows.add(id);
+        }
+        render();
+      }
+    });
+
+    document.getElementById('select-all').addEventListener('click', () => {
+      const paginatedUsers = getPaginatedUsers();
+      const allSelected = paginatedUsers.every(u => selectedRows.has(u.id));
+      
+      if (allSelected) {
+        paginatedUsers.forEach(u => selectedRows.delete(u.id));
+      } else {
+        paginatedUsers.forEach(u => selectedRows.add(u.id));
+      }
+      render();
+    });
+
+    document.querySelectorAll('.table-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelector('.table-tab.active').classList.remove('active');
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        currentPage = 0;
+        render();
+      });
+    });
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      currentSearch = e.target.value;
+      currentPage = 0;
+      render();
+    });
+
+    document.getElementById('rows-per-page').addEventListener('change', e => {
+      rowsPerPage = parseInt(e.target.value, 10);
+      currentPage = 0;
+      render();
+    });
+
+    document.getElementById('prev-page').addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        render();
+      }
+    });
+
+    document.getElementById('next-page').addEventListener('click', () => {
+      const filtered = getFilteredUsers();
+      if ((currentPage + 1) * rowsPerPage < filtered.length) {
+        currentPage++;
+        render();
+      }
+    });
+
+    document.getElementById('pay-dues-btn').addEventListener('click', () => {
+      alert(`Processing payment for ${selectedRows.size} selected user(s)...`);
+    });
+
+    // ===== INITIALIZATION =====
+    render();
+  </script>
+</body>
+</html>

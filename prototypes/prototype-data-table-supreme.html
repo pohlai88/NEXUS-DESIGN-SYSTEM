@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Data Table Supreme</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* Prototype-local styling for the flagship data grid */
+    .dt-cli {
+      display: grid;
+      gap: var(--spacing-2);
+      padding: var(--spacing-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: color-mix(in oklab, var(--color-card) 92%, var(--color-paper-2) 8%);
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-row);
+    }
+
+    .dt-cli-label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .dt-cli-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 92%, var(--color-paper-2) 8%);
+      font-family: var(--font-mono);
+      color: var(--color-lux);
+      box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-stroke) 80%, var(--color-lux) 20%);
+    }
+
+    .dt-cli-input input {
+      border: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      width: 100%;
+      outline: none;
+    }
+
+    .dt-cli-hint {
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      display: flex;
+      gap: var(--spacing-3);
+      flex-wrap: wrap;
+    }
+
+    .dt-cli-tokens {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dt-cli-presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dt-cli-presets button {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background: color-mix(in oklab, var(--color-paper) 94%, var(--color-paper-2) 6%);
+      color: var(--color-lux);
+      padding: 6px 10px;
+      font-size: var(--font-size-xs);
+      cursor: pointer;
+    }
+
+    .dt-cli-suggest {
+      position: absolute;
+      margin-top: 4px;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background: var(--color-paper);
+      box-shadow: var(--shadow-md);
+      max-height: 200px;
+      overflow: auto;
+      z-index: var(--z-sticky-row);
+    }
+
+    /* Governed analytics ribbon */
+    .dt-analytics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacing-3);
+      margin-bottom: var(--spacing-3);
+    }
+
+    .dt-analytic {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: color-mix(in oklab, var(--color-paper) 92%, var(--color-paper-2) 8%);
+      box-shadow: var(--shadow-card);
+      padding: var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    .dt-analytic-title {
+      color: var(--color-clay);
+      font-size: var(--metadata-size);
+      letter-spacing: var(--metadata-tracking);
+      text-transform: uppercase;
+    }
+
+    .dt-analytic-value {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-lux);
+      line-height: 1.2;
+    }
+
+    .dt-analytic-meta {
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .dt-analytic-meta .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--color-chart-3);
+      box-shadow: 0 0 0 1px var(--color-stroke);
+    }
+
+    .dt-analytic-spark {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(6px, 1fr);
+      gap: 4px;
+      align-items: end;
+      height: 38px;
+    }
+
+    .dt-analytic-spark span {
+      display: block;
+      width: 100%;
+      height: var(--h, 20%);
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--spark-color, var(--color-chart-1)) 70%, var(--color-lux) 30%) 0%, var(--spark-color, var(--color-chart-1)) 100%);
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-stroke) 60%, var(--color-lux) 40%);
+    }
+
+    .dt-cli-suggest button {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--color-lux);
+      font-family: var(--font-mono);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .dt-cli-suggest button:hover {
+      background: color-mix(in oklab, var(--color-paper-2) 70%, var(--color-paper));
+    }
+
+    .dt-token {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 96%, var(--color-paper-2) 4%);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+    }
+
+    .dt-token-key { color: var(--color-info); }
+    .dt-token-op { color: var(--color-gold); }
+    .dt-token-val { color: var(--color-lux); }
+
+    .dt-board {
+      display: grid;
+      gap: var(--spacing-5);
+    }
+    .dt-shell {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--spacing-6);
+    }
+
+    .dt-board {
+      display: grid;
+      gap: var(--spacing-5);
+    }
+
+    .dt-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      padding: var(--spacing-3);
+      border-bottom: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 94%, black 6%);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-row);
+    }
+
+    .dt-toolbar-start,
+    .dt-toolbar-end {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      flex-wrap: wrap;
+    }
+
+    .dt-table-wrap {
+      position: relative;
+      overflow: auto;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      box-shadow: var(--shadow-md);
+    }
+
+    table.dt-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      min-width: 1080px;
+    }
+
+    .dt-table th,
+    .dt-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      color: var(--color-lux);
+      font-size: var(--font-size-sm);
+      text-align: left;
+    }
+
+    .dt-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-row);
+      background: color-mix(in oklab, var(--color-paper) 88%, var(--color-void) 12%);
+      box-shadow: inset 0 -1px 0 var(--color-stroke);
+    }
+
+    .dt-table .col-sticky {
+      position: sticky;
+      left: 0;
+      z-index: var(--z-sticky-col);
+      background: color-mix(in oklab, var(--color-paper) 92%, var(--color-void) 8%);
+      box-shadow: inset -1px 0 0 var(--color-stroke);
+    }
+
+    .dt-table .corner-sticky {
+      z-index: var(--z-sticky-corner);
+    }
+
+    .dt-row:hover td {
+      background: color-mix(in oklab, var(--color-paper) 90%, var(--color-stroke) 10%);
+    }
+
+    .dt-cell-editable {
+      position: relative;
+      border: 1px solid transparent;
+      border-radius: var(--radius-control);
+      transition: border-color 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out), background 0.12s var(--ease-out);
+    }
+
+    .dt-cell-editable:focus-within {
+      border-color: color-mix(in oklab, var(--color-info) 55%, var(--color-stroke));
+      box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-info) 45%, var(--color-stroke)), 0 6px 18px -8px rgba(59, 130, 246, 0.45);
+      background: color-mix(in oklab, var(--color-paper) 88%, var(--color-info) 12%);
+    }
+
+    .dt-cell-editable input[aria-label],
+    .dt-cell-editable .dt-editable {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--color-lux);
+      font: inherit;
+      padding: 0;
+      outline: none;
+    }
+
+    .dt-meta {
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .dt-heat-cool {
+      background: linear-gradient(90deg, color-mix(in oklab, var(--color-info) 28%, var(--color-paper)) 0%, transparent 100%);
+    }
+
+    .dt-heat-warm {
+      background: linear-gradient(90deg, color-mix(in oklab, var(--color-warning) 30%, var(--color-paper)) 0%, transparent 100%);
+    }
+
+    .dt-heat-hot {
+      background: linear-gradient(90deg, color-mix(in oklab, var(--color-error) 34%, var(--color-paper)) 0%, transparent 100%);
+    }
+
+    .dt-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 94%, var(--color-paper-2) 6%);
+      font-weight: 600;
+    }
+
+    .dt-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .dt-dot.ok { background: var(--color-success); }
+    .dt-dot.warn { background: var(--color-warning); }
+    .dt-dot.bad { background: var(--color-error); }
+
+    .dt-sparkline {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 8px;
+      gap: 4px;
+      align-items: end;
+      height: 32px;
+      padding-inline: 2px;
+    }
+
+    .dt-sparkline span {
+      display: block;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(180deg,
+          color-mix(in oklab, var(--color-info) 45%, var(--color-lux) 55%) 0%,
+          color-mix(in oklab, var(--color-info) 65%, var(--color-void) 35%) 100%);
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-stroke) 70%, var(--color-lux) 30%);
+      height: var(--h, 50%);
+    }
+
+    .dt-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 95%, var(--color-paper-2) 5%);
+      font-size: var(--font-size-xs);
+      color: var(--color-lux);
+    }
+
+    .dt-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      padding: var(--spacing-3);
+      border-top: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 92%, black 8%);
+      position: sticky;
+      bottom: 0;
+      z-index: var(--z-sticky-row);
+    }
+
+    .dt-pager {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dt-cell-label {
+      display: block;
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .dt-tokens {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacing-3);
+    }
+
+    .dt-token-card {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-4);
+      background: var(--color-paper);
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    /* Inline micro meters */
+    .dt-cell-editable { position: relative; }
+    .dt-mini-bar {
+      position: relative;
+      height: 6px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--color-stroke) 80%, var(--color-paper));
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .dt-mini-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: var(--w, 0%);
+      background: linear-gradient(90deg, color-mix(in oklab, var(--bar-color, var(--color-chart-1)) 72%, var(--color-lux) 28%) 0%, var(--bar-color, var(--color-chart-1)) 100%);
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-stroke) 60%, var(--color-lux) 40%);
+      transition: width var(--duration-200) var(--ease-out);
+    }
+    .dt-mini-bar.is-negative::after {
+      left: auto;
+      right: 0;
+      background: linear-gradient(90deg, color-mix(in oklab, var(--color-error) 75%, var(--color-lux) 25%) 0%, var(--color-error) 100%);
+    }
+
+    /* Resize + reorder handles */
+    .dt-resize-handle {
+      position: absolute;
+      top: 0;
+      right: -6px;
+      width: 12px;
+      height: 100%;
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .dt-dragging {
+      opacity: 0.6;
+    }
+
+    /* Minimap rail */
+    .dt-minimap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 100%;
+      display: grid;
+      grid-auto-rows: 4px;
+      gap: 2px;
+      padding: 4px 2px;
+      background: color-mix(in oklab, var(--color-paper) 92%, var(--color-void) 8%);
+      border-left: 1px solid var(--color-stroke);
+      pointer-events: auto;
+      z-index: var(--z-sticky-row);
+    }
+
+    .dt-minimap span {
+      width: 100%;
+      border-radius: 999px;
+      background: var(--color-stroke);
+      cursor: pointer;
+    }
+
+    .dt-minimap span[data-status="healthy"] { background: var(--color-success); }
+    .dt-minimap span[data-status="watch"] { background: var(--color-warning); }
+    .dt-minimap span[data-status="critical"] { background: var(--color-error); }
+
+    /* Cell history */
+    .dt-has-history {
+      position: relative;
+    }
+
+    .dt-has-history::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, color-mix(in oklab, var(--color-info) 60%, var(--color-lux)) 0%, transparent 60%);
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    .dt-history-pop {
+      position: fixed;
+      min-width: 240px;
+      max-width: 320px;
+      padding: 10px 12px;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      box-shadow: var(--shadow-lg);
+      color: var(--color-lux);
+      z-index: 9999;
+      display: grid;
+      gap: 6px;
+    }
+
+    .dt-history-pop .dt-history-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--color-clay);
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">DT</div>
+        <div>
+          <div class="na-brand-title">Data Table Supreme</div>
+          <div class="na-metadata-small">Inline edit • Sparklines</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#grid" aria-current="page">Grid</a>
+      <a class="na-nav-item" href="#anatomy">Anatomy</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Flagship Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Bi-directional sticky • Inline edit • Pure CSS sparkline</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display:flex;flex-direction:column;gap:var(--spacing-2);">
+            <h1 class="na-h2">Neo-Analog Data Table Supreme</h1>
+            <p class="na-metadata">Bi-directional sticky grid with inline edit, sparklines, heatmap cells, bulk actions</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="na-content" id="grid">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Grid Experience</h2>
+              <p class="na-metadata">Inline edits, sticky header/column, conditional formatting, bulk toolbar</p>
+            </div>
+            <div class="na-inline">
+              <span class="dt-pill">CSV export</span>
+              <span class="dt-pill">JSON export</span>
+              <span class="dt-pill">Load more</span>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="dt-analytics" aria-label="Governed KPI ribbon">
+            <div class="dt-analytic" id="dt-ana-rev-card">
+              <div class="dt-analytic-title">MTD Revenue (governed)</div>
+              <div class="dt-analytic-value" id="dt-ana-rev">$0</div>
+              <div class="dt-analytic-meta" id="dt-ana-rev-meta">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Awaiting data</span>
+              </div>
+              <div class="dt-analytic-spark" id="dt-ana-rev-spark" aria-hidden="true"></div>
+            </div>
+
+            <div class="dt-analytic" id="dt-ana-qoq-card">
+              <div class="dt-analytic-title">QoQ Delta (normalized)</div>
+              <div class="dt-analytic-value" id="dt-ana-qoq">0%</div>
+              <div class="dt-analytic-meta" id="dt-ana-qoq-meta">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Weighted across visible rows</span>
+              </div>
+              <div class="dt-analytic-spark" id="dt-ana-qoq-spark" aria-hidden="true"></div>
+            </div>
+
+            <div class="dt-analytic" id="dt-ana-health-card">
+              <div class="dt-analytic-title">Avg Health (governed)</div>
+              <div class="dt-analytic-value" id="dt-ana-health">0</div>
+              <div class="dt-analytic-meta" id="dt-ana-health-meta">
+                <span class="dot" aria-hidden="true"></span>
+                <span>0 / 0 accounts</span>
+              </div>
+              <div class="dt-analytic-spark" id="dt-ana-health-spark" aria-hidden="true"></div>
+            </div>
+
+            <div class="dt-analytic" id="dt-ana-risk-card">
+              <div class="dt-analytic-title">Risk Mix</div>
+              <div class="dt-analytic-value" id="dt-ana-risk">0 flagged</div>
+              <div class="dt-analytic-meta" id="dt-ana-risk-meta">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Watch / Critical governed</span>
+              </div>
+              <div class="dt-analytic-spark" id="dt-ana-risk-spark" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="dt-cli" role="search" aria-label="Command filter">
+            <div class="dt-cli-label">Command Line Filter</div>
+            <label class="dt-cli-input">
+              <span aria-hidden="true">&gt;</span>
+              <input id="dt-cli-input" aria-label="Type filters" placeholder="status:healthy owner:\"Patel\" revenue>100000" />
+            </label>
+            <div class="dt-cli-tokens" id="dt-cli-tokens" aria-live="polite"></div>
+            <div class="dt-cli-hint">
+              <span>Syntax: field:val · field>number · field<date</span>
+              <span>Try: status:healthy owner:Chen health>80 volatility:low</span>
+            </div>
+            <div class="dt-cli-suggest" id="dt-cli-suggest" hidden></div>
+            <div class="dt-cli-presets" aria-label="Query presets">
+              <button type="button" data-query="status:healthy qoq>0 health>80">Healthy upswing</button>
+              <button type="button" data-query="status:watch qoq<0 health<70">Churn watch</button>
+              <button type="button" data-query="vol:high health<60">High vol + low health</button>
+              <button type="button" data-query="owner:chen status:healthy">Owner: Chen</button>
+            </div>
+          </div>
+
+            <div class="dt-table-wrap">
+              <div class="dt-minimap" id="dt-minimap" aria-hidden="true"></div>
+            <div class="dt-toolbar">
+              <div class="dt-toolbar-start">
+                <button class="na-btn" type="button">Bulk Update</button>
+                <button class="na-btn" type="button">Delete</button>
+                <button class="na-btn" type="button" id="dt-export-csv">Export CSV</button>
+              </div>
+              <div class="dt-toolbar-end">
+                <label class="na-input" style="display:flex;align-items:center;gap:8px;">
+                  <span class="na-metadata">Status</span>
+                  <select class="na-select" aria-label="Filter status">
+                    <option>Any</option>
+                    <option>Healthy</option>
+                    <option>Warning</option>
+                    <option>Critical</option>
+                  </select>
+                </label>
+                <label class="na-input" style="display:flex;align-items:center;gap:8px;">
+                  <span class="na-metadata">Owner</span>
+                  <select class="na-select" aria-label="Filter owner">
+                    <option>All</option>
+                    <option>A. Patel</option>
+                    <option>J. Rivera</option>
+                    <option>M. Chen</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <table class="dt-table" role="grid" aria-label="Inline editable data table">
+              <thead>
+                <tr>
+                  <th class="col-sticky corner-sticky" scope="col" style="width:48px;" data-col-id="select">
+                    <label class="na-checkbox" aria-label="Select all">
+                      <input type="checkbox" />
+                      <span></span>
+                    </label>
+                  </th>
+                  <th class="col-sticky" scope="col" style="width:200px;" data-col-id="account" draggable="true">Account</th>
+                  <th scope="col" style="width:120px;" data-col-id="status" draggable="true">Status</th>
+                  <th scope="col" style="width:120px;" data-col-id="owner" draggable="true">Owner</th>
+                  <th scope="col" style="width:160px;" data-col-id="mtd" draggable="true">MTD Revenue</th>
+                  <th scope="col" style="width:160px;" data-col-id="qoq" draggable="true">QoQ Delta</th>
+                  <th scope="col" style="width:200px;" data-col-id="trend" draggable="true">7d Trend</th>
+                  <th scope="col" style="width:140px;" data-col-id="health" draggable="true">Health</th>
+                  <th scope="col" style="width:140px;" data-col-id="next" draggable="true">Next Step</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="dt-row" data-status="healthy" data-owner="patel" data-revenue="182400" data-qoq="14.2" data-health="88" data-vol="low">
+                  <td class="col-sticky corner-sticky">
+                    <label class="na-checkbox" aria-label="Select ACME">
+                      <input type="checkbox" />
+                      <span></span>
+                    </label>
+                  </td>
+                  <td class="col-sticky dt-cell-editable">
+                    <div class="dt-cell-label">Account</div>
+                    <input aria-label="Account" value="ACME Robotics" />
+                  </td>
+                  <td>
+                    <span class="dt-status"><span class="dt-dot ok"></span>Healthy</span>
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Owner</div>
+                    <input aria-label="Owner" value="A. Patel" />
+                  </td>
+                  <td class="dt-heat-warm dt-cell-editable dt-has-history" data-history='[{"at":"2024-11-02","val":"$174,000"},{"at":"2024-12-02","val":"$178,500"}]'>
+                    <div class="dt-cell-label">MTD</div>
+                    <input aria-label="MTD" value="$182,400" />
+                    <div class="dt-mini-bar" data-kind="revenue" aria-hidden="true"></div>
+                  </td>
+                  <td class="dt-heat-cool dt-cell-editable">
+                    <div class="dt-cell-label">QoQ</div>
+                    <input aria-label="QoQ" value="▲ 14.2%" />
+                    <div class="dt-mini-bar" data-kind="qoq" aria-hidden="true"></div>
+                  </td>
+                  <td>
+                    <div class="dt-sparkline" aria-hidden="true">
+                      <span style="--h:72%"></span>
+                      <span style="--h:55%"></span>
+                      <span style="--h:78%"></span>
+                      <span style="--h:62%"></span>
+                      <span style="--h:88%"></span>
+                      <span style="--h:66%"></span>
+                      <span style="--h:94%"></span>
+                    </div>
+                    <div class="na-metadata-small">Volatility: low</div>
+                  </td>
+                  <td class="dt-heat-cool dt-cell-editable dt-has-history" data-history='[{"at":"2024-09-01","val":"81"},{"at":"2024-10-01","val":"84"},{"at":"2024-11-01","val":"86"}]'>
+                    <div class="dt-cell-label">Health score</div>
+                    <input aria-label="Health" value="88 / 100" />
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Next step</div>
+                    <input aria-label="Next step" value="Renewal prep" />
+                  </td>
+                </tr>
+
+                <tr class="dt-row" data-status="watch" data-owner="rivera" data-revenue="94120" data-qoq="-6.1" data-health="62" data-vol="medium">
+                  <td class="col-sticky corner-sticky">
+                    <label class="na-checkbox" aria-label="Select Helio">
+                      <input type="checkbox" />
+                      <span></span>
+                    </label>
+                  </td>
+                  <td class="col-sticky dt-cell-editable">
+                    <div class="dt-cell-label">Account</div>
+                    <input aria-label="Account" value="Helio Labs" />
+                  </td>
+                  <td>
+                    <span class="dt-status"><span class="dt-dot warn"></span>Watch</span>
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Owner</div>
+                    <input aria-label="Owner" value="J. Rivera" />
+                  </td>
+                  <td class="dt-heat-hot dt-cell-editable dt-has-history" data-history='[{"at":"2024-11-05","val":"$101,400"}]'>
+                    <div class="dt-cell-label">MTD</div>
+                    <input aria-label="MTD" value="$94,120" />
+                    <div class="dt-mini-bar" data-kind="revenue" aria-hidden="true"></div>
+                  </td>
+                  <td class="dt-heat-warm dt-cell-editable">
+                    <div class="dt-cell-label">QoQ</div>
+                    <input aria-label="QoQ" value="▼ 6.1%" />
+                    <div class="dt-mini-bar is-negative" data-kind="qoq" aria-hidden="true"></div>
+                  </td>
+                  <td>
+                    <div class="dt-sparkline" aria-hidden="true">
+                      <span style="--h:44%"></span>
+                      <span style="--h:36%"></span>
+                      <span style="--h:52%"></span>
+                      <span style="--h:38%"></span>
+                      <span style="--h:41%"></span>
+                      <span style="--h:29%"></span>
+                      <span style="--h:33%"></span>
+                    </div>
+                    <div class="na-metadata-small">Volatility: medium</div>
+                  </td>
+                  <td class="dt-heat-warm dt-cell-editable dt-has-history" data-history='[{"at":"2024-10-01","val":"69"},{"at":"2024-11-01","val":"65"}]'>
+                    <div class="dt-cell-label">Health score</div>
+                    <input aria-label="Health" value="62 / 100" />
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Next step</div>
+                    <input aria-label="Next step" value="Churn save plan" />
+                  </td>
+                </tr>
+
+                <tr class="dt-row" data-status="healthy" data-owner="chen" data-revenue="128900" data-qoq="9.4" data-health="91" data-vol="low">
+                  <td class="col-sticky corner-sticky">
+                    <label class="na-checkbox" aria-label="Select Northwind">
+                      <input type="checkbox" />
+                      <span></span>
+                    </label>
+                  </td>
+                  <td class="col-sticky dt-cell-editable">
+                    <div class="dt-cell-label">Account</div>
+                    <input aria-label="Account" value="Northwind Data" />
+                  </td>
+                  <td>
+                    <span class="dt-status"><span class="dt-dot ok"></span>Healthy</span>
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Owner</div>
+                    <input aria-label="Owner" value="M. Chen" />
+                  </td>
+                  <td class="dt-heat-warm dt-cell-editable dt-has-history" data-history='[{"at":"2024-11-03","val":"$119,800"}]'>
+                    <div class="dt-cell-label">MTD</div>
+                    <input aria-label="MTD" value="$128,900" />
+                    <div class="dt-mini-bar" data-kind="revenue" aria-hidden="true"></div>
+                  </td>
+                  <td class="dt-heat-cool dt-cell-editable">
+                    <div class="dt-cell-label">QoQ</div>
+                    <input aria-label="QoQ" value="▲ 9.4%" />
+                    <div class="dt-mini-bar" data-kind="qoq" aria-hidden="true"></div>
+                  </td>
+                  <td>
+                    <div class="dt-sparkline" aria-hidden="true">
+                      <span style="--h:58%"></span>
+                      <span style="--h:63%"></span>
+                      <span style="--h:72%"></span>
+                      <span style="--h:69%"></span>
+                      <span style="--h:75%"></span>
+                      <span style="--h:78%"></span>
+                      <span style="--h:82%"></span>
+                    </div>
+                    <div class="na-metadata-small">Volatility: low</div>
+                  </td>
+                  <td class="dt-heat-cool dt-cell-editable dt-has-history" data-history='[{"at":"2024-09-01","val":"87"},{"at":"2024-10-01","val":"89"}]'>
+                    <div class="dt-cell-label">Health score</div>
+                    <input aria-label="Health" value="91 / 100" />
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Next step</div>
+                    <input aria-label="Next step" value="Expansion call" />
+                  </td>
+                </tr>
+
+                <tr class="dt-row" data-status="watch" data-owner="ortiz" data-revenue="72410" data-qoq="-12.7" data-health="48" data-vol="high">
+                  <td class="col-sticky corner-sticky">
+                    <label class="na-checkbox" aria-label="Select Vertex">
+                      <input type="checkbox" />
+                      <span></span>
+                    </label>
+                  </td>
+                  <td class="col-sticky dt-cell-editable">
+                    <div class="dt-cell-label">Account</div>
+                    <input aria-label="Account" value="Vertex Bio" />
+                  </td>
+                  <td>
+                    <span class="dt-status"><span class="dt-dot warn"></span>Watch</span>
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Owner</div>
+                    <input aria-label="Owner" value="L. Ortiz" />
+                  </td>
+                  <td class="dt-heat-hot dt-cell-editable dt-has-history" data-history='[{"at":"2024-10-15","val":"$82,200"},{"at":"2024-11-15","val":"$76,300"}]'>
+                    <div class="dt-cell-label">MTD</div>
+                    <input aria-label="MTD" value="$72,410" />
+                    <div class="dt-mini-bar" data-kind="revenue" aria-hidden="true"></div>
+                  </td>
+                  <td class="dt-heat-hot dt-cell-editable">
+                    <div class="dt-cell-label">QoQ</div>
+                    <input aria-label="QoQ" value="▼ 12.7%" />
+                    <div class="dt-mini-bar is-negative" data-kind="qoq" aria-hidden="true"></div>
+                  </td>
+                  <td>
+                    <div class="dt-sparkline" aria-hidden="true">
+                      <span style="--h:42%"></span>
+                      <span style="--h:38%"></span>
+                      <span style="--h:41%"></span>
+                      <span style="--h:29%"></span>
+                      <span style="--h:26%"></span>
+                      <span style="--h:22%"></span>
+                      <span style="--h:18%"></span>
+                    </div>
+                    <div class="na-metadata-small">Volatility: high</div>
+                  </td>
+                  <td class="dt-heat-hot dt-cell-editable dt-has-history" data-history='[{"at":"2024-09-01","val":"58"},{"at":"2024-10-01","val":"53"}]'>
+                    <div class="dt-cell-label">Health score</div>
+                    <input aria-label="Health" value="48 / 100" />
+                  </td>
+                  <td class="dt-cell-editable">
+                    <div class="dt-cell-label">Next step</div>
+                    <input aria-label="Next step" value="Escalate to CSM" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="dt-pagination" aria-label="Pagination">
+              <div class="na-inline">
+                <button class="na-btn" type="button" id="dt-load-more">Load More</button>
+                <button class="na-btn" type="button" id="dt-export-json">Export JSON</button>
+              </div>
+              <div class="dt-pager" role="group" aria-label="Pages">
+                <button class="na-btn" type="button" aria-label="Previous">Prev</button>
+                <button class="na-btn" type="button" aria-current="page">1</button>
+                <button class="na-btn" type="button">2</button>
+                <button class="na-btn" type="button">3</button>
+                <button class="na-btn" type="button" aria-label="Next">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="anatomy">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Anatomy</h2>
+              <p class="na-metadata">Bi-directional sticky, inline-edit affordances, data viz cells</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+          <div class="dt-tokens">
+            <div class="dt-token-card">
+              <div class="na-label">Sticky Layers</div>
+              <div class="na-metadata-small">--z-sticky-row / col / corner</div>
+              <p class="na-muted">Header and left rail stay pinned; corner cell gets highest z-index.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Inline Edit</div>
+              <div class="na-metadata-small">:focus-within ring</div>
+              <p class="na-muted">Inputs live inside cells; focus sets a semantic ring using color-mix(info).</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Heatmap Cells</div>
+              <div class="na-metadata-small">cool / warm / hot</div>
+              <p class="na-muted">Use linear-gradients blended with paper to encode risk or performance.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Sparklines</div>
+              <div class="na-metadata-small">pure CSS columns</div>
+              <p class="na-muted">Grid of spans with gradient fill; heights driven by per-span custom props.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Bulk Actions</div>
+              <div class="na-metadata-small">Toolbar stickiness</div>
+              <p class="na-muted">Toolbar is sticky to viewport top inside the scroll area for batch ops.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Token Map</h2>
+              <p class="na-metadata">Semantic alignments to the Neo-Analog theme</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+          <div class="dt-tokens">
+            <div class="dt-token-card">
+              <div class="na-label">Spacing</div>
+              <p class="na-muted">Toolbar padding var(--spacing-3); cell padding 12x14; card gap var(--spacing-5).</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Radius</div>
+              <p class="na-muted">Card radius var(--radius-card); control radius var(--radius-control); pills use full round.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Color</div>
+              <p class="na-muted">Paper/void for surfaces; stroke for separators; info/warning/error for heatmap + focus.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Shadow</div>
+              <p class="na-muted">Grid wrap uses var(--shadow-md) for elevation; focus ring stacks subtle shadow.</p>
+            </div>
+            <div class="dt-token-card">
+              <div class="na-label">Typography</div>
+              <p class="na-muted">Body set to var(--font-size-sm); meta labels use var(--font-size-xs) and color-clay.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="dt-live" class="na-visually-hidden" aria-live="polite"></div>
+
+  <script>
+    // --- Command Line Filter (CLI) ---
+    const cliInput = document.getElementById('dt-cli-input');
+    const cliTokens = document.getElementById('dt-cli-tokens');
+    const cliSuggest = document.getElementById('dt-cli-suggest');
+    const rows = Array.from(document.querySelectorAll('.dt-row'));
+    const live = document.getElementById('dt-live');
+
+    const CLI_QUERY_KEY = 'dtCliQuery';
+    const fieldCatalog = [
+      { key: 'status', hint: 'governed enum', ops: [':', '='], values: ['healthy', 'watch', 'critical'], defaultFormat: 'enum: healthy|watch|critical' },
+      { key: 'owner', hint: 'governed enum', ops: [':', '='], values: ['patel', 'rivera', 'chen', 'ortiz'], defaultFormat: 'enum: patel|rivera|chen|ortiz' },
+      { key: 'revenue', hint: 'currency, default USD', ops: ['>', '>=', '<', '<=', ':', '='], defaultFormat: 'numeric (USD, raw)' },
+      { key: 'qoq', hint: 'delta numeric', ops: ['>', '>=', '<', '<=', ':', '='], defaultFormat: 'numeric (signed %)' },
+      { key: 'health', hint: '0-100 score', ops: ['>', '>=', '<', '<=', ':', '='], defaultFormat: 'score 0-100' },
+      { key: 'vol', hint: 'governed enum', ops: [':', '='], values: ['low', 'medium', 'high'], defaultFormat: 'enum: low|medium|high' },
+      { key: 'account', hint: 'text match', ops: [':', '='], defaultFormat: 'string contains' }
+    ];
+
+    const fmtCurrency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const fmtPercent = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+
+    const analyticsRefs = {
+      revenue: {
+        value: document.getElementById('dt-ana-rev'),
+        meta: document.getElementById('dt-ana-rev-meta'),
+        spark: document.getElementById('dt-ana-rev-spark')
+      },
+      qoq: {
+        value: document.getElementById('dt-ana-qoq'),
+        meta: document.getElementById('dt-ana-qoq-meta'),
+        spark: document.getElementById('dt-ana-qoq-spark')
+      },
+      health: {
+        value: document.getElementById('dt-ana-health'),
+        meta: document.getElementById('dt-ana-health-meta'),
+        spark: document.getElementById('dt-ana-health-spark')
+      },
+      risk: {
+        value: document.getElementById('dt-ana-risk'),
+        meta: document.getElementById('dt-ana-risk-meta'),
+        spark: document.getElementById('dt-ana-risk-spark')
+      }
+    };
+
+    function renderSpark(target, data, color) {
+      if (!target) return;
+      target.innerHTML = '';
+      if (!data.length) return;
+      const max = Math.max(...data);
+      data.forEach(v => {
+        const span = document.createElement('span');
+        span.style.setProperty('--h', `${max ? (v / max) * 100 : 0}%`);
+        span.style.setProperty('--spark-color', color);
+        target.appendChild(span);
+      });
+    }
+
+    function updateAnalytics() {
+      const vr = visibleRows();
+      const revenues = vr.map(r => Number(r.dataset.revenue) || 0);
+      const qoqs = vr.map(r => Number(r.dataset.qoq) || 0);
+      const health = vr.map(r => Number(r.dataset.health) || 0);
+      const totalRevenue = revenues.reduce((a, b) => a + b, 0);
+      const avgQoq = qoqs.length ? qoqs.reduce((a, b) => a + b, 0) / qoqs.length : 0;
+      const avgHealth = health.length ? health.reduce((a, b) => a + b, 0) / health.length : 0;
+      const flagged = vr.filter(r => ['watch', 'critical'].includes((r.dataset.status || '').toLowerCase()));
+
+      if (analyticsRefs.revenue.value) analyticsRefs.revenue.value.textContent = fmtCurrency.format(totalRevenue || 0);
+      if (analyticsRefs.revenue.meta) analyticsRefs.revenue.meta.lastElementChild.textContent = `${vr.length} filtered accounts`;
+      renderSpark(analyticsRefs.revenue.spark, revenues, 'var(--color-chart-1)');
+
+      if (analyticsRefs.qoq.value) analyticsRefs.qoq.value.textContent = `${avgQoq >= 0 ? '▲' : '▼'} ${fmtPercent.format(Math.abs(avgQoq))}%`;
+      if (analyticsRefs.qoq.meta) analyticsRefs.qoq.meta.lastElementChild.textContent = `Mean over ${vr.length || 0}`;
+      renderSpark(analyticsRefs.qoq.spark, qoqs.map(v => Math.abs(v)), 'var(--color-chart-3)');
+
+      if (analyticsRefs.health.value) analyticsRefs.health.value.textContent = fmtPercent.format(avgHealth || 0);
+      if (analyticsRefs.health.meta) analyticsRefs.health.meta.lastElementChild.textContent = `${Math.round(avgHealth)} avg / ${vr.length || 0} accounts`;
+      renderSpark(analyticsRefs.health.spark, health, 'var(--color-chart-2)');
+
+      if (analyticsRefs.risk.value) analyticsRefs.risk.value.textContent = `${flagged.length} flagged`;
+      if (analyticsRefs.risk.meta) analyticsRefs.risk.meta.lastElementChild.textContent = `Watch+Critical of ${vr.length || 0}`;
+      renderSpark(analyticsRefs.risk.spark, flagged.map(() => 1), 'var(--color-error)');
+    }
+
+      const parts = text.trim().split(/\s+/).filter(Boolean);
+      return parts.map(part => {
+        const match = part.match(/^(?<key>[a-zA-Z_]+)(?<op>:|>=|<=|>|<|=)(?<val>.+)$/);
+        if (!match) return null;
+        return { key: match.groups.key.toLowerCase(), op: match.groups.op, val: match.groups.val.replace(/^"|"$/g, '') };
+      }).filter(Boolean);
+    }
+
+    function renderTokens(tokens) {
+      cliTokens.innerHTML = '';
+      tokens.forEach(t => {
+        const el = document.createElement('span');
+        el.className = 'dt-token';
+        el.innerHTML = `<span class="dt-token-key">${t.key}</span><span class="dt-token-op">${t.op}</span><span class="dt-token-val">${t.val}</span>`;
+        cliTokens.appendChild(el);
+      });
+    }
+
+    function matches(row, token) {
+      const value = (row.dataset[token.key] || '').toLowerCase();
+      const num = Number(row.dataset[token.key]);
+      switch (token.op) {
+        case ':':
+        case '=':
+          return value.includes(token.val.toLowerCase());
+        case '>':
+          return !Number.isNaN(num) && num > Number(token.val);
+        case '<':
+          return !Number.isNaN(num) && num < Number(token.val);
+        case '>=':
+          return !Number.isNaN(num) && num >= Number(token.val);
+        case '<=':
+          return !Number.isNaN(num) && num <= Number(token.val);
+        default:
+          return true;
+      }
+    }
+
+    function currentPartial(text) {
+      const m = text.match(/([a-zA-Z_]+[><=:]?[^\s]*)$/);
+      return m ? m[1] : '';
+    }
+
+    function buildSuggestions(partial) {
+      if (!partial) return [];
+      const match = partial.match(/^([a-zA-Z_]+)(:|>=|<=|>|<|=)?([^:]*)$/);
+      if (!match) return [];
+      const [, keyRaw, opRaw = '', valRaw = ''] = match;
+      const key = keyRaw.toLowerCase();
+      const exact = fieldCatalog.find(f => f.key === key);
+      const fieldMatches = fieldCatalog.filter(f => f.key.startsWith(key));
+      if (!opRaw) {
+        return fieldMatches.map(f => ({ label: `${f.key}:`, hint: `${f.defaultFormat}`, insert: `${f.key}:` }));
+      }
+      if (!exact) return [];
+      if (valRaw === '' && exact.values?.length) {
+        return exact.values.map(v => ({ label: `${exact.key}:${v}`, hint: 'governed value', insert: `${exact.key}:${v}` }));
+      }
+      if (valRaw === '' && exact.ops?.length) {
+        return [{ label: `${exact.key}${opRaw}`, hint: `operators: ${exact.ops.join(' ')}`, insert: `${exact.key}${opRaw}` }];
+      }
+      if (valRaw && exact.values?.length) {
+        return exact.values
+          .filter(v => v.startsWith(valRaw.toLowerCase()))
+          .map(v => ({ label: `${exact.key}:${v}`, hint: 'governed value', insert: `${exact.key}:${v}` }));
+      }
+      return [];
+    }
+
+    function showSuggest(list) {
+      if (!list.length) {
+        cliSuggest.hidden = true;
+        cliSuggest.innerHTML = '';
+        return;
+      }
+      cliSuggest.innerHTML = '';
+      list.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.innerHTML = `<span>${item.label}</span><span class="na-muted">${item.hint}</span>`;
+        btn.addEventListener('click', () => {
+          const base = cliInput.value.replace(/([a-zA-Z_]+[><=:]?[^\s]*)$/, '').trim();
+          const next = `${base} ${item.insert}`.trimStart();
+          cliInput.value = next + (item.insert.endsWith(':') ? '' : ' ');
+          cliInput.focus();
+          applyFilters();
+          showSuggest([]);
+        });
+        cliSuggest.appendChild(btn);
+      });
+      cliSuggest.hidden = false;
+    }
+
+    cliInput?.addEventListener('input', () => {
+      const tokens = parseTokens(cliInput.value);
+      renderTokens(tokens);
+      localStorage.setItem(CLI_QUERY_KEY, cliInput.value);
+      const partial = currentPartial(cliInput.value);
+      const list = buildSuggestions(partial);
+      showSuggest(list);
+      applyFilters();
+    });
+
+    function applyFilters() {
+      const tokens = parseTokens(cliInput.value);
+      renderTokens(tokens);
+      rows.forEach(row => {
+        const ok = tokens.every(t => matches(row, t));
+        row.style.display = ok ? '' : 'none';
+      });
+      renderMinimap();
+      updateMeters();
+      updateAnalytics();
+    }
+
+    // --- Inline edit live announcements ---
+    document.querySelectorAll('.dt-cell-editable input').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const label = inp.getAttribute('aria-label') || 'cell';
+        live.textContent = `${label} updated to ${inp.value}`;
+        inp.closest('.dt-cell-editable')?.classList.add('na-changed');
+      });
+    });
+
+    // --- Export helpers ---
+    const exportCsvBtn = document.getElementById('dt-export-csv');
+    const exportJsonBtn = document.getElementById('dt-export-json');
+
+    function visibleRows() {
+      return rows.filter(r => r.style.display !== 'none');
+    }
+
+    function updateMeters() {
+      const vr = visibleRows();
+      const revenues = vr.map(r => Number(r.dataset.revenue) || 0);
+      const qoqs = vr.map(r => Number(r.dataset.qoq) || 0);
+      const maxRevenue = Math.max(...revenues, 0) || 1;
+      vr.forEach(row => {
+        const rev = Number(row.dataset.revenue) || 0;
+        const qoq = Number(row.dataset.qoq) || 0;
+        const revPct = Math.min(100, Math.max(0, (rev / maxRevenue) * 100));
+        const revBar = row.querySelector('.dt-mini-bar[data-kind="revenue"]');
+        if (revBar) {
+          revBar.style.setProperty('--w', `${revPct}%`);
+          revBar.style.setProperty('--bar-color', 'var(--color-chart-1)');
+        }
+        const qoqBar = row.querySelector('.dt-mini-bar[data-kind="qoq"]');
+        if (qoqBar) {
+          const qPct = Math.min(100, (Math.min(Math.abs(qoq), 20) / 20) * 100);
+          qoqBar.style.setProperty('--w', `${qPct}%`);
+          qoqBar.classList.toggle('is-negative', qoq < 0);
+          if (!qoqBar.classList.contains('is-negative')) {
+            qoqBar.style.setProperty('--bar-color', 'var(--color-chart-3)');
+          }
+        }
+      });
+    }
+
+    function rowToObj(row) {
+      const cells = Array.from(row.querySelectorAll('td'));
+      return {
+        account: cells[1]?.querySelector('input')?.value || '',
+        status: cells[2]?.innerText.trim() || '',
+        owner: cells[3]?.querySelector('input')?.value || '',
+        mtd: cells[4]?.querySelector('input')?.value || '',
+        qoq: cells[5]?.querySelector('input')?.value || '',
+        health: cells[7]?.querySelector('input')?.value || '',
+        next: cells[8]?.querySelector('input')?.value || ''
+      };
+    }
+
+    function download(filename, content, type = 'text/plain') {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    exportCsvBtn?.addEventListener('click', () => {
+      const objs = visibleRows().map(rowToObj);
+      const headers = ['account', 'status', 'owner', 'mtd', 'qoq', 'health', 'next'];
+      const lines = [headers.join(',')].concat(
+        objs.map(o => headers.map(h => `"${String(o[h]).replace(/"/g, '""')}"`).join(','))
+      );
+      download('data-table.csv', lines.join('\n'), 'text/csv');
+      live.textContent = 'CSV exported';
+    });
+
+    exportJsonBtn?.addEventListener('click', () => {
+      const objs = visibleRows().map(rowToObj);
+      download('data-table.json', JSON.stringify(objs, null, 2), 'application/json');
+      live.textContent = 'JSON exported';
+    });
+
+    // --- Column resize ---
+    function addResize(th) {
+      if (th.dataset.colId === 'select') return; // skip checkbox
+      const handle = document.createElement('span');
+      handle.className = 'dt-resize-handle';
+      th.style.position = 'relative';
+      th.appendChild(handle);
+      let startX = 0;
+      let startWidth = 0;
+      const onMove = (e) => {
+        const delta = e.clientX - startX;
+        const newWidth = Math.max(80, startWidth + delta);
+        th.style.width = `${newWidth}px`;
+        const idx = Array.from(th.parentNode.children).indexOf(th);
+        document.querySelectorAll(`tbody tr`).forEach(tr => {
+          const cell = tr.children[idx];
+          if (cell) cell.style.width = `${newWidth}px`;
+        });
+      };
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        persistWidths();
+      };
+      handle.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+        startWidth = th.getBoundingClientRect().width;
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+
+    const headerRow = document.querySelector('thead tr');
+    const headerCells = Array.from(headerRow?.children || []);
+
+    function persistWidths() {
+      const widths = {};
+      document.querySelectorAll('thead th').forEach(th => {
+        if (th.dataset.colId) widths[th.dataset.colId] = th.style.width || '';
+      });
+      localStorage.setItem('dtWidths', JSON.stringify(widths));
+    }
+
+    function restoreWidths() {
+      const raw = localStorage.getItem('dtWidths');
+      if (!raw) return;
+      try {
+        const widths = JSON.parse(raw);
+        document.querySelectorAll('thead th').forEach(th => {
+          const w = widths[th.dataset.colId];
+          if (w) {
+            th.style.width = w;
+            const idx = Array.from(th.parentNode.children).indexOf(th);
+            document.querySelectorAll('tbody tr').forEach(tr => {
+              const cell = tr.children[idx];
+              if (cell) cell.style.width = w;
+            });
+          }
+        });
+      } catch (e) { /* ignore */ }
+    }
+
+    function persistOrder() {
+      const order = Array.from(headerRow.children).map(th => th.dataset.colId || '');
+      localStorage.setItem('dtOrder', JSON.stringify(order));
+    }
+
+    function restoreOrder() {
+      const raw = localStorage.getItem('dtOrder');
+      if (!raw) return;
+      let order;
+      try { order = JSON.parse(raw); } catch (e) { return; }
+      if (!Array.isArray(order)) return;
+      order.forEach(id => {
+        const th = headerRow.querySelector(`[data-col-id="${id}"]`);
+        if (th) headerRow.appendChild(th);
+      });
+      document.querySelectorAll('tbody tr').forEach(row => {
+        order.forEach(id => {
+          const idx = headerCells.findIndex(h => h.dataset.colId === id);
+          const cell = row.querySelector(`td:nth-child(${idx + 1})`);
+          if (cell) row.appendChild(cell);
+        });
+      });
+    }
+
+    document.querySelectorAll('thead th').forEach(addResize);
+    restoreWidths();
+
+    // --- Column reorder (drag & drop) ---
+    let dragSrc = null;
+    headerRow?.querySelectorAll('th').forEach(th => {
+      if (th.dataset.colId === 'select') return;
+      th.setAttribute('draggable', 'true');
+      th.addEventListener('dragstart', (e) => {
+        dragSrc = th;
+        th.classList.add('dt-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      th.addEventListener('dragend', () => th.classList.remove('dt-dragging'));
+      th.addEventListener('dragover', (e) => e.preventDefault());
+      th.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!dragSrc || dragSrc === th) return;
+        const cells = (row) => Array.from(row.children);
+        const srcIndex = cells(headerRow).indexOf(dragSrc);
+        const destIndex = cells(headerRow).indexOf(th);
+        if (srcIndex < 0 || destIndex < 0) return;
+        if (srcIndex < destIndex) {
+          headerRow.insertBefore(dragSrc, th.nextSibling);
+        } else {
+          headerRow.insertBefore(dragSrc, th);
+        }
+        document.querySelectorAll('tbody tr').forEach(row => {
+          const rowCells = cells(row);
+          const srcCell = rowCells[srcIndex];
+          const destCell = rowCells[destIndex];
+          if (srcIndex < destIndex) {
+            row.insertBefore(srcCell, destCell.nextSibling);
+          } else {
+            row.insertBefore(srcCell, destCell);
+          }
+        });
+        persistOrder();
+      });
+    });
+
+    // --- Minimal load more placeholder ---
+    document.getElementById('dt-load-more')?.addEventListener('click', () => {
+      live.textContent = 'Load more triggered (hook to data fetch)';
+    });
+
+    // --- Minimap rail ---
+    const minimap = document.getElementById('dt-minimap');
+    function renderMinimap() {
+      if (!minimap) return;
+      minimap.innerHTML = '';
+      visibleRows().forEach((row, idx) => {
+        const dot = document.createElement('span');
+        dot.dataset.status = row.dataset.status || 'standard';
+        dot.title = `Row ${idx + 1}`;
+        dot.addEventListener('click', () => {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        minimap.appendChild(dot);
+      });
+    }
+
+    // --- Cell history popovers + keyboard shortcuts ---
+    let altPressed = false;
+    let historyEnabled = false;
+    let historyPop;
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Alt') altPressed = true;
+      if (e.altKey && e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        historyEnabled = !historyEnabled;
+        live.textContent = historyEnabled ? 'History mode pinned on' : 'History mode off';
+      }
+      if (e.ctrlKey && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        cliInput.focus();
+        cliInput.select();
+      }
+    });
+    window.addEventListener('keyup', e => {
+      if (e.key === 'Alt') altPressed = false;
+      if (!e.altKey && !historyEnabled) hideHistory();
+    });
+
+    function hideHistory() {
+      if (historyPop && historyPop.parentNode) historyPop.parentNode.removeChild(historyPop);
+      historyPop = null;
+    }
+
+    function showHistory(target, items) {
+      hideHistory();
+      historyPop = document.createElement('div');
+      historyPop.className = 'dt-history-pop';
+      items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'dt-history-row';
+        row.innerHTML = `<span>${it.at}</span><span>${it.val}</span>`;
+        historyPop.appendChild(row);
+      });
+      document.body.appendChild(historyPop);
+      const rect = target.getBoundingClientRect();
+      historyPop.style.left = `${rect.right + 8}px`;
+      historyPop.style.top = `${rect.top}px`;
+    }
+
+    document.querySelectorAll('.dt-has-history').forEach(cell => {
+      cell.addEventListener('mouseenter', () => {
+        if (!(historyEnabled || altPressed)) return;
+        try {
+          const data = JSON.parse(cell.dataset.history || '[]');
+          if (data.length) showHistory(cell, data);
+        } catch (e) {}
+      });
+      cell.addEventListener('mouseleave', hideHistory);
+    });
+
+    // Restore CLI query + wire presets
+    const savedQuery = localStorage.getItem(CLI_QUERY_KEY) || '';
+    if (savedQuery) cliInput.value = savedQuery;
+    document.querySelectorAll('.dt-cli-presets button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cliInput.value = btn.dataset.query || '';
+        localStorage.setItem(CLI_QUERY_KEY, cliInput.value);
+        applyFilters();
+        cliInput.focus();
+      });
+    });
+
+    applyFilters();
+    restoreOrder();
+  </script>
+</body>
+</html>

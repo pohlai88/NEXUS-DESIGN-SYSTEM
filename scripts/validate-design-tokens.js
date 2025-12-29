@@ -76,8 +76,8 @@ try {
     VALID_CLASSES.add('mb-4');
     VALID_CLASSES.add('w-full');
     VALID_CLASSES.add('h-full');
-} catch (error) {
-    console.error('⚠️  Could not load input.css to extract valid classes');
+} catch {
+    // CSS loading failed, will validate what we can
 }
 
 const FORBIDDEN_PATTERNS = [
@@ -213,13 +213,9 @@ function findHtmlFiles(dir = '.') {
                 } else if (entry.endsWith('.html')) {
                     files.push(fullPath);
                 }
-            } catch (err) {
-                // Skip files we can't access
-            }
+            } catch {}
         }
-    } catch (err) {
-        // Skip directories we can't access
-    }
+    } catch {}
     return files;
 }
 

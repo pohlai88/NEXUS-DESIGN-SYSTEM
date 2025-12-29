@@ -135,6 +135,8 @@ fs.writeFileSync(
 );
 
 // Generate TypeScript definitions
+// Note: Function kept for future TypeScript definitions export
+// eslint-disable-next-line no-unused-vars
 function generateTypeScript(tokens, indent = 0) {
     const spaces = '  '.repeat(indent);
     let output = '';
@@ -148,16 +150,7 @@ function generateTypeScript(tokens, indent = 0) {
             output += generateTypeScript(value, indent + 1);
             output += `${spaces}},\n`;
         } else {
-            // Determine type
-            let type = 'string';
-            if (value.startsWith('var(')) {
-                type = 'string'; // CSS variable reference
-            } else if (/^\d+(\.\d+)?(px|rem|em|%)?$/.test(value)) {
-                type = 'string'; // CSS value
-            } else if (value === 'none' || value === 'auto') {
-                type = 'string';
-            }
-
+            // Token value (always stringified as JSON)
             output += `${spaces}${camelKey}: ${JSON.stringify(value)};\n`;
         }
     });

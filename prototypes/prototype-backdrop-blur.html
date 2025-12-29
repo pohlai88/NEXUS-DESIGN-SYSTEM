@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Backdrop Blur (Myna UI)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* Backdrop blur scale derived from Figma node 14:19 */
+    :root {
+      --backdrop-blur-none: 0px;
+      --backdrop-blur-xs: 2px;
+      --backdrop-blur-sm: 4px;
+      --backdrop-blur-md: 6px;
+      --backdrop-blur-lg: 8px;
+      --backdrop-blur-xl: 12px;
+      --backdrop-blur-2xl: 20px;
+      --backdrop-blur-3xl: 32px;
+      --backdrop-box-size: 96px;
+      --backdrop-box-radius: var(--radius-control, 8px);
+      --backdrop-surface: rgba(255, 255, 255, 0.14);
+      --backdrop-stage-radius: var(--radius-panel, 20px);
+    }
+
+    /* Stage visuals */
+    .backdrop-stage {
+      position: relative;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--backdrop-stage-radius);
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--color-paper) 0%, color-mix(in oklab, var(--color-paper) 75%, var(--color-lux) 25%) 100%);
+    }
+
+    .backdrop-stage__bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("https://www.figma.com/api/mcp/asset/022eb18d-d3c4-4a11-a8de-a873e3bda897");
+      background-size: cover;
+      background-position: center;
+      filter: saturate(110%) contrast(102%);
+      opacity: 0.9;
+    }
+
+    .backdrop-stage__scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12));
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .backdrop-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--spacing-7);
+      padding: var(--spacing-8);
+    }
+
+    .backdrop-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3);
+      align-items: center;
+      color: var(--color-lux);
+      text-align: center;
+    }
+
+    .backdrop-box {
+      width: var(--backdrop-box-size);
+      height: var(--backdrop-box-size);
+      border-radius: var(--backdrop-box-radius);
+      background: var(--backdrop-surface);
+      border: 1px solid color-mix(in oklab, var(--color-stroke) 70%, var(--color-lux) 30%);
+      display: grid;
+      place-items: center;
+      color: var(--color-lux);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(var(--backdrop-blur-none));
+      -webkit-backdrop-filter: blur(var(--backdrop-blur-none));
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .backdrop-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-clay);
+      letter-spacing: 0.02em;
+    }
+
+    /* Backdrop blur utilities */
+    .na-backdrop-blur-none { backdrop-filter: blur(var(--backdrop-blur-none)); -webkit-backdrop-filter: blur(var(--backdrop-blur-none)); }
+    .na-backdrop-blur-xs { backdrop-filter: blur(var(--backdrop-blur-xs)); -webkit-backdrop-filter: blur(var(--backdrop-blur-xs)); }
+    .na-backdrop-blur-sm { backdrop-filter: blur(var(--backdrop-blur-sm)); -webkit-backdrop-filter: blur(var(--backdrop-blur-sm)); }
+    .na-backdrop-blur-md { backdrop-filter: blur(var(--backdrop-blur-md)); -webkit-backdrop-filter: blur(var(--backdrop-blur-md)); }
+    .na-backdrop-blur-lg { backdrop-filter: blur(var(--backdrop-blur-lg)); -webkit-backdrop-filter: blur(var(--backdrop-blur-lg)); }
+    .na-backdrop-blur-xl { backdrop-filter: blur(var(--backdrop-blur-xl)); -webkit-backdrop-filter: blur(var(--backdrop-blur-xl)); }
+    .na-backdrop-blur-2xl { backdrop-filter: blur(var(--backdrop-blur-2xl)); -webkit-backdrop-filter: blur(var(--backdrop-blur-2xl)); }
+    .na-backdrop-blur-3xl { backdrop-filter: blur(var(--backdrop-blur-3xl)); -webkit-backdrop-filter: blur(var(--backdrop-blur-3xl)); }
+
+    /* Usage grid */
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--spacing-6);
+      padding: var(--spacing-6);
+    }
+
+    .usage-card {
+      padding: var(--spacing-6);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+    }
+
+    .glass-card {
+      position: relative;
+      border-radius: var(--radius-card);
+      border: 1px solid color-mix(in oklab, var(--color-lux) 18%, var(--color-paper) 82%);
+      background: rgba(18, 18, 20, 0.75);
+      color: var(--color-lux);
+      padding: var(--spacing-5);
+      backdrop-filter: blur(var(--backdrop-blur-xl));
+      -webkit-backdrop-filter: blur(var(--backdrop-blur-xl));
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.32);
+    }
+
+    .hover-blur {
+      transition: backdrop-filter 200ms var(--ease-premium, ease), -webkit-backdrop-filter 200ms var(--ease-premium, ease);
+    }
+
+    .hover-blur:hover {
+      backdrop-filter: blur(var(--backdrop-blur-lg));
+      -webkit-backdrop-filter: blur(var(--backdrop-blur-lg));
+    }
+  </style>
+</head>
+
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">🧊</div>
+        <div>
+          <div class="na-brand-title">Backdrop Blur</div>
+          <div class="na-metadata-small">Myna UI • Figma 14:19</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#scale" aria-current="page">Scale</a>
+      <a class="na-nav-item" href="#examples">Examples</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <a class="na-nav-item" href="#usage">Usage</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Headless • Semantic • Drift-Proof</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Backdrop Blur System</h1>
+            <p class="na-metadata">Background blur scale from none → 3xl using design tokens</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="na-content" id="scale">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Blur Scale</h2>
+              <p class="na-metadata">Matches Figma: none, xs, sm, md, lg, xl, 2xl, 3xl</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="backdrop-stage">
+            <div class="backdrop-stage__bg" aria-hidden="true"></div>
+            <div class="backdrop-stage__scrim" aria-hidden="true"></div>
+            <div class="backdrop-grid">
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-none">0px</div>
+                <div class="backdrop-label">backdrop-blur-none</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-xs">2px</div>
+                <div class="backdrop-label">backdrop-blur-xs</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-sm">4px</div>
+                <div class="backdrop-label">backdrop-blur-sm</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-md">6px</div>
+                <div class="backdrop-label">backdrop-blur-md</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-lg">8px</div>
+                <div class="backdrop-label">backdrop-blur-lg</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-xl">12px</div>
+                <div class="backdrop-label">backdrop-blur-xl</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-2xl">20px</div>
+                <div class="backdrop-label">backdrop-blur-2xl</div>
+              </div>
+              <div class="backdrop-item">
+                <div class="backdrop-box na-backdrop-blur-3xl">32px</div>
+                <div class="backdrop-label">backdrop-blur-3xl</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="examples">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Real-World Usage</h2>
+              <p class="na-metadata">Glass, overlays, and interactive treatments</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <div class="usage-card">
+              <h4 class="na-h5">Modal Backdrop</h4>
+              <p class="na-metadata">Frosted overlay behind dialogs</p>
+              <div style="margin-top: var(--spacing-4); position: relative; height: 120px; border-radius: var(--radius-panel); overflow: hidden;">
+                <div style="position: absolute; inset: 0; background-image: linear-gradient(135deg, var(--color-success), var(--color-info));"></div>
+                <div class="na-backdrop-blur-sm" style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.35);"></div>
+                <div class="na-panel" style="position: absolute; inset: 16px; display: grid; place-items: center; text-align: center;">Dialog content</div>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Glass Card</h4>
+              <p class="na-metadata">Modern frosted glass panel</p>
+              <div style="margin-top: var(--spacing-4); position: relative; overflow: hidden; border-radius: var(--radius-card);">
+                <div style="position: absolute; inset: 0; background-image: linear-gradient(45deg, var(--color-warning), var(--color-error));"></div>
+                <div class="glass-card">Glass surface with blur-xl backdrop</div>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Navigation Bar</h4>
+              <p class="na-metadata">Pinned translucent nav</p>
+              <div style="margin-top: var(--spacing-4); position: relative; overflow: hidden; border-radius: var(--radius-panel);">
+                <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--color-paper-2), var(--color-paper));"></div>
+                <div class="na-backdrop-blur-lg" style="position: relative; padding: var(--spacing-4); border-bottom: 1px solid var(--color-stroke); display: flex; gap: var(--spacing-4);">
+                  <span class="na-metadata">Home</span>
+                  <span class="na-metadata">Components</span>
+                  <span class="na-metadata">Themes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Hover Reveal</h4>
+              <p class="na-metadata">Interactive blur-on-hover</p>
+              <div style="margin-top: var(--spacing-4); position: relative; overflow: hidden; border-radius: var(--radius-card);">
+                <div style="position: absolute; inset: 0; background-image: linear-gradient(135deg, var(--color-info), var(--color-gold));"></div>
+                <div class="na-backdrop-blur-xs hover-blur" style="position: relative; padding: var(--spacing-5); background: rgba(0, 0, 0, 0.35); color: var(--color-lux);">Hover me to increase blur</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">Backdrop blur variables</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="na-panel">
+            <h4 class="na-h5">Blur Tokens</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>--backdrop-blur-none: 0px;
+--backdrop-blur-xs: 2px;
+--backdrop-blur-sm: 4px;
+--backdrop-blur-md: 6px;
+--backdrop-blur-lg: 8px;
+--backdrop-blur-xl: 12px;
+--backdrop-blur-2xl: 20px;
+--backdrop-blur-3xl: 32px;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Code Usage</h2>
+              <p class="na-metadata">Semantic classes and CSS variables</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-5);">
+            <div class="na-panel">
+              <h4 class="na-h5">Semantic Classes</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>&lt;div class="na-backdrop-blur-none"&gt;0px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-xs"&gt;2px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-sm"&gt;4px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-md"&gt;6px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-lg"&gt;8px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-xl"&gt;12px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-2xl"&gt;20px&lt;/div&gt;
+&lt;div class="na-backdrop-blur-3xl"&gt;32px&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Using Tokens in CSS</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>.modal-backdrop {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(var(--backdrop-blur-sm));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur-sm));
+}
+
+glass-card {
+  backdrop-filter: blur(var(--backdrop-blur-xl));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur-xl));
+}
+
+.nav-blur {
+  backdrop-filter: blur(var(--backdrop-blur-lg));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur-lg));
+}</code></pre>
+            </div>
+
+            <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 12%, var(--color-paper) 88%); border-color: var(--color-gold);">
+              <h4 class="na-h5">Figma → Neo-Analog</h4>
+              <div class="na-metadata" style="margin-top: var(--spacing-2);">
+                ❌ backdrop-blur-[var(--blur/xs,2px)] → ✅ .na-backdrop-blur-xs / blur(var(--backdrop-blur-xs))
+              </div>
+              <div class="na-metadata" style="margin-top: var(--spacing-1_5);">
+                ❌ backdrop-blur-[var(--blur/3xl,32px)] → ✅ .na-backdrop-blur-3xl / blur(var(--backdrop-blur-3xl))
+              </div>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Compliance Checklist</h4>
+              <div class="na-metadata">✓ Semantic classes only • ✓ Design tokens • ✓ No arbitrary Tailwind values • ✓ Matches Figma 14:19</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Backdrop Blur • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • Drift-Proof</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

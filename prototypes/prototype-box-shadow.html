@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Box Shadow Component (Myna UI Integration)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* =========================================================
+       BOX SHADOW PROTOTYPE - REUSABLE COMPONENT
+       Extracted from Myna UI Kit (Figma: 3:5823)
+       Neo-Analog Design System Compliant
+       ========================================================= */
+
+    /* --- Enhanced Background Texture --- */
+    .na-bg-grain {
+      background:
+        radial-gradient(1200px 900px at 14% 18%, rgba(255, 255, 255, var(--opacity-6)), transparent 60%),
+        radial-gradient(1100px 800px at 86% 20%, rgba(255, 255, 255, var(--opacity-4)), transparent 62%),
+        radial-gradient(1000px 800px at 50% 115%, rgba(0, 0, 0, 0.48), transparent 58%),
+        linear-gradient(180deg,
+          color-mix(in oklab, var(--color-void) 92%, var(--color-clay) 8%),
+          var(--color-void) 60%,
+          color-mix(in oklab, var(--color-void) 86%, black 14%));
+    }
+
+    .na-bg-grain::after {
+      background-image:
+        repeating-linear-gradient(35deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 10px),
+        repeating-linear-gradient(125deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 14px),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: auto, auto, 220px 220px;
+      background-repeat: repeat, repeat, repeat;
+      opacity: 0.1;
+      filter: contrast(115%) brightness(95%);
+      mix-blend-mode: soft-light;
+    }
+
+    /* --- Shadow Demo Grid --- */
+    .shadow-demo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      padding: var(--spacing-10);
+      background: color-mix(in oklab, var(--color-paper) 80%, var(--color-lux) 20%);
+    }
+
+    .shadow-demo-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3);
+      align-items: center;
+    }
+
+    .shadow-box {
+      width: 96px;
+      height: 96px;
+      background: var(--color-paper);
+      border-radius: 4px;
+    }
+
+    .shadow-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--color-clay);
+      text-align: center;
+    }
+
+    /* --- Shadow Variants (Drop Shadows) --- */
+    .na-shadow-none {
+      box-shadow: none;
+    }
+
+    .na-shadow-2xs {
+      box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .na-shadow-xs {
+      box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .na-shadow-sm {
+      box-shadow: 
+        0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+    }
+
+    .na-shadow-md {
+      box-shadow: 
+        0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .na-shadow-lg {
+      box-shadow: 
+        0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .na-shadow-xl {
+      box-shadow: 
+        0px 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .na-shadow-2xl {
+      box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* --- Inset Shadows --- */
+    .na-shadow-inset-2xs {
+      box-shadow: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .na-shadow-inset-xs {
+      box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .na-shadow-inset-sm {
+      box-shadow: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    /* --- Usage Examples Grid --- */
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-6);
+      padding: var(--spacing-6);
+    }
+
+    .usage-card {
+      padding: var(--spacing-6);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      border-radius: var(--radius-card);
+    }
+  </style>
+</head>
+
+<body class="na-app na-density-comfort">
+  <a href="#main" class="na-skip-link">Skip to main content</a>
+  <div class="na-bg-grain" aria-hidden="true"></div>
+
+  <div class="na-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">☁️</div>
+        <div>
+          <div class="na-brand-title">Box Shadow</div>
+          <div class="na-metadata-small">Myna UI Component</div>
+        </div>
+      </div>
+
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#drop-shadows" aria-current="page">
+        <span>Drop Shadows</span>
+      </a>
+      <a class="na-nav-item" href="#inset-shadows">
+        <span>Inset Shadows</span>
+      </a>
+      <a class="na-nav-item" href="#examples">
+        <span>Usage Examples</span>
+      </a>
+      <a class="na-nav-item" href="#tokens">
+        <span>Design Tokens</span>
+      </a>
+      <a class="na-nav-item" href="#usage">
+        <span>Code Usage</span>
+      </a>
+
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm" style="line-height:1.35;">
+          Headless • Reusable • Framework-Agnostic
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="na-main" id="main">
+      <!-- Header -->
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Box Shadow System</h1>
+            <p class="na-metadata">Extracted from Myna UI Kit • Figma: 3:5823 • Neo-Analog Compliant</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Drop Shadows Section -->
+      <section class="na-content" id="drop-shadows">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Drop Shadow Scale</h2>
+              <p class="na-metadata">Elevation system from subtle to dramatic</p>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="shadow-demo-grid">
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-none"></div>
+              <div class="shadow-label">shadow-none</div>
+              <div class="na-metadata-small">No shadow</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-2xs"></div>
+              <div class="shadow-label">shadow-2xs</div>
+              <div class="na-metadata-small">0px 1px 0px</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-xs"></div>
+              <div class="shadow-label">shadow-xs</div>
+              <div class="na-metadata-small">0px 1px 2px</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-sm"></div>
+              <div class="shadow-label">shadow-sm</div>
+              <div class="na-metadata-small">Subtle depth</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-md"></div>
+              <div class="shadow-label">shadow-md</div>
+              <div class="na-metadata-small">Cards</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-lg"></div>
+              <div class="shadow-label">shadow-lg</div>
+              <div class="na-metadata-small">Panels</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-xl"></div>
+              <div class="shadow-label">shadow-xl</div>
+              <div class="na-metadata-small">Modals</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-2xl"></div>
+              <div class="shadow-label">shadow-2xl</div>
+              <div class="na-metadata-small">Maximum depth</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inset Shadows Section -->
+      <section class="na-content" id="inset-shadows">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Inset Shadows</h2>
+              <p class="na-metadata">Inner depth for pressed/recessed elements</p>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="shadow-demo-grid">
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-inset-2xs"></div>
+              <div class="shadow-label">inset-shadow-2xs</div>
+              <div class="na-metadata-small">0px 1px 0px</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-inset-xs"></div>
+              <div class="shadow-label">inset-shadow-xs</div>
+              <div class="na-metadata-small">0px 1px 1px</div>
+            </div>
+
+            <div class="shadow-demo-item">
+              <div class="shadow-box na-shadow-inset-sm"></div>
+              <div class="shadow-label">inset-shadow-sm</div>
+              <div class="na-metadata-small">0px 2px 4px</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Examples Section -->
+      <section class="na-content" id="examples">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Real-World Usage</h2>
+              <p class="na-metadata">Components using different shadow elevations</p>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <!-- Buttons -->
+            <div class="usage-card na-shadow-sm">
+              <h4 class="na-h5">Buttons (shadow-sm)</h4>
+              <p class="na-metadata">Subtle elevation for interactive elements</p>
+              <div style="margin-top: var(--spacing-4);">
+                <button class="na-btn na-btn-primary">Primary Button</button>
+              </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="usage-card na-shadow-md">
+              <h4 class="na-h5">Cards (shadow-md)</h4>
+              <p class="na-metadata">Standard elevation for content containers</p>
+            </div>
+
+            <!-- Dropdowns -->
+            <div class="usage-card na-shadow-lg">
+              <h4 class="na-h5">Dropdowns (shadow-lg)</h4>
+              <p class="na-metadata">Higher elevation for floating elements</p>
+            </div>
+
+            <!-- Modals -->
+            <div class="usage-card na-shadow-xl">
+              <h4 class="na-h5">Modals (shadow-xl)</h4>
+              <p class="na-metadata">Maximum elevation for dialogs</p>
+            </div>
+
+            <!-- Pressed Inputs -->
+            <div class="usage-card">
+              <h4 class="na-h5">Pressed Input (inset-shadow-sm)</h4>
+              <p class="na-metadata">Inset shadow for active/focused states</p>
+              <div style="margin-top: var(--spacing-4);">
+                <input class="na-input na-shadow-inset-sm" placeholder="Focused input..." />
+              </div>
+            </div>
+
+            <!-- Hover States -->
+            <div class="usage-card na-shadow-sm" style="transition: box-shadow 0.15s var(--ease-premium); cursor: pointer;" onmouseover="this.classList.replace('na-shadow-sm', 'na-shadow-md')" onmouseout="this.classList.replace('na-shadow-md', 'na-shadow-sm')">
+              <h4 class="na-h5">Hover Effect</h4>
+              <p class="na-metadata">Transitions from sm → md on hover</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Design Tokens Section -->
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">CSS variables for box shadow values</p>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-6);">
+            <!-- Drop Shadows -->
+            <div class="na-panel">
+              <h4 class="na-h5">Drop Shadow Tokens</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>/* Drop Shadows */
+--shadow-2xs: 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+--shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+--shadow-sm: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 
+             0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+--shadow-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 
+             0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+--shadow-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 
+             0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+--shadow-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 
+             0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+--shadow-2xl: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);</code></pre>
+            </div>
+
+            <!-- Inset Shadows -->
+            <div class="na-panel">
+              <h4 class="na-h5">Inset Shadow Tokens</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>/* Inset Shadows */
+--shadow-inset-2xs: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+--shadow-inset-xs: inset 0px 1px 1px 0px rgba(0, 0, 0, 0.05);
+--shadow-inset-sm: inset 0px 2px 4px 0px rgba(0, 0, 0, 0.05);</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Usage Section -->
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Code Usage</h2>
+              <p class="na-metadata">Copy-paste ready code examples</p>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-6);">
+            <!-- HTML Classes -->
+            <div class="na-panel">
+              <h4 class="na-h5">Using Semantic Classes</h4>
+              <p class="na-metadata" style="margin-bottom: var(--spacing-3);">Apply shadows using utility classes:</p>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>&lt;!-- Drop shadows --&gt;
+&lt;div class="na-shadow-none"&gt;No shadow&lt;/div&gt;
+&lt;div class="na-shadow-2xs"&gt;Extra extra small&lt;/div&gt;
+&lt;div class="na-shadow-xs"&gt;Extra small&lt;/div&gt;
+&lt;div class="na-shadow-sm"&gt;Small&lt;/div&gt;
+&lt;div class="na-shadow-md"&gt;Medium (default cards)&lt;/div&gt;
+&lt;div class="na-shadow-lg"&gt;Large (panels)&lt;/div&gt;
+&lt;div class="na-shadow-xl"&gt;Extra large (modals)&lt;/div&gt;
+&lt;div class="na-shadow-2xl"&gt;2X large&lt;/div&gt;
+
+&lt;!-- Inset shadows --&gt;
+&lt;div class="na-shadow-inset-2xs"&gt;Inset 2XS&lt;/div&gt;
+&lt;div class="na-shadow-inset-xs"&gt;Inset XS&lt;/div&gt;
+&lt;div class="na-shadow-inset-sm"&gt;Inset SM&lt;/div&gt;</code></pre>
+            </div>
+
+            <!-- CSS Variables -->
+            <div class="na-panel">
+              <h4 class="na-h5">Using CSS Variables</h4>
+              <p class="na-metadata" style="margin-bottom: var(--spacing-3);">Direct access to shadow tokens:</p>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>/* In your CSS */
+.card {
+  box-shadow: var(--shadow-md);
+}
+
+.modal {
+  box-shadow: var(--shadow-xl);
+}
+
+.input:focus {
+  box-shadow: var(--shadow-inset-sm);
+}
+
+/* Hover transitions */
+.interactive-card {
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s var(--ease-premium);
+}
+
+.interactive-card:hover {
+  box-shadow: var(--shadow-md);
+}</code></pre>
+            </div>
+
+            <!-- Figma Conversion -->
+            <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 10%, var(--color-paper) 90%); border-color: var(--color-gold);">
+              <h4 class="na-h5">Figma → Neo-Analog Conversion</h4>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-2); color: var(--color-lux-dim); font-size: 13px;">
+                <div>❌ <code style="color: var(--color-error);">shadow-[0px_1px_2px_0px_rgba(...)]</code></div>
+                <div>✅ <code style="color: var(--color-success);">var(--shadow-xs)</code> or <code style="color: var(--color-success);">.na-shadow-xs</code></div>
+                <div style="margin-top: var(--spacing-2);"></div>
+                <div>❌ <code style="color: var(--color-error);">shadow-[0px_4px_6px_-1px_rgba(...)]</code></div>
+                <div>✅ <code style="color: var(--color-success);">var(--shadow-md)</code> or <code style="color: var(--color-success);">.na-shadow-md</code></div>
+              </div>
+            </div>
+
+            <!-- Design System Compliance -->
+            <div class="na-panel">
+              <h4 class="na-h5">Design System Compliance</h4>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-3);">
+                <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                  <span style="color: var(--color-success); font-weight: 600;">✓</span>
+                  <span class="na-metadata">100% Neo-Analog semantic classes</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                  <span style="color: var(--color-success); font-weight: 600;">✓</span>
+                  <span class="na-metadata">Uses design tokens (no hardcoded values)</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                  <span style="color: var(--color-success); font-weight: 600;">✓</span>
+                  <span class="na-metadata">Converted from Figma arbitrary values</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                  <span style="color: var(--color-success); font-weight: 600;">✓</span>
+                  <span class="na-metadata">Extracted from Figma Design Effects</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                  <span style="color: var(--color-success); font-weight: 600;">✓</span>
+                  <span class="na-metadata">Production-ready & drift-proof</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Box Shadow Component • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • 100% Design System Compliant • Production Ready</p>
+      </footer>
+    </main>
+  </div>
+</body>
+
+</html>

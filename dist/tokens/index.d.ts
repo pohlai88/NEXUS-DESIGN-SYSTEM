@@ -11,7 +11,7 @@ export const tokens = {
       "Analog Base Palette) ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "color": {
                   "void": "#09090b"
@@ -25,8 +25,8 @@ export const tokens = {
     " Typography Primitives ": {
       "": {
         "": {
-          " */\r\n  /* Font Families ": {
-            " Figma Standard Naming (100% Compliance) */\r\n  ": {
+          " */\n  /* Font Families ": {
+            " Figma Standard Naming (100% Compliance) */\n  ": {
               "": {
                 "font": {
                   "family": {
@@ -43,10 +43,10 @@ export const tokens = {
       " Figma Standard Scale (0px through 384px) ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "spacing0": {
-                  "0": "0px"
+                  "0": "0"
                 }
               }
             }
@@ -58,7 +58,7 @@ export const tokens = {
       " Figma Standard Scale ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "radius": {
                   "none": "0"
@@ -73,7 +73,7 @@ export const tokens = {
       " Figma Standard Scale ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "shadow": {
                   "none": "none"
@@ -88,7 +88,7 @@ export const tokens = {
       " Figma Standard Scale ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "blur": {
                   "none": "0"
@@ -103,7 +103,7 @@ export const tokens = {
       " Figma Standard Scale ": {
         "": {
           "": {
-            " */\r\n  ": {
+            " */\n  ": {
               "": {
                 "opacity0": {
                   "0": "0"
@@ -118,8 +118,8 @@ export const tokens = {
       " Figma Standard ": {
         "": {
           "": {
-            " */\r\n  /* Easing Functions ": {
-              " Figma Standard */\r\n  ": {
+            " */\n  /* Easing Functions ": {
+              " Figma Standard */\n  ": {
                 "": {
                   "ease": {
                     "linear": "linear"
@@ -136,7 +136,7 @@ export const tokens = {
         " Figma Standard Scale ": {
           "": {
             "": {
-              " */\r\n  ": {
+              " */\n  ": {
                 "": {
                   "z0": {
                     "0": "0"
@@ -151,7 +151,7 @@ export const tokens = {
     " Color Semantic Mappings (Figma Standard) ": {
       "": {
         "": {
-          " */\r\n  /* Base Theme */\r\n  ": {
+          " */\n  /* Base Theme */\n  ": {
             "": {
               "color": {
                 "background": "var(--color-void)"
@@ -165,8 +165,8 @@ export const tokens = {
       "Compliant Extension) ": {
         "": {
           "": {
-            " */\r\n  /* These are valid Figma extensions ": {
-              " semantic tokens mapped to standard scale */\r\n  ": {
+            " */\n  /* These are valid Figma extensions ": {
+              " semantic tokens mapped to standard scale */\n  ": {
                 "": {
                   "radius": {
                     "card": "var(--radius-xl)"
@@ -182,8 +182,8 @@ export const tokens = {
       "Compliant Extension) ": {
         "": {
           "": {
-            " */\r\n  /* Semantic opacity tokens mapped to standard scale ": {
-              " valid Figma extensions */\r\n  ": {
+            " */\n  /* Semantic opacity tokens mapped to standard scale ": {
+              " valid Figma extensions */\n  ": {
                 "": {
                   "opacity": {
                     "disabled": "var(--opacity-50)"
@@ -195,14 +195,14 @@ export const tokens = {
         }
       }
     },
-    " Typography Extensions": "Data & Metadata (Figma-Compliant Extension) --- */\r\n  \r\n  \r\n  --data-size: 0.875rem",
+    " Typography Extensions": "Data & Metadata (Figma-Compliant Extension) --- */\n  \n  \n  --data-size: 0.875rem",
     " Animation Extensions (Figma": {
       "Compliant Extension) ": {
         "": {
           "": {
-            " */\r\n  /* Neo": {
+            " */\n  /* Neo": {
               "Analog animation definitions using custom easing ": {
-                " valid Figma extensions */\r\n  ": {
+                " valid Figma extensions */\n  ": {
                   "": {
                     "animate": {
                       "fade": {
@@ -226,7 +226,7 @@ export const tokens = {
     "paperhover": {
       "hover": "#27272a"
     },
-    "white": "#ffffff",
+    "white": "#fff",
     "lux": "#f4f4f5",
     "luxdim": {
       "dim": "#a1a1aa"
@@ -307,8 +307,8 @@ export const tokens = {
     }
   },
   "fontFamily": {
-    "serif": "\"Playfair Display\", Georgia, serif",
-    "mono": "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Courier New\", monospace"
+    "serif": "\"Playfair Display\", georgia, serif",
+    "mono": "\"JetBrains Mono\", ui-monospace, sfmono-regular, menlo, monaco, consolas, \"Courier New\", monospace"
   },
   "font": {
     "weight": {
@@ -463,23 +463,23 @@ export const tokens = {
     "lg": "0.5rem",
     "xl": "0.75rem",
     "full": "9999px",
-    "xl */\r\n  ": {
+    "xl */\n  ": {
       "": {
         "radius": {
           "panel": "var(--radius-2xl)"
         }
       }
     },
-    "lg */\r\n\r\n  /* ": {
+    "lg */\n\n  /* ": {
       "": {
         "": {
           " Custom Shadow Tokens (Figma": {
             "Compliant Extension) ": {
               "": {
                 "": {
-                  " */\r\n  /* Neo": {
+                  " */\n  /* Neo": {
                     "Analog signature shadows ": {
-                      " valid Figma extensions */\r\n  ": {
+                      " valid Figma extensions */\n  ": {
                         "": {
                           "shadow": {
                             "card": "0 1px 2px -1px rgba(0, 0, 0, 0.5), 0 1px 0 0 rgba(255, 255, 255, 0.03) inset"
@@ -644,44 +644,44 @@ export const tokens = {
     "tooltip": "1070",
     "toast": "1080"
   },
-  "radius2xl */\r\n  ": {
+  "radius2xl */\n  ": {
     "": {
       "radius": {
         "control": "var(--radius-lg)"
       }
     }
   },
-  "opacity50 */\r\n  ": {
+  "opacity50 */\n  ": {
     "": {
       "opacity": {
         "hover": "var(--opacity-80)"
       }
     }
   },
-  "opacity80 */\r\n  ": {
+  "opacity80 */\n  ": {
     "": {
       "opacity": {
         "pressed": "var(--opacity-60)"
       }
     }
   },
-  "opacity60 */\r\n  ": {
+  "opacity60 */\n  ": {
     "": {
       "opacity": {
         "focus": "var(--opacity-90)"
       }
     }
   },
-  "opacity90 */\r\n\r\n  /* ": {
+  "opacity90 */\n\n  /* ": {
     "": {
       "": {
         " Custom Easing Functions (Figma": {
           "Compliant Extension) ": {
             "": {
               "": {
-                " */\r\n  /* Neo": {
+                " */\n  /* Neo": {
                   "Analog premium easing curves ": {
-                    " valid Figma extensions */\r\n  ": {
+                    " valid Figma extensions */\n  ": {
                       "": {
                         "ease": {
                           "premium": "cubic-bezier(0.2, 0, 0, 1)"

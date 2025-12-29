@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Filter: Phantom Input Pattern Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ========== Phantom Input: Core Setup ========== */
+        
+        /* Both layers must share EXACT same typography */
+        #cli-input,
+        #cli-highlighter {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0px;
+            /* Critical: Match padding/border to ensure pixel-perfect alignment */
+            padding: 8px 12px;
+            border: 1px solid transparent;
+        }
+
+        /* The transparent input with visible caret */
+        #cli-input {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            background: transparent;
+            color: transparent;
+            caret-color: #09090b;
+            resize: none;
+            outline: none;
+        }
+
+        #cli-input::placeholder {
+            color: transparent;
+        }
+
+        #cli-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 1px #2563eb;
+        }
+
+        /* The background layer with highlighted tokens */
+        #cli-highlighter {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            color: #09090b;
+            pointer-events: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background-color: #f8fafc;
+        }
+
+        /* Neo-Analog Syntax Colors */
+        .syntax-key {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .syntax-op {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        .syntax-val {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        .syntax-err {
+            color: #dc2626;
+            text-decoration: wavy underline;
+        }
+
+        /* Container must be relative positioned */
+        .cli-input-container {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Demo UI styling */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .demo-section {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #f8fafc;
+        }
+
+        .demo-section h3 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-output {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        .token-line {
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .token-key-demo {
+            color: #60a5fa;
+        }
+
+        .token-op-demo {
+            color: #fbbf24;
+        }
+
+        .token-val-demo {
+            color: #34d399;
+        }
+
+        .token-raw-demo {
+            color: #cbd5e1;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .code-sample {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        /* Placeholder text in input */
+        #cli-input::placeholder {
+            color: transparent;
+        }
+
+        .cli-placeholder {
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            color: #cbd5e1;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen p-8">
+        <div class="max-w-2xl mx-auto">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-900 mb-2">
+                    CLI Filter: Phantom Input Pattern
+                </h1>
+                <p class="text-slate-600">
+                    Syntax-highlighted search input using the "phantom input" technique.
+                    Type to see live token highlighting with Neo-Analog colors.
+                </p>
+            </header>
+
+            <!-- ========== DEMO ========== -->
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 mb-8">
+                <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4">
+                    Try It Out
+                </h2>
+
+                <div class="cli-input-container">
+                    <!-- Background layer with syntax highlighting -->
+                    <div id="cli-highlighter" aria-hidden="true"></div>
+
+                    <!-- Transparent input with visible caret -->
+                    <input 
+                        type="text" 
+                        id="cli-input"
+                        placeholder="> filter data..."
+                        spellcheck="false" 
+                        autocomplete="off">
+                </div>
+
+                <p class="text-xs text-slate-500 mt-3">
+                    💡 Try: <code class="bg-slate-100 px-2 py-1 rounded">status:active owner:alice >100</code>
+                </p>
+            </div>
+
+            <!-- ========== OUTPUT PANELS ========== -->
+            <div class="demo-grid">
+                <!-- Tokens Panel -->
+                <div class="demo-section">
+                    <h3>Parsed Tokens</h3>
+                    <div id="tokens-output" class="demo-output">
+                        <div class="token-line text-slate-500">(type here to see tokens)</div>
+                    </div>
+                </div>
+
+                <!-- Key-Value Panel -->
+                <div class="demo-section">
+                    <h3>Extracted Filters</h3>
+                    <div id="filters-output" class="demo-output">
+                        <div class="token-line text-slate-500">(type to extract filters)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== DOCUMENTATION ========== -->
+            <div class="mt-8 space-y-6">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">How It Works</h2>
+
+                    <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">🎯 The "Phantom Input" Trick</h3>
+                            <p>
+                                This demo uses a clever CSS technique: two perfectly overlapped layers:
+                            </p>
+                            <div class="code-sample">
+// Layer 1: Transparent input with visible caret
+&lt;input type="text" class="text-transparent caret-slate-900" /&gt;
+
+// Layer 2: Hidden div with HTML-highlighted tokens
+&lt;div class="absolute pointer-events-none"&gt;
+  &lt;span class="syntax-key"&gt;status:&lt;/span&gt;
+  &lt;span class="syntax-val"&gt;active&lt;/span&gt;
+&lt;/div&gt;
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">📝 Syntax Rules</h3>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Keys:</strong> <code class="bg-slate-100 px-1 rounded">word:</code> (e.g., <code class="bg-slate-100 px-1 rounded">status:</code>, <code class="bg-slate-100 px-1 rounded">owner:</code>)</li>
+                                <li><strong>Values:</strong> Single word or <code class="bg-slate-100 px-1 rounded">"quoted phrase"</code></li>
+                                <li><strong>Operators:</strong> <code class="bg-slate-100 px-1 rounded">&gt;</code>, <code class="bg-slate-100 px-1 rounded">&lt;</code>, <code class="bg-slate-100 px-1 rounded">=</code>, <code class="bg-slate-100 px-1 rounded">!=</code></li>
+                                <li><strong>Separator:</strong> Space between filters</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">🎨 Token Types (Colors)</h3>
+                            <div class="space-y-1">
+                                <div><span class="syntax-key">status:</span> — Key (Blue-600)</div>
+                                <div><span class="syntax-op">&gt;</span> — Operator (Amber-600)</div>
+                                <div><span class="syntax-val">active</span> — Value (Emerald-600)</div>
+                                <div><span class="syntax-err">error</span> — Error (Red-600)</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">⚡ Examples</h3>
+                            <div class="space-y-2 font-mono text-xs">
+                                <div><code class="bg-slate-100 px-2 py-1 rounded">status:active</code> — Filter by status</div>
+                                <div><code class="bg-slate-100 px-2 py-1 rounded">owner:alice priority:high</code> — Multiple filters</div>
+                                <div><code class="bg-slate-100 px-2 py-1 rounded">score:>80</code> — Numeric comparison</div>
+                                <div><code class="bg-slate-100 px-2 py-1 rounded">"high priority" owner:alice</code> — Quoted phrases</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">Integration Checklist</h2>
+                    <div class="instructions">
+                        <h3 class="font-semibold mb-2">To use this pattern in your project:</h3>
+                        <ol class="list-decimal list-inside space-y-1">
+                            <li>Copy the HTML structure (input + highlighter div)</li>
+                            <li>Copy the CSS (ensure font-family and padding match)</li>
+                            <li>Import the parser: <code>import { parseSearchInput, highlightCommand } from '@/lib/cli-parser'</code></li>
+                            <li>Wire the <code>input</code> event to update the highlighter</li>
+                            <li>Apply <code>filterData()</code> to your table/list on change</li>
+                            <li>Optional: Add autocomplete menu for better UX</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">Files Reference</h2>
+                    <div class="space-y-2 text-sm">
+                        <p><strong>lib/cli-parser.ts</strong> — Core parsing logic (functions and types)</p>
+                        <p><strong>lib/cli-commands.ts</strong> — Valid commands registry and autocomplete hints</p>
+                        <p><strong>docs/CLI_FILTER_COMMANDS.md</strong> — Complete specification of all filter keys</p>
+                        <p><strong>docs/CLI_FILTER_INTEGRATION.md</strong> — Step-by-step integration guide</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // Simple regex-based tokenizer (mirrors lib/cli-parser.ts)
+        function parseSearchInput(input) {
+            const tokens = [];
+            const regex = /([a-zA-Z0-9_-]+:)|([><=!]+)|(".*?"|[^"\s]+)|(\s+)/g;
+            let match;
+
+            while ((match = regex.exec(input)) !== null) {
+                const text = match[0];
+                let type = 'raw';
+
+                if (match[1]) type = 'key';
+                else if (match[2]) type = 'operator';
+                else if (match[3]) type = 'value';
+                else if (match[4]) type = 'space';
+
+                if (type !== 'space') {
+                    tokens.push({
+                        type,
+                        text,
+                        start: match.index,
+                        end: match.index + text.length
+                    });
+                }
+            }
+
+            return tokens;
+        }
+
+        // Convert tokens to HTML with color spans (mirrors lib/cli-parser.ts)
+        function highlightCommand(input) {
+            if (!input) return '';
+
+            const tokens = parseSearchInput(input);
+            if (tokens.length === 0) return escapeHtml(input);
+
+            let html = '';
+            let lastEnd = 0;
+
+            for (const token of tokens) {
+                // Add any whitespace before this token
+                if (token.start > lastEnd) {
+                    html += escapeHtml(input.slice(lastEnd, token.start));
+                }
+
+                // Add the colored token
+                const className = `syntax-${token.type}`;
+                html += `<span class="${className}">${escapeHtml(token.text)}</span>`;
+                lastEnd = token.end;
+            }
+
+            // Add any remaining text
+            if (lastEnd < input.length) {
+                html += escapeHtml(input.slice(lastEnd));
+            }
+
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Extract key-value pairs from tokens
+        function extractKeyValues(tokens) {
+            const result = {};
+            let currentKey = null;
+
+            for (const token of tokens) {
+                if (token.type === 'key') {
+                    currentKey = token.text.slice(0, -1); // Remove ':'
+                    result[currentKey] = [];
+                } else if (token.type === 'value' && currentKey) {
+                    // Remove quotes if present
+                    let value = token.text;
+                    if (value.startsWith('"') && value.endsWith('"')) {
+                        value = value.slice(1, -1);
+                    }
+                    result[currentKey].push(value);
+                }
+            }
+
+            return result;
+        }
+
+        // ========== WIRING ==========
+        const input = document.getElementById('cli-input');
+        const highlighter = document.getElementById('cli-highlighter');
+        const tokensOutput = document.getElementById('tokens-output');
+        const filtersOutput = document.getElementById('filters-output');
+
+        function updateView() {
+            const value = input.value;
+
+            // Update highlighter
+            highlighter.innerHTML = highlightCommand(value) || '<br>';
+
+            // Update tokens panel
+            const tokens = parseSearchInput(value);
+            if (tokens.length === 0) {
+                tokensOutput.innerHTML = '<div class="token-line text-slate-500">(type to parse tokens)</div>';
+            } else {
+                tokensOutput.innerHTML = tokens
+                    .map(t => `<div class="token-line">
+                        <span class="token-${t.type}-demo">${t.type}</span>: <code>"${escapeHtml(t.text)}"</code>
+                    </div>`)
+                    .join('');
+            }
+
+            // Update filters panel
+            const filters = extractKeyValues(tokens);
+            const filterEntries = Object.entries(filters);
+            if (filterEntries.length === 0) {
+                filtersOutput.innerHTML = '<div class="token-line text-slate-500">(type to extract filters)</div>';
+            } else {
+                filtersOutput.innerHTML = filterEntries
+                    .map(([key, values]) => `<div class="token-line">
+                        <span class="token-key-demo">${escapeHtml(key)}</span>: [${values.map(v => `"${escapeHtml(v)}"`).join(', ')}]
+                    </div>`)
+                    .join('');
+            }
+        }
+
+        input.addEventListener('input', updateView);
+
+        // Sync scrolling if needed
+        input.addEventListener('scroll', () => {
+            highlighter.scrollTop = input.scrollTop;
+            highlighter.scrollLeft = input.scrollLeft;
+        });
+
+        // Initialize
+        updateView();
+    </script>
+</body>
+</html>

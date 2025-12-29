@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Filter: Autocomplete Engine Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ========== Phantom Input: Core Setup ========== */
+        
+        #cli-input,
+        #cli-highlighter {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0px;
+            padding: 8px 12px;
+            border: 1px solid transparent;
+        }
+
+        #cli-input {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            background: transparent;
+            color: transparent;
+            caret-color: #09090b;
+            resize: none;
+            outline: none;
+        }
+
+        #cli-input::placeholder {
+            color: transparent;
+        }
+
+        #cli-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 1px #2563eb;
+        }
+
+        #cli-highlighter {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            color: #09090b;
+            pointer-events: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background-color: #f8fafc;
+        }
+
+        /* Neo-Analog Syntax Colors */
+        .syntax-key {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .syntax-op {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        .syntax-val {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        /* Container setup */
+        .cli-input-container {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Autocomplete Menu */
+        #cli-menu {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        #cli-menu li {
+            padding: 0.5rem 0.75rem;
+            transition: background-color 0.1s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        #cli-menu li:hover {
+            background-color: #f1f5f9;
+            border-left-color: #2563eb;
+        }
+
+        #cli-menu li.selected {
+            background-color: #eff6ff;
+            border-left-color: #2563eb;
+        }
+
+        #cli-menu .suggestion-label {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        #cli-menu .suggestion-type {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-left: auto;
+            padding-left: 1rem;
+        }
+
+        #cli-menu .suggestion-key {
+            color: #2563eb;
+        }
+
+        #cli-menu .suggestion-value {
+            color: #059669;
+        }
+
+        #cli-menu .suggestion-operator {
+            color: #d97706;
+        }
+
+        /* Demo styling */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .demo-section {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #f8fafc;
+        }
+
+        .demo-section h3 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-output {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        .token-line {
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .token-key-demo {
+            color: #60a5fa;
+        }
+
+        .token-op-demo {
+            color: #fbbf24;
+        }
+
+        .token-val-demo {
+            color: #34d399;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .keyboard-hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        kbd {
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 11px;
+            display: inline-block;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen p-8">
+        <div class="max-w-2xl mx-auto">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-900 mb-2">
+                    CLI Filter: Autocomplete Engine
+                </h1>
+                <p class="text-slate-600">
+                    Context-aware suggestions that enforce your command schema.
+                    The "Policeman" prevents invalid input.
+                </p>
+            </header>
+
+            <!-- ========== DEMO ========== -->
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 mb-8">
+                <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4">
+                    Try It Out
+                </h2>
+
+                <div class="cli-input-container">
+                    <!-- Background layer with syntax highlighting -->
+                    <div id="cli-highlighter" aria-hidden="true"></div>
+
+                    <!-- Transparent input with visible caret -->
+                    <input 
+                        type="text" 
+                        id="cli-input"
+                        placeholder="> filter data..."
+                        spellcheck="false" 
+                        autocomplete="off">
+
+                    <!-- Autocomplete Menu -->
+                    <ul id="cli-menu" 
+                        class="hidden absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-md py-2 mt-1 z-50 max-h-64 overflow-y-auto"
+                        role="listbox"
+                        aria-label="Autocomplete suggestions">
+                    </ul>
+                </div>
+
+                <div class="keyboard-hint">
+                    💡 <kbd>↓</kbd> <kbd>↑</kbd> to navigate • <kbd>Enter</kbd> to select • <kbd>Esc</kbd> to close
+                </div>
+                <p class="text-xs text-slate-500 mt-3">
+                    Try: Type "st" → see keys • Type "status:" → see values
+                </p>
+            </div>
+
+            <!-- ========== OUTPUT PANELS ========== -->
+            <div class="demo-grid">
+                <!-- Suggestions Panel -->
+                <div class="demo-section">
+                    <h3>Autocomplete Suggestions</h3>
+                    <div id="suggestions-output" class="demo-output">
+                        <div class="token-line text-slate-500">(type to see suggestions)</div>
+                    </div>
+                </div>
+
+                <!-- Context Panel -->
+                <div class="demo-section">
+                    <h3>Current Context</h3>
+                    <div id="context-output" class="demo-output">
+                        <div class="token-line text-slate-500">(context info)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== DOCUMENTATION ========== -->
+            <div class="mt-8 space-y-6">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">How Autocomplete Works</h2>
+
+                    <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">🧠 Context Detection</h3>
+                            <p>
+                                The engine analyzes your cursor position and determines:
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 mt-2">
+                                <li><strong>Are you typing a KEY?</strong> (e.g., "sta" → suggest keys starting with "sta")</li>
+                                <li><strong>Are you typing a VALUE?</strong> (e.g., "status:ac" → suggest values after the colon)</li>
+                                <li><strong>Do you need an OPERATOR?</strong> (e.g., "score:" → suggest <code>&gt;</code>, <code>&lt;</code>)</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">🚦 The Policeman Effect</h3>
+                            <p>
+                                Because we have a strict schema (<code>COMMAND_SCHEMA</code>), the engine:
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 mt-2">
+                                <li>Only suggests valid keys (no typos)</li>
+                                <li>Only suggests valid values for each key</li>
+                                <li>Suggests operators only for numeric/date fields</li>
+                                <li>Prevents invalid syntax like <code>status:>100</code></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">⚡ Smart Insertion</h3>
+                            <p>
+                                Notice the <code>insertText</code> includes auto-completion:
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 mt-2">
+                                <li><code>status</code> → inserts <code>status:</code> (auto-append colon)</li>
+                                <li><code>active</code> → inserts <code>active </code> (auto-append space for next command)</li>
+                                <li><code>&gt;</code> → inserts <code>&gt;</code> (operator, no space yet)</li>
+                            </ul>
+                            <p class="mt-2">This creates a <strong>rhythm</strong>: Type → Select → Type → Select</p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-2">⌨️ Keyboard Navigation</h3>
+                            <p>
+                                Full keyboard support for power users:
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 mt-2">
+                                <li><kbd>↓</kbd> Navigate down through suggestions</li>
+                                <li><kbd>↑</kbd> Navigate up through suggestions</li>
+                                <li><kbd>Enter</kbd> Select the highlighted suggestion</li>
+                                <li><kbd>Esc</kbd> Close the menu</li>
+                                <li><kbd>Tab</kbd> (Optional) Accept and move to next field</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">Example Workflows</h2>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>Simple Filter:</strong>
+                            <div class="text-slate-600 mt-1 font-mono text-xs">
+                                Type "st" → Select "status:" → Type "ac" → Select "active" → Done
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>Numeric Comparison:</strong>
+                            <div class="text-slate-600 mt-1 font-mono text-xs">
+                                Type "sco" → Select "score:" → Type ">" → Select "&gt;" → Type "100" → Press Space
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong>Chained Filters:</strong>
+                            <div class="text-slate-600 mt-1 font-mono text-xs">
+                                "status:active owner:alice priority:high type:bug"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">Files Reference</h2>
+                    <div class="space-y-2 text-sm">
+                        <p><strong>lib/cli-autocomplete.ts</strong> — AutocompleteEngine class with context detection</p>
+                        <p><strong>lib/cli-commands.ts</strong> — COMMAND_SCHEMA registry (the "Law")</p>
+                        <p><strong>lib/cli-parser.ts</strong> — Token parsing and syntax highlighting</p>
+                        <p><strong>prototypes/prototype-cli-filter-autocomplete.html</strong> — This demo with full implementation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // ===== Simple implementations of parser functions for demo =====
+        
+        function parseSearchInput(input) {
+            const tokens = [];
+            const regex = /([a-zA-Z0-9_-]+:)|([><=!]+)|(".*?"|[^"\s]+)|(\s+)/g;
+            let match;
+
+            while ((match = regex.exec(input)) !== null) {
+                const text = match[0];
+                let type = 'raw';
+
+                if (match[1]) type = 'key';
+                else if (match[2]) type = 'operator';
+                else if (match[3]) type = 'value';
+                else if (match[4]) type = 'space';
+
+                if (type !== 'space') {
+                    tokens.push({
+                        type,
+                        text,
+                        start: match.index,
+                        end: match.index + text.length
+                    });
+                }
+            }
+
+            return tokens;
+        }
+
+        function highlightCommand(input) {
+            if (!input) return '';
+
+            const tokens = parseSearchInput(input);
+            if (tokens.length === 0) return escapeHtml(input);
+
+            let html = '';
+            let lastEnd = 0;
+
+            for (const token of tokens) {
+                if (token.start > lastEnd) {
+                    html += escapeHtml(input.slice(lastEnd, token.start));
+                }
+
+                const className = `syntax-${token.type}`;
+                html += `<span class="${className}">${escapeHtml(token.text)}</span>`;
+                lastEnd = token.end;
+            }
+
+            if (lastEnd < input.length) {
+                html += escapeHtml(input.slice(lastEnd));
+            }
+
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== Autocomplete Engine Implementation =====
+
+        const COMMAND_SCHEMA = {
+            status: {
+                type: 'enum',
+                values: ['active', 'pending', 'completed', 'archived', 'paused'],
+                description: 'Item lifecycle status'
+            },
+            stage: {
+                type: 'enum',
+                values: ['backlog', 'todo', 'in-progress', 'in-review', 'done'],
+                description: 'Workflow stage'
+            },
+            priority: {
+                type: 'enum',
+                values: ['critical', 'high', 'medium', 'low', 'none'],
+                description: 'Priority level'
+            },
+            owner: {
+                type: 'string',
+                description: 'Item owner'
+            },
+            assignee: {
+                type: 'string',
+                description: 'Assigned person'
+            },
+            score: {
+                type: 'number',
+                supportsOperators: true,
+                description: 'Numeric score'
+            },
+            revenue: {
+                type: 'number',
+                supportsOperators: true,
+                description: 'Revenue amount'
+            },
+            created: {
+                type: 'date',
+                supportsOperators: true,
+                description: 'Creation date'
+            },
+            type: {
+                type: 'enum',
+                values: ['bug', 'feature', 'enhancement', 'task', 'spike'],
+                description: 'Item type'
+            }
+        };
+
+        class AutocompleteEngine {
+            getSuggestions(fullText, cursorIndex) {
+                const context = this.parseContext(fullText, cursorIndex);
+
+                if (context.isKey) {
+                    return this.getSuggestionsForKeys(context.word);
+                } else if (context.keyContext) {
+                    return this.getSuggestionsForValues(context.keyContext, context.word);
+                }
+
+                return [];
+            }
+
+            getSuggestionsForKeys(prefix) {
+                const lower = prefix.toLowerCase();
+                return Object.entries(COMMAND_SCHEMA)
+                    .filter(([key]) => key.toLowerCase().startsWith(lower))
+                    .map(([key, schema]) => ({
+                        label: key,
+                        type: 'key',
+                        insertText: key + ':',
+                        description: schema.description
+                    }))
+                    .sort((a, b) => a.label.localeCompare(b.label));
+            }
+
+            getSuggestionsForValues(key, prefix) {
+                const schema = COMMAND_SCHEMA[key];
+                if (!schema) return [];
+
+                if (schema.type === 'enum' && schema.values) {
+                    const lower = prefix.toLowerCase();
+                    return schema.values
+                        .filter(val => val.toLowerCase().startsWith(lower))
+                        .map(val => ({
+                            label: val,
+                            type: 'value',
+                            insertText: val + ' ',
+                            description: `${key}: ${val}`
+                        }));
+                }
+
+                if (schema.supportsOperators) {
+                    const operators = ['>', '<', '=', '!=', '>=', '<='];
+                    const lower = prefix.toLowerCase();
+
+                    if (!prefix || operators.some(op => op.startsWith(lower))) {
+                        return operators
+                            .filter(op => op.startsWith(lower))
+                            .map(op => ({
+                                label: `Operator: ${op}`,
+                                type: 'operator',
+                                insertText: op,
+                                description: `${key}: ${op} [value]`
+                            }));
+                    }
+                }
+
+                return [];
+            }
+
+            parseContext(text, index) {
+                const leftText = text.slice(0, index);
+                const lastSpaceIndex = leftText.lastIndexOf(' ');
+                const currentToken = leftText.slice(lastSpaceIndex + 1);
+                const colonIndex = currentToken.indexOf(':');
+
+                if (colonIndex === -1) {
+                    return { word: currentToken, isKey: true, keyContext: null };
+                } else {
+                    const key = currentToken.slice(0, colonIndex);
+                    const valuePart = currentToken.slice(colonIndex + 1);
+                    return { word: valuePart, isKey: false, keyContext: key };
+                }
+            }
+
+            getInsertionInfo(fullText, cursorIndex, insertText) {
+                const leftText = fullText.slice(0, cursorIndex);
+                const lastSpaceIndex = leftText.lastIndexOf(' ');
+                const tokenStart = lastSpaceIndex + 1;
+
+                const newText = fullText.slice(0, tokenStart) + insertText + fullText.slice(cursorIndex);
+                const newCursorPos = tokenStart + insertText.length;
+
+                return { newText, newCursorPos };
+            }
+        }
+
+        // ===== DOM Wiring =====
+
+        const input = document.getElementById('cli-input');
+        const highlighter = document.getElementById('cli-highlighter');
+        const menu = document.getElementById('cli-menu');
+        const suggestionsOutput = document.getElementById('suggestions-output');
+        const contextOutput = document.getElementById('context-output');
+
+        const engine = new AutocompleteEngine();
+        let selectedIndex = -1;
+        let currentSuggestions = [];
+
+        function updateView() {
+            const cursor = input.selectionStart || 0;
+            const value = input.value;
+
+            // Update highlighter
+            highlighter.innerHTML = highlightCommand(value) || '<br>';
+
+            // Get suggestions
+            currentSuggestions = engine.getSuggestions(value, cursor);
+            selectedIndex = currentSuggestions.length > 0 ? 0 : -1;
+
+            renderMenu();
+            updateOutputPanels(value, cursor);
+        }
+
+        function renderMenu() {
+            if (currentSuggestions.length === 0) {
+                menu.classList.add('hidden');
+                return;
+            }
+
+            menu.innerHTML = currentSuggestions.map((s, i) => {
+                const className = `suggestion-${s.type}`;
+                return `
+                    <li class="flex items-center justify-between ${i === selectedIndex ? 'selected' : ''}"
+                        data-index="${i}"
+                        data-insert="${s.insertText}">
+                        <span class="suggestion-label ${className}">${escapeHtml(s.label)}</span>
+                        <span class="suggestion-type">${s.type}</span>
+                    </li>
+                `;
+            }).join('');
+
+            menu.classList.remove('hidden');
+
+            // Add click handlers
+            menu.querySelectorAll('li').forEach(li => {
+                li.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.dataset.index);
+                    acceptSuggestion(index);
+                });
+            });
+        }
+
+        function acceptSuggestion(index) {
+            if (index < 0 || index >= currentSuggestions.length) return;
+
+            const suggestion = currentSuggestions[index];
+            const cursor = input.selectionStart || 0;
+            const { newText, newCursorPos } = engine.getInsertionInfo(input.value, cursor, suggestion.insertText);
+
+            input.value = newText;
+            input.selectionStart = input.selectionEnd = newCursorPos;
+
+            menu.classList.add('hidden');
+            updateView();
+            input.focus();
+        }
+
+        function updateOutputPanels(value, cursor) {
+            const context = engine.parseContext(value, cursor);
+
+            // Update suggestions
+            if (currentSuggestions.length === 0) {
+                suggestionsOutput.innerHTML = '<div class="token-line text-slate-500">(no suggestions)</div>';
+            } else {
+                suggestionsOutput.innerHTML = currentSuggestions.map((s, i) => {
+                    const marker = i === selectedIndex ? '→' : ' ';
+                    return `<div class="token-line">${marker} <span class="token-${s.type}-demo">${escapeHtml(s.label)}</span> (${s.type})</div>`;
+                }).join('');
+            }
+
+            // Update context
+            contextOutput.innerHTML = `
+                <div class="token-line"><span class="token-key-demo">isKey:</span> ${context.isKey}</div>
+                <div class="token-line"><span class="token-key-demo">word:</span> <code>"${escapeHtml(context.word)}"</code></div>
+                <div class="token-line"><span class="token-key-demo">keyContext:</span> ${context.keyContext || 'null'}</div>
+                <div class="token-line"><span class="token-key-demo">cursor:</span> ${cursor}</div>
+            `;
+        }
+
+        // ===== Keyboard Navigation =====
+
+        input.addEventListener('input', updateView);
+
+        input.addEventListener('keydown', (e) => {
+            if (menu.classList.contains('hidden')) return;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex + 1) % currentSuggestions.length;
+                    renderMenu();
+                    break;
+
+                case 'ArrowUp':
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex - 1 + currentSuggestions.length) % currentSuggestions.length;
+                    renderMenu();
+                    break;
+
+                case 'Enter':
+                    e.preventDefault();
+                    if (selectedIndex >= 0) {
+                        acceptSuggestion(selectedIndex);
+                    }
+                    break;
+
+                case 'Escape':
+                    e.preventDefault();
+                    menu.classList.add('hidden');
+                    break;
+            }
+        });
+
+        // Sync scrolling
+        input.addEventListener('scroll', () => {
+            highlighter.scrollTop = input.scrollTop;
+            highlighter.scrollLeft = input.scrollLeft;
+        });
+
+        // Initialize
+        updateView();
+    </script>
+</body>
+</html>

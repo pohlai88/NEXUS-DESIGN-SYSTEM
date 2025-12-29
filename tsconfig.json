@@ -20,6 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    /* Ignore TypeScript 6.0 Deprecations (baseUrl will be removed in TS 7.0) */
+    "ignoreDeprecations": "6.0",
+
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
