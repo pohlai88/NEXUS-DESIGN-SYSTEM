@@ -1,7 +1,7 @@
 {
   "name": "aibos-design-system",
-  "version": "1.0.1",
-  "description": "Enterprise-grade design system with 254 tokens, 171 semantic classes, and Beast Mode patterns. Zero framework overhead, 100% Figma compliant.",
+  "version": "1.1.0",
+  "description": "Enterprise-grade design system with 254 tokens, 171 semantic classes, and Beast Mode patterns. Includes React components for Next.js integration. Zero framework overhead, 100% Figma compliant.",
   "type": "module",
   "keywords": [
     "design-system",
@@ -9,10 +9,13 @@
     "tokens",
     "ui",
     "components",
+    "react",
+    "nextjs",
     "tailwind",
     "design-tokens",
     "neural-analog",
-    "enterprise"
+    "enterprise",
+    "typescript"
   ],
   "author": "AI-BOS",
   "license": "MIT",
@@ -46,7 +49,27 @@
     ".": "./style.css",
     "./css": "./style.css",
     "./tokens": "./dist/tokens.json",
-    "./tokens/typescript": "./dist/tokens/index.d.ts"
+    "./tokens/typescript": "./dist/tokens/index.d.ts",
+    "./react": {
+      "types": "./components/react/index.ts",
+      "import": "./components/react/index.ts",
+      "require": "./components/react/index.ts"
+    },
+    "./types": {
+      "types": "./types/index.ts",
+      "import": "./types/index.ts",
+      "require": "./types/index.ts"
+    },
+    "./utils": {
+      "types": "./components/utils.ts",
+      "import": "./components/utils.ts",
+      "require": "./components/utils.ts"
+    },
+    "./design-tokens": {
+      "types": "./types/design-tokens.ts",
+      "import": "./types/design-tokens.ts",
+      "require": "./types/design-tokens.ts"
+    }
   },
   "files": [
     "style.css",
@@ -54,6 +77,9 @@
     "dist/**/*",
     "lib/**/*.ts",
     "lib/**/*.js",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "types/**/*.ts",
     "README.md",
     "docs/API_REFERENCE.md",
     "docs/EXTERNAL_USAGE.md",
@@ -61,6 +87,22 @@
     "docs/INTEGRATION_GUIDE.md",
     "LICENSE"
   ],
+  "peerDependencies": {
+    "@nextui-org/react": ">=2.0.0",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "@nextui-org/react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.23",
@@ -74,5 +116,8 @@
     "stylelint-config-standard": "^39.0.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.1.18"
+  },
+  "dependencies": {
+    "aibos-design-system": "^1.1.0"
   }
 }

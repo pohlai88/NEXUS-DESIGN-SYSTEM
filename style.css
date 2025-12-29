@@ -229,6 +229,7 @@
     --color-border: var(--color-stroke);
     --color-primary: var(--color-gold);
     --color-primary-foreground: var(--color-void);
+    --color-secondary: var(--color-paper-2);
     --color-destructive: var(--color-error);
     --color-ring: var(--color-gold);
     --color-chart-1: #eab308;
@@ -637,6 +638,9 @@
   }
   .ml-2 {
     margin-left: var(--spacing-2);
+  }
+  .ml-4 {
+    margin-left: var(--spacing-4);
   }
   .ml-auto {
     margin-left: auto;
