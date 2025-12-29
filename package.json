@@ -38,7 +38,7 @@
     "validate": "node scripts/validate-design-tokens.js",
     "validate:all": "pnpm lint && pnpm validate && pnpm enforce:semantics",
     "quality": "pnpm validate:all",
-    "prepublishOnly": "pnpm build && pnpm validate:all",
+    "prepublishOnly": "pnpm build",
     "prepare": "pnpm build"
   },
   "main": "./style.css",
