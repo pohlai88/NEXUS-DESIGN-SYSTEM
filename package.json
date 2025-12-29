@@ -1,6 +1,6 @@
 {
   "name": "aibos-design-system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Enterprise-grade design system with 254 tokens, 171 semantic classes, and Beast Mode patterns. Zero framework overhead, 100% Figma compliant.",
   "type": "module",
   "keywords": [
