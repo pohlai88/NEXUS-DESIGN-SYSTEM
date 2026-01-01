@@ -1,16 +1,10 @@
-# Package Naming Strategy: aibos-ui vs aibos-design-system
+# Package Naming Strategy: @aibos Organization
 
 ## Current Situation
 
-### Existing Package
-- **`aibos-ui`** (v0.1.3) - React component library
-  - React components with Radix UI
-  - TypeScript, Tailwind CSS
-  - 34 dependencies
-  - Published 2 months ago
-
-### New Package (This Repo)
-- **`aibos-design-system`** - CSS design system
+### Package Migration
+- **Old Package**: `aibos-design-system` (deprecated)
+- **New Package**: `@aibos/design-system` (current)
   - Pure CSS tokens and classes
   - No React dependencies
   - Framework-agnostic
@@ -52,20 +46,16 @@ npm install aibos-design-system
 npm install aibos-ui
 ```
 
-### Option 2: Use Scoped Names
+### ✅ Option 2: Use Scoped Names (IMPLEMENTED)
 
-**Alternative:**
-- `@aibos/ui` - React components
+**Current:**
 - `@aibos/design-system` - CSS design system
 
 **Pros:**
 - ✅ Professional organization scope
 - ✅ Clear grouping under @aibos
 - ✅ Better for branding
-
-**Cons:**
-- ❌ Requires creating @aibos organization on npm
-- ❌ More setup needed
+- ✅ Prevents naming conflicts
 
 ### Option 3: Rename to Avoid Confusion
 
@@ -81,46 +71,56 @@ npm install aibos-ui
 
 ## Recommendation
 
-**Keep `aibos-design-system`** - It's the perfect name because:
+**✅ MIGRATED TO `@aibos/design-system`** - The scoped package name provides:
 
-1. ✅ Clearly indicates it's a design system
-2. ✅ Different from `aibos-ui` (components vs styling)
-3. ✅ Users understand the relationship:
-   - `aibos-ui` = React components
-   - `aibos-design-system` = CSS styling that can be used with any framework
+1. ✅ Professional organization branding
+2. ✅ Clear grouping under @aibos organization
+3. ✅ Prevents naming conflicts
+4. ✅ Better for enterprise adoption
 
 ## Usage Examples
 
-### Using Design System Only
+### Using Design System
 ```bash
-npm install aibos-design-system
+npm install @aibos/design-system
 ```
 
 ```tsx
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 
 <div className="na-card na-p-6">
   <h1 className="na-h1">Title</h1>
 </div>
 ```
 
-### Using with aibos-ui
-```bash
-npm install aibos-ui aibos-design-system
-```
+## Migration from Old Package
 
-```tsx
-import 'aibos-design-system/css';
-import { Button } from 'aibos-ui';
+If you're using the old `aibos-design-system` package:
 
-<Button className="na-btn-primary">Click me</Button>
-```
+1. **Update package.json:**
+   ```bash
+   npm uninstall aibos-design-system
+   npm install @aibos/design-system
+   ```
+
+2. **Update imports:**
+   ```tsx
+   // Old
+   import 'aibos-design-system/css';
+   import { StatusIndicator } from 'aibos-design-system/react';
+   
+   // New
+   import '@aibos/design-system/css';
+   import { StatusIndicator } from '@aibos/design-system/react';
+   ```
+
+3. **The old package is deprecated** - See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for complete migration instructions.
 
 ## Conclusion
 
-**Keep the name `aibos-design-system`** - it's perfect as-is! The two packages serve different purposes and complement each other.
+**✅ Package migrated to `@aibos/design-system`** - The scoped organization package provides better branding and prevents naming conflicts.
 
 ---
 
-**Ready to publish?** The name `aibos-design-system` is good to go!
+**Ready to use?** Install `@aibos/design-system` and start building!
 

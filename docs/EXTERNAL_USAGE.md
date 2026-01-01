@@ -10,20 +10,20 @@
 ### 1. Install
 
 ```bash
-npm install aibos-design-system
+npm install @aibos/design-system
 # or
-pnpm add aibos-design-system
+pnpm add @aibos/design-system
 # or
-yarn add aibos-design-system
+yarn add @aibos/design-system
 ```
 
 ### 2. Import CSS
 
 ```typescript
 // In your main entry file (app/layout.tsx, main.tsx, etc.)
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 // or
-import 'aibos-design-system';
+import '@aibos/design-system';
 ```
 
 ### 3. Use Classes
@@ -41,7 +41,7 @@ import 'aibos-design-system';
 
 ## 📦 What You Get
 
-When you install `aibos-design-system`, you get:
+When you install `@aibos/design-system`, you get:
 
 - ✅ **254 Design Tokens** - Colors, typography, spacing, shadows
 - ✅ **171 Semantic Classes** - Ready-to-use `.na-*` components
@@ -57,7 +57,7 @@ When you install `aibos-design-system`, you get:
 
 ```tsx
 // app/layout.tsx (Next.js App Router)
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 
 export default function RootLayout({ children }) {
   return (
@@ -88,7 +88,7 @@ export function Card() {
 
 ```typescript
 // main.ts
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 import { createApp } from 'vue';
 import App from './App.vue';
 
@@ -110,7 +110,7 @@ createApp(App).mount('#app');
 
 ```typescript
 // app.js
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 import App from './App.svelte';
 
 const app = new App({ target: document.body });
@@ -132,7 +132,7 @@ const app = new App({ target: document.body });
 <head>
   <meta charset="UTF-8">
   <title>My App</title>
-  <link rel="stylesheet" href="./node_modules/aibos-design-system/style.css">
+  <link rel="stylesheet" href="./node_modules/@aibos/design-system/style.css">
 </head>
 <body>
   <div class="na-card na-p-6">
@@ -150,8 +150,8 @@ const app = new App({ target: document.body });
 ### TypeScript
 
 ```typescript
-import tokens from 'aibos-design-system/tokens';
-import type { DesignTokens } from 'aibos-design-system/tokens/typescript';
+import tokens from '@aibos/design-system/tokens';
+import type { DesignTokens } from '@aibos/design-system/tokens/typescript';
 
 export function Button() {
   return (
@@ -172,7 +172,7 @@ export function Button() {
 ### JavaScript
 
 ```javascript
-import tokens from 'aibos-design-system/tokens';
+import tokens from '@aibos/design-system/tokens';
 
 export function Button() {
   return (
@@ -302,15 +302,15 @@ export function Button() {
 
 ```typescript
 // CSS (main export)
-import 'aibos-design-system/css'
+import '@aibos/design-system/css'
 // or
-import 'aibos-design-system'
+import '@aibos/design-system'
 
 // Tokens (JSON)
-import tokens from 'aibos-design-system/tokens'
+import tokens from '@aibos/design-system/tokens'
 
 // Tokens (TypeScript)
-import type { DesignTokens } from 'aibos-design-system/tokens/typescript'
+import type { DesignTokens } from '@aibos/design-system/tokens/typescript'
 ```
 
 ---
@@ -334,12 +334,12 @@ Ensure CSS is imported **before** your app code:
 
 ```typescript
 // ✅ Correct
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 import './app.css';
 
 // ❌ Wrong
 import './app.css';
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 ```
 
 ### TypeScript errors?

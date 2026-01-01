@@ -1,6 +1,6 @@
 # 📦 NPM Publishing Guide - AIBOS Design System
 
-**Package Name**: `aibos-design-system`  
+**Package Name**: `@aibos/design-system`  
 **Current Version**: 1.0.0  
 **Status**: ✅ Ready for Publishing
 
@@ -56,7 +56,7 @@ npm publish --access public
 ### Step 4: Verify Publication
 
 ```bash
-npm view aibos-design-system
+npm view @aibos/design-system
 ```
 
 ---
@@ -89,7 +89,7 @@ npm publish
 The following files/directories will be included in the npm package (per package.json `files` field):
 
 ```
-aibos-design-system/
+@aibos/design-system/
 ├── style.css                          # ⭐ Compiled CSS (main entry)
 ├── input.css                          # Source CSS
 ├── dist/
@@ -130,7 +130,7 @@ aibos-design-system/
 mkdir test-aibos
 cd test-aibos
 npm init -y
-npm install aibos-design-system
+npm install @aibos/design-system
 ```
 
 ### Usage Test
@@ -139,7 +139,7 @@ npm install aibos-design-system
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="node_modules/aibos-design-system/style.css">
+  <link rel="stylesheet" href="node_modules/@aibos/design-system/style.css">
 </head>
 <body>
   <div class="na-card na-p-6">
@@ -153,9 +153,9 @@ npm install aibos-design-system
 Or in a React/Vue project:
 
 ```javascript
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 // or
-import 'aibos-design-system';
+import '@aibos/design-system';
 ```
 
 ---
@@ -183,8 +183,8 @@ import 'aibos-design-system';
 
 ### If Package Name is Taken
 
-If `aibos-design-system` is already taken, consider:
-- `@your-org/aibos-design-system` (scoped package)
+If `@aibos/design-system` is already taken, consider:
+- `@your-org/@aibos/design-system` (scoped package)
 - `aibos-ds`
 - `aibos-ui-system`
 - `neo-analog-design-system`
@@ -207,7 +207,7 @@ npm whoami
 npm publish --access public
 
 # 5. Verify
-npm view aibos-design-system
+npm view @aibos/design-system
 ```
 
 ---
@@ -216,8 +216,8 @@ npm view aibos-design-system
 
 After publishing, verify:
 
-1. **Package Page**: https://www.npmjs.com/package/aibos-design-system
-2. **Installation**: `npm install aibos-design-system` works
+1. **Package Page**: https://www.npmjs.com/package/@aibos/design-system
+2. **Installation**: `npm install @aibos/design-system` works
 3. **Documentation**: README displays correctly on npm
 4. **Files**: Check the "Files" tab on npm to ensure correct files are included
 5. **Version**: Correct version number shows
@@ -230,7 +230,7 @@ After publishing:
 
 1. **Update GitHub README** with npm install badge:
    ```markdown
-   [![npm version](https://badge.fury.io/js/aibos-design-system.svg)](https://www.npmjs.com/package/aibos-design-system)
+   [![npm version](https://badge.fury.io/js/@aibos/design-system.svg)](https://www.npmjs.com/package/@aibos/design-system)
    ```
 
 2. **Add to package.json keywords** (already done ✅)
@@ -248,7 +248,7 @@ After publishing:
 ### "Package name taken"
 ```bash
 npm publish --access public
-# Or use scoped package: @yourname/aibos-design-system
+# Or use scoped package: @yourname/@aibos/design-system
 ```
 
 ### "Need to login"

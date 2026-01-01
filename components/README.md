@@ -4,7 +4,7 @@ React components for AIBOS Design System, optimized for Next.js integration.
 
 ## Installation
 
-The React components are included in the `aibos-design-system` package. No additional installation needed.
+The React components are included in the `@aibos/design-system` package. No additional installation needed.
 
 ## Usage
 
@@ -13,7 +13,7 @@ The React components are included in the `aibos-design-system` package. No addit
 The `StatusIndicator` component provides accessible status indicators using AIBOS CSS classes.
 
 ```tsx
-import { StatusIndicator } from 'aibos-design-system/react';
+import { StatusIndicator } from '@aibos/design-system/react';
 
 // Success status
 <StatusIndicator variant="success" label="Complete" />
@@ -42,7 +42,7 @@ import { StatusIndicator } from 'aibos-design-system/react';
 
 ```tsx
 import { Card, CardBody } from '@nextui-org/react';
-import { StatusIndicator } from 'aibos-design-system/react';
+import { StatusIndicator } from '@aibos/design-system/react';
 
 <Card>
   <CardBody>
@@ -88,7 +88,7 @@ The `StatusIndicator` component includes:
 Full TypeScript support is included:
 
 ```tsx
-import { StatusIndicator, type StatusIndicatorProps, type StatusVariant } from 'aibos-design-system/react';
+import { StatusIndicator, type StatusIndicatorProps, type StatusVariant } from '@aibos/design-system/react';
 
 const variant: StatusVariant = 'success';
 const props: StatusIndicatorProps = {
@@ -102,7 +102,7 @@ const props: StatusIndicatorProps = {
 ### cn() - Class Name Merger
 
 ```tsx
-import { cn } from 'aibos-design-system/utils';
+import { cn } from '@aibos/design-system/utils';
 
 const classes = cn('na-status', 'ok', isActive && 'active');
 // => 'na-status ok active'
@@ -115,7 +115,7 @@ See [NEXTJS_DESIGN_SYSTEM_IMPROVEMENTS.md](../NEXTJS_DESIGN_SYSTEM_IMPROVEMENTS.
 ## Design Tokens
 
 ```tsx
-import { designTokens } from 'aibos-design-system/design-tokens';
+import { designTokens } from '@aibos/design-system/design-tokens';
 
 const successColor = designTokens.colors.success; // 'var(--color-success)'
 const spacing = designTokens.spacing.md; // 'var(--spacing-4)'
@@ -125,6 +125,6 @@ const h1Class = designTokens.typography.h1.class; // 'na-h1'
 ## Type Definitions
 
 ```tsx
-import type { AIBOSStatusVariant, AIBOSTypographyClass } from 'aibos-design-system/types';
+import type { AIBOSStatusVariant, AIBOSTypographyClass } from '@aibos/design-system/types';
 ```
 

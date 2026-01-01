@@ -11,7 +11,7 @@ Complete React component library for seamless NextUI/HeroUI integration with AIB
 Accessible status indicators with AIBOS styling.
 
 ```tsx
-import { StatusIndicator } from 'aibos-design-system/react';
+import { StatusIndicator } from '@aibos/design-system/react';
 
 <StatusIndicator variant="success" label="Complete" />
 <StatusIndicator variant="error" label="Failed" />
@@ -24,7 +24,7 @@ import { StatusIndicator } from 'aibos-design-system/react';
 Enhanced NextUI Card with AIBOS styling.
 
 ```tsx
-import { Card, CardHeader, CardBody } from 'aibos-design-system/react';
+import { Card, CardHeader, CardBody } from '@aibos/design-system/react';
 
 <Card>
   <CardHeader>
@@ -46,7 +46,7 @@ import { Card, CardHeader, CardBody } from 'aibos-design-system/react';
 Enhanced NextUI Button with AIBOS styling.
 
 ```tsx
-import { Button } from 'aibos-design-system/react';
+import { Button } from '@aibos/design-system/react';
 
 <Button variant="primary">Click me</Button>
 <Button variant="secondary">Cancel</Button>
@@ -67,7 +67,7 @@ import { Button } from 'aibos-design-system/react';
 Combine AIBOS classes with NextUI components.
 
 ```tsx
-import { withAIBOS } from 'aibos-design-system/react';
+import { withAIBOS } from '@aibos/design-system/react';
 import { Card } from '@nextui-org/react';
 
 <Card className={withAIBOS('na-card', 'na-p-6', customClass)}>
@@ -80,7 +80,7 @@ import { Card } from '@nextui-org/react';
 Get AIBOS typography classes.
 
 ```tsx
-import { aibosTypography } from 'aibos-design-system/react';
+import { aibosTypography } from '@aibos/design-system/react';
 
 <h1 className={aibosTypography('h1')}>Title</h1>
 <div className={aibosTypography('data')}>$12,450.00</div>
@@ -92,7 +92,7 @@ import { aibosTypography } from 'aibos-design-system/react';
 Get AIBOS spacing classes.
 
 ```tsx
-import { aibosSpacing } from 'aibos-design-system/react';
+import { aibosSpacing } from '@aibos/design-system/react';
 
 <div className={aibosSpacing('p-6', 'mt-4')}>Content</div>
 ```
@@ -102,7 +102,7 @@ import { aibosSpacing } from 'aibos-design-system/react';
 HOC to add AIBOS classes to any component.
 
 ```tsx
-import { withAIBOSClasses } from 'aibos-design-system/react';
+import { withAIBOSClasses } from '@aibos/design-system/react';
 import { Card as NextUICard } from '@nextui-org/react';
 
 const AIBOSCard = withAIBOSClasses(NextUICard, 'na-card', 'na-p-6');
@@ -119,7 +119,7 @@ const AIBOSCard = withAIBOSClasses(NextUICard, 'na-card', 'na-p-6');
 ### Data Dashboard Card
 
 ```tsx
-import { Card, CardHeader, CardBody, Button, StatusIndicator } from 'aibos-design-system/react';
+import { Card, CardHeader, CardBody, Button, StatusIndicator } from '@aibos/design-system/react';
 
 export function VendorCard({ vendor }) {
   return (
@@ -143,7 +143,7 @@ export function VendorCard({ vendor }) {
 ### Form with AIBOS Styling
 
 ```tsx
-import { Card, CardBody, Button } from 'aibos-design-system/react';
+import { Card, CardBody, Button } from '@aibos/design-system/react';
 import { Input } from '@nextui-org/react';
 
 export function VendorForm() {
@@ -173,7 +173,7 @@ export function VendorForm() {
 ### Table with Status Indicators
 
 ```tsx
-import { StatusIndicator } from 'aibos-design-system/react';
+import { StatusIndicator } from '@aibos/design-system/react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
 
 export function VendorTable({ vendors }) {
@@ -216,7 +216,7 @@ import type {
   CardProps,
   ButtonProps,
   ButtonVariant,
-} from 'aibos-design-system/react';
+} from '@aibos/design-system/react';
 ```
 
 ---
@@ -227,7 +227,7 @@ import type {
 
 ✅ **Good:**
 ```tsx
-import { Card, CardBody } from 'aibos-design-system/react';
+import { Card, CardBody } from '@aibos/design-system/react';
 <Card><CardBody>Content</CardBody></Card>
 ```
 
@@ -298,7 +298,7 @@ import { Card, CardBody, Button } from '@nextui-org/react';
 ### After (AIBOS Components)
 
 ```tsx
-import { Card, CardBody, Button } from 'aibos-design-system/react';
+import { Card, CardBody, Button } from '@aibos/design-system/react';
 
 <Card>
   <CardBody>

@@ -1,5 +1,5 @@
 {
-  "name": "aibos-design-system",
+  "name": "@aibos/design-system",
   "version": "1.1.0",
   "description": "Enterprise-grade design system with 254 tokens, 171 semantic classes, and Beast Mode patterns. Includes React components for Next.js integration. Zero framework overhead, 100% Figma compliant.",
   "type": "module",
@@ -116,8 +116,5 @@
     "stylelint-config-standard": "^39.0.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.1.18"
-  },
-  "dependencies": {
-    "aibos-design-system": "^1.1.0"
   }
 }

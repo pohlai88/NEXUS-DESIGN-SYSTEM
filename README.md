@@ -28,12 +28,12 @@ The Neo-Analog Design System is an enterprise-grade, production-ready design sys
 
 ```bash
 # Install
-npm install aibos-design-system
+npm install @aibos/design-system
 
 # Import CSS
-import 'aibos-design-system/css';
+import '@aibos/design-system/css';
 # or
-import 'aibos-design-system';
+import '@aibos/design-system';
 
 # Use classes
 <div className="na-card na-p-6">Content</div>
