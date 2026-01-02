@@ -1,0 +1,65 @@
+{
+  "name": "Card",
+  "description": "Container component for grouping related content",
+  "radixPrimitive": null,
+  "nativeElement": "div",
+  "props": {
+    "interactive": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the card is interactive (clickable)"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-card"],
+      "description": "Default card variant"
+    },
+    "interactive": {
+      "aibosClasses": ["na-card", "na-card-interactive"],
+      "description": "Interactive card variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "hover": {
+      "css": "hover:shadow-lg",
+      "description": "Hover state (for interactive cards)"
+    }
+  },
+  "parts": {
+    "Header": {
+      "aibosClasses": ["na-card-title"],
+      "description": "Card header section"
+    },
+    "Title": {
+      "aibosClasses": ["na-h4"],
+      "description": "Card title"
+    },
+    "Content": {
+      "aibosClasses": ["na-p-6", "na-content"],
+      "description": "Card content section"
+    },
+    "Footer": {
+      "aibosClasses": ["na-card-meta"],
+      "description": "Card footer section"
+    }
+  },
+  "accessibility": {
+    "handledBy": "native",
+    "aria": {
+      "ariaLabel": "Optional label for card"
+    }
+  },
+  "metadata": {
+    "category": "layout",
+    "tags": ["container", "card", "panel"],
+    "related": ["panel", "dialog", "sheet"],
+    "complexity": "simple"
+  }
+}
+

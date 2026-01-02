@@ -11,7 +11,6 @@
  * ```
  */
 
-import React from 'react';
 import { cn } from '../utils.js';
 
 export type StatusVariant = 'success' | 'error' | 'warning' | 'pending';

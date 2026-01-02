@@ -1,0 +1,76 @@
+{
+  "name": "Accordion",
+  "description": "Accordion component for collapsible content sections",
+  "radixPrimitive": "@radix-ui/react-accordion",
+  "props": {
+    "type": {
+      "type": "single | multiple",
+      "default": "single",
+      "required": false,
+      "description": "Whether single or multiple items can be open"
+    },
+    "value": {
+      "type": "string | string[]",
+      "required": false,
+      "description": "Open item value(s)"
+    },
+    "onValueChange": {
+      "type": "(value: string | string[]) => void",
+      "required": false,
+      "description": "Callback when open value changes"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-accordion"],
+      "description": "Default accordion variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "open": {
+      "aibosClasses": ["na-open"],
+      "description": "Open state"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "Accordion",
+      "aibosClasses": [""],
+      "description": "Accordion root component"
+    },
+    "Item": {
+      "radixComponent": "AccordionItem",
+      "aibosClasses": ["na-accordion-item"],
+      "description": "Individual accordion item"
+    },
+    "Trigger": {
+      "radixComponent": "AccordionTrigger",
+      "aibosClasses": ["na-accordion-trigger"],
+      "description": "Accordion trigger button"
+    },
+    "Content": {
+      "radixComponent": "AccordionContent",
+      "aibosClasses": ["na-accordion-content"],
+      "description": "Accordion content panel"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "navigation",
+    "tags": ["accordion", "collapse", "expand"],
+    "related": ["tabs", "dialog"],
+    "complexity": "moderate"
+  }
+}
+

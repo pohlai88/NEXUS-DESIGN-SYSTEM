@@ -1,0 +1,75 @@
+{
+  "name": "Radio",
+  "description": "Radio button component for single selection in forms",
+  "radixPrimitive": "@radix-ui/react-radio-group",
+  "props": {
+    "value": {
+      "type": "string",
+      "required": false,
+      "description": "Selected value"
+    },
+    "onValueChange": {
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Callback when value changes"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the radio group is disabled"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-radio"],
+      "description": "Default radio variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "checked": {
+      "aibosClasses": ["na-checked"],
+      "description": "Checked state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50", "cursor-not-allowed"],
+      "description": "Disabled state"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "RadioGroup",
+      "aibosClasses": [""],
+      "description": "Radio group root"
+    },
+    "Item": {
+      "radixComponent": "RadioGroupItem",
+      "aibosClasses": ["na-radio"],
+      "description": "Individual radio item"
+    },
+    "Indicator": {
+      "radixComponent": "RadioGroupIndicator",
+      "aibosClasses": ["na-radio-indicator"],
+      "description": "Radio indicator (checked dot)"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["radio", "form", "input", "selection"],
+    "related": ["checkbox", "switch", "select"],
+    "complexity": "moderate"
+  }
+}
+

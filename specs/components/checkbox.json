@@ -1,0 +1,58 @@
+{
+  "name": "Checkbox",
+  "description": "Checkbox component for forms",
+  "radixPrimitive": "@radix-ui/react-checkbox",
+  "props": {
+    "checked": {
+      "type": "boolean | 'indeterminate'",
+      "required": false,
+      "description": "Checked state"
+    },
+    "onCheckedChange": {
+      "type": "(checked: boolean) => void",
+      "required": false,
+      "description": "Callback when checked state changes"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the checkbox is disabled"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-checkbox"],
+      "description": "Default checkbox variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "checked": {
+      "aibosClasses": ["na-checked"],
+      "description": "Checked state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50", "cursor-not-allowed"],
+      "description": "Disabled state"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["checkbox", "form", "input"],
+    "related": ["radio", "switch", "toggle"],
+    "complexity": "simple"
+  }
+}
+

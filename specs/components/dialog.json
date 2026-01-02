@@ -1,0 +1,86 @@
+{
+  "name": "Dialog",
+  "description": "Modal dialog component for displaying content in an overlay",
+  "radixPrimitive": "@radix-ui/react-dialog",
+  "props": {
+    "open": {
+      "type": "boolean",
+      "required": true,
+      "description": "Whether the dialog is open"
+    },
+    "onOpenChange": {
+      "type": "(open: boolean) => void",
+      "required": true,
+      "description": "Callback when open state changes"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-card", "na-modal"],
+      "description": "Default dialog variant"
+    },
+    "center": {
+      "aibosClasses": ["na-card", "na-modal", "na-modal--center"],
+      "description": "Centered dialog variant"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "Dialog",
+      "aibosClasses": [""],
+      "description": "Dialog root component"
+    },
+    "Trigger": {
+      "radixComponent": "DialogTrigger",
+      "aibosClasses": ["na-btn", "na-btn-primary"],
+      "description": "Button that opens the dialog"
+    },
+    "Content": {
+      "radixComponent": "DialogContent",
+      "aibosClasses": ["na-card", "na-modal"],
+      "description": "Dialog content container"
+    },
+    "Header": {
+      "radixComponent": "DialogHeader",
+      "aibosClasses": ["na-card-title"],
+      "description": "Dialog header section"
+    },
+    "Title": {
+      "radixComponent": "DialogTitle",
+      "aibosClasses": ["na-h3"],
+      "description": "Dialog title"
+    },
+    "Description": {
+      "radixComponent": "DialogDescription",
+      "aibosClasses": ["na-metadata"],
+      "description": "Dialog description"
+    },
+    "Footer": {
+      "radixComponent": "DialogFooter",
+      "aibosClasses": ["na-card-meta"],
+      "description": "Dialog footer section"
+    },
+    "Close": {
+      "radixComponent": "DialogClose",
+      "aibosClasses": ["na-iconbtn"],
+      "description": "Close button"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Focus trap",
+      "ESC key handling",
+      "ARIA attributes",
+      "Keyboard navigation",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "feedback",
+    "tags": ["modal", "overlay", "dialog"],
+    "related": ["alert-dialog", "sheet", "drawer"],
+    "complexity": "moderate"
+  }
+}
+

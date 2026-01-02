@@ -9,7 +9,7 @@
  * See docs/CLI_FILTER_COMMANDS.md for the complete command specification.
  */
 
-import { COMMAND_SCHEMA, type ValidCommand } from './cli-commands';
+import { COMMAND_SCHEMA, type ValidCommand } from './cli-commands.js';
 
 export interface Suggestion {
   label: string;

@@ -98,6 +98,8 @@
 | [CLI_REACTIVE_HUD_COMPLETE_GUIDE.md](CLI_REACTIVE_HUD_COMPLETE_GUIDE.md) | ~1,200 lines | System architecture | Architects, senior developers |
 | [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) | ~300 lines | How to integrate | Developers |
 | [CLI_FILTER_COMMANDS.md](CLI_FILTER_COMMANDS.md) | ~400 lines | Command reference | All developers |
+| [TESTING_OPTIMIZATION_GUIDE.md](TESTING_OPTIMIZATION_GUIDE.md) | ~600 lines | Battle-tested testing methods | Developers, QA engineers |
+| [360_DEEP_DIVE_AUDIT.md](360_DEEP_DIVE_AUDIT.md) | ~600 lines | Implementation verification audit | Architects, auditors |
 
 ### Quick References
 | Document | Size | Purpose | Audience |
@@ -154,6 +156,7 @@ AIBOS-DESIGN-SYSTEM/
 │   ├── EXTERNAL_USAGE.md       - External usage
 │   ├── API_REFERENCE.md        - API docs
 │   ├── TOKEN_REFERENCE.md      - Semantic tokens
+│   ├── TESTING_OPTIMIZATION_GUIDE.md - Battle-tested testing methods
 │   ├── PACKAGE_NAMING_STRATEGY.md
 │   ├── archive/                - Legacy documentation (old docs for reference)
 │   │   ├── CLI_FILTER_INTEGRATION.md
@@ -224,6 +227,18 @@ AIBOS-DESIGN-SYSTEM/
 3. Study: Source code structure in `../lib/`
 4. Review: Relevant section in [CLI_REACTIVE_HUD_COMPLETE_GUIDE.md](CLI_REACTIVE_HUD_COMPLETE_GUIDE.md)
 
+### "I need to write or optimize tests"
+1. Read: [TESTING_OPTIMIZATION_GUIDE.md](TESTING_OPTIMIZATION_GUIDE.md) - Battle-tested methods (20 min)
+2. Review: Test patterns for Radix UI components
+3. Follow: Common pitfalls and solutions
+4. Apply: Performance optimizations
+
+### "I need to verify what's actually implemented"
+1. Read: [360_DEEP_DIVE_AUDIT.md](360_DEEP_DIVE_AUDIT.md) - Complete implementation audit (30 min)
+2. Review: IDE integration verification
+3. Check: Framework adapter status
+4. Verify: Documentation accuracy
+
 ### "I need to deploy this"
 1. Read: [CLI_REACTIVE_HUD_FINAL_STATUS.md](CLI_REACTIVE_HUD_FINAL_STATUS.md) - Deployment checklist (5 min)
 2. Verify: Build status (`pnpm build`)
@@ -266,6 +281,10 @@ AIBOS-DESIGN-SYSTEM/
 ### How to Extend the System
 → [CLI_REACTIVE_HUD_COMPLETE_GUIDE.md](CLI_REACTIVE_HUD_COMPLETE_GUIDE.md) - "Customization Points"  
 → [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - "Customization Guide"
+
+### Testing & Quality Assurance
+→ [TESTING_OPTIMIZATION_GUIDE.md](TESTING_OPTIMIZATION_GUIDE.md) - Battle-tested testing methods  
+→ [TESTING_AND_THEME_GUIDE.md](TESTING_AND_THEME_GUIDE.md) - Testing and theme setup
 
 ---
 

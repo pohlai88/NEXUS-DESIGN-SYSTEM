@@ -1,0 +1,75 @@
+{
+  "name": "Tabs",
+  "description": "Tab component for organizing content into panels",
+  "radixPrimitive": "@radix-ui/react-tabs",
+  "props": {
+    "value": {
+      "type": "string",
+      "required": false,
+      "description": "Active tab value"
+    },
+    "onValueChange": {
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Callback when active tab changes"
+    },
+    "defaultValue": {
+      "type": "string",
+      "required": false,
+      "description": "Default active tab value"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-tabs"],
+      "description": "Default tabs variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "active": {
+      "aibosClasses": ["na-active"],
+      "description": "Active tab state"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "Tabs",
+      "aibosClasses": [""],
+      "description": "Tabs root component"
+    },
+    "List": {
+      "radixComponent": "TabsList",
+      "aibosClasses": ["na-tabs-list"],
+      "description": "Tab list container"
+    },
+    "Trigger": {
+      "radixComponent": "TabsTrigger",
+      "aibosClasses": ["na-tab"],
+      "description": "Individual tab trigger"
+    },
+    "Content": {
+      "radixComponent": "TabsContent",
+      "aibosClasses": ["na-tab-content"],
+      "description": "Tab content panel"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation (Arrow keys)",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "navigation",
+    "tags": ["tabs", "navigation", "panels"],
+    "related": ["accordion", "dialog"],
+    "complexity": "moderate"
+  }
+}
+

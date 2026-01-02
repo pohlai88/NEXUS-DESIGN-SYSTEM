@@ -1,8 +1,8 @@
 # Neo-Analog Design System v2.0
 
 **Version**: 2.0  
-**Last Updated**: 2025-01-27  
-**Status**: ✅ **Production-Ready | Beast Mode Enabled**
+**Last Updated**: 2026-01-02  
+**Status**: ✅ **Production-Ready | Beast Mode Enabled | shadcn/ui Integrated**
 
 ---
 
@@ -14,11 +14,13 @@ The Neo-Analog Design System is an enterprise-grade, production-ready design sys
 
 - ✅ **254 Design Tokens** - Comprehensive token system (colors, typography, spacing, shadows, motion)
 - ✅ **171 Semantic Classes** - Reusable `.na-*` component classes
+- ✅ **shadcn/ui Integration** - Complete mapping of 54 shadcn components to AIBOS classes (872 mappings)
 - ✅ **Beast Mode Patterns** - Advanced patterns (Radio State Machine, Bi-directional Grid, Omni Shell)
 - ✅ **100% Figma Compliant** - Full alignment with Figma design system standards
 - ✅ **Zero Framework Overhead** - Pure CSS/HTML implementation
 - ✅ **Drift Prevention** - Automated semantic validation
 - ✅ **Headless Architecture** - Platform-agnostic design API
+- ✅ **IDE Integration** - Full TypeScript support, IntelliSense, and autocomplete
 
 ---
 
@@ -208,11 +210,18 @@ design_system/
 │   ├── enforce-semantics.cjs   # Drift detection
 │   ├── extract-headless-map.cjs # Headless map extraction
 │   ├── extract-tokens.js        # Token extraction
+│   ├── generate-shadcn-map.js  # shadcn/ui mapping generator
 │   └── validate-design-tokens.js # Token validation
+├── components.json               # shadcn/ui configuration
 └── dist/                        # Generated files
     ├── tokens.json              # Extracted tokens
     ├── headless-map.json        # Headless design map
-    └── tokens/                  # TypeScript definitions
+    ├── shadcn-map.json          # shadcn/ui component mapping
+    ├── api-docs.json            # API documentation
+    ├── css-custom-data.json     # VS Code IntelliSense data
+    └── types/                   # TypeScript definitions
+        ├── index.d.ts           # Main types export
+        └── shadcn-map.d.ts      # shadcn mapping types
 ```
 
 ---
@@ -268,6 +277,7 @@ design_system/
 | `pnpm dev` | Development mode (watch) |
 | `pnpm extract:tokens` | Extract design tokens to JSON |
 | `pnpm extract:headless` | Generate headless design map |
+| `pnpm extract:shadcn-map` | Generate shadcn/ui component mapping |
 | `pnpm enforce:semantics` | Run drift detection |
 | `pnpm validate` | Validate design tokens |
 | `pnpm validate:all` | Run all validations |
@@ -277,7 +287,7 @@ design_system/
 
 ---
 
-## Design Tokens
+## Design Tokens & Exports
 
 ### Available Exports
 
@@ -290,7 +300,147 @@ import tokens from '@aibos/design-system/tokens'
 
 // Tokens (TypeScript)
 import type { DesignTokens } from '@aibos/design-system/tokens/typescript'
+
+// API Documentation (JSON) - For IDE integration
+import apiDocs from '@aibos/design-system/api-docs'
+
+// CSS Custom Data (JSON) - For VS Code IntelliSense
+import cssData from '@aibos/design-system/css-custom-data'
+
+// shadcn/ui Component Mapping (JSON)
+import shadcnMap from '@aibos/design-system/shadcn-map'
+
+// shadcn/ui Component Mapping (TypeScript)
+import type { ShadcnMap, ShadcnComponentMapping } from '@aibos/design-system/shadcn-map/typescript'
+
+// shadcn/ui Configuration
+import componentsConfig from '@aibos/design-system/components.json'
+
+// Headless Map (Class-to-CSS mapping)
+import headlessMap from '@aibos/design-system/headless-map'
+
+// TypeScript Types
+import type { ShadcnMap, AIBOSClassesMapping } from '@aibos/design-system/types'
 ```
+
+---
+
+## shadcn/ui Integration
+
+The design system provides **complete integration** with shadcn/ui components, mapping all 54 shadcn components to AIBOS semantic classes.
+
+### Quick Start with shadcn/ui
+
+```bash
+# 1. Install shadcn/ui
+npx shadcn-ui@latest init
+
+# 2. Install AIBOS Design System
+npm install @aibos/design-system
+
+# 3. Import AIBOS CSS in your app
+import '@aibos/design-system/css'
+```
+
+### Using the Mapping
+
+```typescript
+// Import the mapping
+import shadcnMap from '@aibos/design-system/shadcn-map'
+
+// Get AIBOS classes for a shadcn component
+const buttonClasses = shadcnMap.mappings.button.aibosClasses
+// Returns: { base: 'na-btn', semantic: [...], utilities: [...], all: [...] }
+
+// Use in your component
+import { Button } from '@/components/ui/button'
+
+<Button className={shadcnMap.mappings.button.aibosClasses.base}>
+  Click me
+</Button>
+```
+
+### TypeScript Support
+
+```typescript
+import type { 
+  ShadcnMap, 
+  ShadcnComponentMapping,
+  AIBOSClassesForComponent 
+} from '@aibos/design-system/types'
+
+// Type-safe access
+const buttonMapping: ShadcnComponentMapping = shadcnMap.mappings.button
+
+// Helper types
+type ButtonClasses = AIBOSClassesForComponent<'button'>
+```
+
+### Component Mapping Examples
+
+**Button Component:**
+```tsx
+import { Button } from '@/components/ui/button'
+import shadcnMap from '@aibos/design-system/shadcn-map'
+
+// Primary button
+<Button className={shadcnMap.mappings.button.aibosClasses.base}>
+  Primary Action
+</Button>
+
+// With recommended classes
+<Button className={`${shadcnMap.mappings.button.aibosClasses.base} ${shadcnMap.mappings.button.aibosClasses.semantic[1]}`}>
+  Styled Button
+</Button>
+```
+
+**Card Component:**
+```tsx
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import shadcnMap from '@aibos/design-system/shadcn-map'
+
+<Card className={shadcnMap.mappings.card.aibosClasses.base}>
+  <CardHeader className={shadcnMap.mappings.card.parts.CardHeader?.join(' ')}>
+    <CardTitle className={shadcnMap.mappings.card.parts.CardTitle?.join(' ')}>
+      Card Title
+    </CardTitle>
+  </CardHeader>
+  <CardContent className={shadcnMap.mappings.card.parts.CardContent?.join(' ')}>
+    Content here
+  </CardContent>
+</Card>
+```
+
+### Mapping Statistics
+
+- **54 shadcn components** fully mapped
+- **872 total mappings** generated
+- **172 AIBOS classes** available
+- **100% coverage** of shadcn/ui components
+- **IDE-friendly** with IntelliSense metadata
+
+### Configuration
+
+The `components.json` file is included in the package and can be imported:
+
+```typescript
+import componentsConfig from '@aibos/design-system/components.json'
+
+// Access shadcn/ui configuration
+console.log(componentsConfig.style) // "new-york"
+console.log(componentsConfig.tailwind.css) // "input.css"
+```
+
+### IDE Integration
+
+The mapping includes IDE-friendly metadata for VS Code, WebStorm, and TypeScript:
+
+- **IntelliSense**: Full autocomplete for component mappings
+- **Type Safety**: Complete TypeScript definitions
+- **Hover Documentation**: Detailed descriptions for each component
+- **Usage Examples**: Code snippets for each component
+
+See [IDE_INTEGRATION.md](./docs/IDE_INTEGRATION.md) for complete IDE setup guide.
 
 ---
 
@@ -324,9 +474,10 @@ For questions or issues:
 ## Status
 
 **Version**: 2.0  
-**Last Updated**: 2025-01-27  
+**Last Updated**: 2026-01-02  
 **Status**: ✅ **Production Ready**  
 **Beast Mode**: ✅ **Enabled**  
+**shadcn/ui Integration**: ✅ **54 components mapped (872 mappings)**  
 **Prototypes**: 8 production-ready modules  
 **Documentation**: Complete and consolidated
 

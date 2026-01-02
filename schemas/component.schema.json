@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aibos.design/schemas/component.json",
+  "title": "AIBOS Component",
+  "description": "Schema for a single AIBOS component specification",
+  "type": "object",
+  "required": ["name", "variants"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Component name (PascalCase)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Component description"
+    },
+    "radixPrimitive": {
+      "type": ["string", "null"],
+      "description": "Radix UI primitive package name, or null for native elements",
+      "enum": [
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-popover",
+        "@radix-ui/react-select",
+        "@radix-ui/react-checkbox",
+        "@radix-ui/react-radio-group",
+        "@radix-ui/react-switch",
+        "@radix-ui/react-slider",
+        "@radix-ui/react-tabs",
+        "@radix-ui/react-accordion",
+        "@radix-ui/react-alert-dialog",
+        "@radix-ui/react-toast",
+        "@radix-ui/react-tooltip",
+        "@radix-ui/react-separator",
+        "@radix-ui/react-label",
+        null
+      ]
+    },
+    "nativeElement": {
+      "type": ["string", "null"],
+      "description": "Native HTML element if not using Radix UI",
+      "enum": ["button", "input", "div", "label", "select", "textarea", null]
+    },
+    "props": {
+      "type": "object",
+      "description": "Component props definition",
+      "patternProperties": {
+        "^[a-z][a-zA-Z0-9]*$": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Prop type (TypeScript-like syntax)"
+            },
+            "default": {
+              "description": "Default value"
+            },
+            "required": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": ["type"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "variants": {
+      "type": "object",
+      "description": "Component variants",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {
+          "type": "object",
+          "required": ["aibosClasses"],
+          "properties": {
+            "aibosClasses": {
+              "type": "array",
+              "description": "AIBOS CSS classes for this variant",
+              "items": {
+                "type": "string",
+                "pattern": "^na-.*"
+              },
+              "minItems": 1
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "minProperties": 1
+    },
+    "states": {
+      "type": "object",
+      "description": "Component states",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {
+          "type": "object",
+          "properties": {
+            "aibosClasses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "css": {
+              "type": "string",
+              "description": "Additional CSS (Tailwind classes)"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "parts": {
+      "type": "object",
+      "description": "Component parts (for composite components like Dialog)",
+      "patternProperties": {
+        "^[A-Z][a-zA-Z0-9]*$": {
+          "type": "object",
+          "required": ["aibosClasses"],
+          "properties": {
+            "radixComponent": {
+              "type": "string",
+              "description": "Radix UI component name (e.g., DialogHeader)"
+            },
+            "aibosClasses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 0
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "description": "Accessibility specifications",
+      "properties": {
+        "handledBy": {
+          "type": "string",
+          "enum": ["radix-ui", "native", "custom"],
+          "description": "Who handles accessibility"
+        },
+        "aria": {
+          "type": "object",
+          "description": "ARIA attributes",
+          "patternProperties": {
+            "^aria[A-Z][a-zA-Z]*$": {
+              "type": "string"
+            }
+          }
+        },
+        "keyboard": {
+          "type": "object",
+          "description": "Keyboard navigation patterns",
+          "patternProperties": {
+            "^[a-z]+$": {
+              "type": "string"
+            }
+          }
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Accessibility features (e.g., 'Focus trap', 'ESC key handling')"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Component metadata",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["interactive", "layout", "form", "feedback", "navigation", "data-display"]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related component names"
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+

@@ -1,0 +1,77 @@
+{
+  "name": "Tooltip",
+  "description": "Tooltip component for displaying additional information on hover",
+  "radixPrimitive": "@radix-ui/react-tooltip",
+  "props": {
+    "open": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the tooltip is open"
+    },
+    "onOpenChange": {
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Callback when open state changes"
+    },
+    "delayDuration": {
+      "type": "number",
+      "default": 700,
+      "required": false,
+      "description": "Delay before showing tooltip (ms)"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-tooltip"],
+      "description": "Default tooltip variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "open": {
+      "aibosClasses": ["na-open"],
+      "description": "Open state"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "Tooltip",
+      "aibosClasses": [""],
+      "description": "Tooltip root component"
+    },
+    "Trigger": {
+      "radixComponent": "TooltipTrigger",
+      "aibosClasses": [""],
+      "description": "Tooltip trigger element"
+    },
+    "Content": {
+      "radixComponent": "TooltipContent",
+      "aibosClasses": ["na-tooltip-content", "na-card"],
+      "description": "Tooltip content"
+    },
+    "Provider": {
+      "radixComponent": "TooltipProvider",
+      "aibosClasses": [""],
+      "description": "Tooltip provider (for global config)"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support",
+      "Focus management"
+    ]
+  },
+  "metadata": {
+    "category": "feedback",
+    "tags": ["tooltip", "hover", "help"],
+    "related": ["popover", "dialog"],
+    "complexity": "simple"
+  }
+}
+

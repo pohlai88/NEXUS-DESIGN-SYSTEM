@@ -1,0 +1,51 @@
+{
+  "name": "Label",
+  "description": "Form label component",
+  "radixPrimitive": "@radix-ui/react-label",
+  "nativeElement": "label",
+  "props": {
+    "htmlFor": {
+      "type": "string",
+      "required": false,
+      "description": "ID of the associated form element"
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the field is required"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-metadata", "na-label"],
+      "description": "Default label variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50"],
+      "description": "Disabled state"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "aria": {
+      "ariaLabel": "Label text"
+    },
+    "keyboard": {
+      "tab": "Focus navigation to associated input"
+    }
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["label", "form", "text"],
+    "related": ["input", "textarea", "select", "field"],
+    "complexity": "simple"
+  }
+}
+

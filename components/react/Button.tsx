@@ -11,7 +11,6 @@
  * ```
  */
 
-import React from 'react';
 import { Button as NextUIButton, ButtonProps as NextUIButtonProps } from '@nextui-org/react';
 import { cn } from '../utils.js';
 

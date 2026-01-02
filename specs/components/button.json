@@ -1,0 +1,114 @@
+{
+    "name": "Button",
+    "description": "Interactive button component for triggering actions",
+    "radixPrimitive": null,
+    "nativeElement": "button",
+    "props": {
+        "variant": {
+            "type": "primary | secondary | danger | ghost",
+            "default": "primary",
+            "required": false,
+            "description": "Visual style variant"
+        },
+        "size": {
+            "type": "sm | md | lg",
+            "default": "md",
+            "required": false,
+            "description": "Button size"
+        },
+        "disabled": {
+            "type": "boolean",
+            "default": false,
+            "required": false,
+            "description": "Whether the button is disabled"
+        },
+        "loading": {
+            "type": "boolean",
+            "default": false,
+            "required": false,
+            "description": "Whether the button is in loading state"
+        }
+    },
+    "variants": {
+        "primary": {
+            "aibosClasses": [
+                "na-btn",
+                "na-btn-primary"
+            ],
+            "description": "Primary action button"
+        },
+        "secondary": {
+            "aibosClasses": [
+                "na-btn",
+                "na-btn-secondary"
+            ],
+            "description": "Secondary button"
+        },
+        "danger": {
+            "aibosClasses": [
+                "na-btn",
+                "na-btn-danger"
+            ],
+            "description": "Destructive action button"
+        },
+        "ghost": {
+            "aibosClasses": [
+                "na-btn"
+            ],
+            "description": "Ghost button with minimal styling"
+        }
+    },
+    "states": {
+        "default": {
+            "aibosClasses": [],
+            "description": "Default state"
+        },
+        "hover": {
+            "css": "hover:opacity-90",
+            "description": "Hover state"
+        },
+        "focus": {
+            "css": "focus:ring-2 focus:ring-gold focus:outline-none",
+            "description": "Focus state"
+        },
+        "disabled": {
+            "aibosClasses": [
+                "opacity-50",
+                "cursor-not-allowed"
+            ],
+            "description": "Disabled state"
+        },
+        "loading": {
+            "aibosClasses": [
+                "na-shimmer"
+            ],
+            "description": "Loading state"
+        }
+    },
+    "accessibility": {
+        "handledBy": "native",
+        "aria": {
+            "ariaLabel": "Required for icon-only buttons",
+            "ariaDisabled": "When disabled"
+        },
+        "keyboard": {
+            "enter": "Activates button",
+            "space": "Activates button",
+            "tab": "Focus navigation"
+        }
+    },
+    "metadata": {
+        "category": "interactive",
+        "tags": [
+            "action",
+            "clickable",
+            "form"
+        ],
+        "related": [
+            "link",
+            "icon-button",
+            "button-group"
+        ],
+        "complexity": "simple"
+    }
+}

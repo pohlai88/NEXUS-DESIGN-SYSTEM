@@ -1,0 +1,85 @@
+{
+  "name": "Select",
+  "description": "Select dropdown component for forms",
+  "radixPrimitive": "@radix-ui/react-select",
+  "props": {
+    "value": {
+      "type": "string",
+      "required": false,
+      "description": "Selected value"
+    },
+    "onValueChange": {
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Callback when value changes"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the select is disabled"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-input"],
+      "description": "Default select variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50", "cursor-not-allowed"],
+      "description": "Disabled state"
+    },
+    "error": {
+      "aibosClasses": ["na-error"],
+      "description": "Error state"
+    }
+  },
+  "parts": {
+    "Root": {
+      "radixComponent": "Select",
+      "aibosClasses": [""],
+      "description": "Select root component"
+    },
+    "Trigger": {
+      "radixComponent": "SelectTrigger",
+      "aibosClasses": ["na-input"],
+      "description": "Select trigger button"
+    },
+    "Value": {
+      "radixComponent": "SelectValue",
+      "aibosClasses": ["na-data"],
+      "description": "Selected value display"
+    },
+    "Content": {
+      "radixComponent": "SelectContent",
+      "aibosClasses": ["na-card", "na-dropdown"],
+      "description": "Dropdown content"
+    },
+    "Item": {
+      "radixComponent": "SelectItem",
+      "aibosClasses": ["na-data"],
+      "description": "Select item"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["select", "dropdown", "form"],
+    "related": ["input", "combobox", "autocomplete"],
+    "complexity": "moderate"
+  }
+}
+

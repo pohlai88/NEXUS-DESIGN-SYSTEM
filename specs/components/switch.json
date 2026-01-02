@@ -1,0 +1,58 @@
+{
+  "name": "Switch",
+  "description": "Toggle switch component for boolean inputs",
+  "radixPrimitive": "@radix-ui/react-switch",
+  "props": {
+    "checked": {
+      "type": "boolean",
+      "required": false,
+      "description": "Checked state"
+    },
+    "onCheckedChange": {
+      "type": "(checked: boolean) => void",
+      "required": false,
+      "description": "Callback when checked state changes"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the switch is disabled"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-switch"],
+      "description": "Default switch variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "checked": {
+      "aibosClasses": ["na-checked"],
+      "description": "Checked state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50", "cursor-not-allowed"],
+      "description": "Disabled state"
+    }
+  },
+  "accessibility": {
+    "handledBy": "radix-ui",
+    "features": [
+      "Keyboard navigation",
+      "ARIA attributes",
+      "Screen reader support"
+    ]
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["switch", "toggle", "form", "input"],
+    "related": ["checkbox", "radio"],
+    "complexity": "simple"
+  }
+}
+

@@ -1,9 +1,33 @@
 # Dependencies
 node_modules/
-pnpm-lock.yaml
+.pnp
+.pnp.js
 
-# Build outputs (keep dist/ for publishing)
-# dist/ is included in package.json "files", so we keep it
+# Build outputs
+dist/
+.style.css
+*.css.map
+*.js.map
+
+# TypeScript
+*.tsbuildinfo
+.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
@@ -12,38 +36,16 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# OS files
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
-.temp/
-
-# Test coverage
+# Testing
 coverage/
 .nyc_output/
 
-# Package files (generated)
-*.tgz
-*.tar.gz
+# Temporary
+*.tmp
+*.temp
+.cache/
 
-# Local development
-.local/
-
+# Package
+.npmrc
+package-lock.json
+yarn.lock

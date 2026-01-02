@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    /* Build mode - for npm package compilation */
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    
+    /* Output */
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "noEmit": false,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    
+    /* Type checking */
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    
+    /* ESM support */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": true,
+    
+    /* Linting - relaxed for build */
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "types/**/*.ts",
+    "lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "scripts",
+    "prototypes",
+    "apps",
+    "components/ui"
+  ]
+}

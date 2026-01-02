@@ -4,7 +4,6 @@
  * Utility functions and HOCs for seamless NextUI + AIBOS integration
  */
 
-import React from 'react';
 import { cn } from '../utils.js';
 
 /**

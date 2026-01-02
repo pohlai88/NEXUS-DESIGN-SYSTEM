@@ -1,0 +1,68 @@
+{
+  "name": "Input",
+  "description": "Text input component for forms",
+  "radixPrimitive": null,
+  "nativeElement": "input",
+  "props": {
+    "type": {
+      "type": "text | email | password | number | tel | url | search",
+      "default": "text",
+      "required": false,
+      "description": "Input type"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Whether the input is disabled"
+    },
+    "placeholder": {
+      "type": "string",
+      "required": false,
+      "description": "Placeholder text"
+    }
+  },
+  "variants": {
+    "default": {
+      "aibosClasses": ["na-input"],
+      "description": "Default input variant"
+    }
+  },
+  "states": {
+    "default": {
+      "aibosClasses": [],
+      "description": "Default state"
+    },
+    "focus": {
+      "css": "focus:ring-2 focus:ring-gold focus:outline-none",
+      "description": "Focus state"
+    },
+    "disabled": {
+      "aibosClasses": ["opacity-50", "cursor-not-allowed"],
+      "description": "Disabled state"
+    },
+    "error": {
+      "aibosClasses": ["na-error"],
+      "description": "Error state"
+    }
+  },
+  "accessibility": {
+    "handledBy": "native",
+    "aria": {
+      "ariaLabel": "Required for icon-only inputs",
+      "ariaInvalid": "When in error state",
+      "ariaDisabled": "When disabled"
+    },
+    "keyboard": {
+      "tab": "Focus navigation",
+      "enter": "Submits form (if in form)"
+    }
+  },
+  "metadata": {
+    "category": "form",
+    "tags": ["input", "form", "text"],
+    "related": ["textarea", "select", "label", "field"],
+    "complexity": "simple"
+  }
+}
+

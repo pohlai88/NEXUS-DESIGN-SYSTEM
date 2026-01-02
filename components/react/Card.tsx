@@ -17,7 +17,6 @@
  * ```
  */
 
-import React from 'react';
 import { Card as NextUICard, CardProps as NextUICardProps, CardHeader, CardBody, CardFooter } from '@nextui-org/react';
 import { cn } from '../utils.js';
 

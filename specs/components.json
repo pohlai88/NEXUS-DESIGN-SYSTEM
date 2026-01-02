@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-02T00:00:00.000Z",
+  "components": {
+    "button": {
+      "$ref": "./components/button.json"
+    },
+    "dialog": {
+      "$ref": "./components/dialog.json"
+    }
+  }
+}
+
