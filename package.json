@@ -119,6 +119,31 @@
       "types": "./themes/index.d.ts",
       "import": "./themes/index.ts",
       "require": "./themes/index.js"
+    },
+    "./themes/light": {
+      "types": "./themes/light-theme.d.ts",
+      "import": "./themes/light-theme.ts",
+      "require": "./themes/light-theme.js"
+    },
+    "./themes/attractive": {
+      "types": "./themes/attractive-theme.d.ts",
+      "import": "./themes/attractive-theme.ts",
+      "require": "./themes/attractive-theme.js"
+    },
+    "./themes/rose-pine": {
+      "types": "./themes/rose-pine-theme.d.ts",
+      "import": "./themes/rose-pine-theme.ts",
+      "require": "./themes/rose-pine-theme.js"
+    },
+    "./themes/catppuccin-frappe": {
+      "types": "./themes/catppuccin-frappe-theme.d.ts",
+      "import": "./themes/catppuccin-frappe-theme.ts",
+      "require": "./themes/catppuccin-frappe-theme.js"
+    },
+    "./themes/kanagawa": {
+      "types": "./themes/kanagawa-theme.d.ts",
+      "import": "./themes/kanagawa-theme.ts",
+      "require": "./themes/kanagawa-theme.js"
     }
   },
   "files": [

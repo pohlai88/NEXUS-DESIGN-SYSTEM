@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIBOS Twilight Theme - Balanced Mid-Tone Theme</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: var(--font-family-sans, system-ui, sans-serif);
+      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .theme-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: color-mix(in oklab, var(--color-paper) 95%, transparent);
+      border-bottom: 1px solid var(--color-stroke);
+      padding: 20px 32px;
+      backdrop-filter: blur(12px);
+    }
+    
+    .theme-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .theme-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .theme-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 6px 0;
+      letter-spacing: -0.02em;
+    }
+    
+    .theme-subtitle {
+      font-size: 13px;
+      color: var(--color-clay);
+      margin: 0;
+      line-height: 1.5;
+    }
+    
+    .theme-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 8px;
+    }
+    
+    .theme-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .theme-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--color-stroke);
+      border-radius: 8px;
+      background: var(--color-paper-2);
+      color: var(--color-lux);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: capitalize;
+    }
+    
+    .theme-btn:hover {
+      background: var(--color-paper-hover);
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-1px);
+    }
+    
+    .theme-btn.active {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(94, 129, 172, 0.25);
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+    
+    .section {
+      margin-bottom: 56px;
+    }
+    
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 12px 0;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--color-stroke);
+      letter-spacing: -0.02em;
+    }
+    
+    .section-description {
+      font-size: 15px;
+      color: var(--color-lux-dim);
+      margin: 0 0 32px 0;
+      line-height: 1.7;
+      max-width: 800px;
+    }
+    
+    .hero-section {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 16px;
+      padding: 48px;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    
+    .hero-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-lux);
+      margin: 0 0 16px 0;
+      letter-spacing: -0.03em;
+    }
+    
+    .hero-description {
+      font-size: 18px;
+      color: var(--color-lux-dim);
+      margin: 0 0 32px 0;
+      line-height: 1.6;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .hero-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    
+    .hero-feature {
+      text-align: center;
+    }
+    
+    .hero-feature-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+    
+    .hero-feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 6px 0;
+    }
+    
+    .hero-feature-desc {
+      font-size: 13px;
+      color: var(--color-clay);
+      margin: 0;
+    }
+    
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    
+    .color-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+    
+    .color-card:hover {
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .color-swatch {
+      width: 100%;
+      height: 100px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border: 1px solid var(--color-stroke);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .color-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 6px 0;
+    }
+    
+    .color-value {
+      font-size: 13px;
+      color: var(--color-clay);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0 0 8px 0;
+    }
+    
+    .color-description {
+      font-size: 12px;
+      color: var(--color-clay);
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .button-group {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    
+    .button-group:hover {
+      border-color: var(--color-stroke-strong);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    .button-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    
+    .button-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .button-label {
+      font-size: 12px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 90px;
+      font-weight: 500;
+    }
+    
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .comparison-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    
+    .comparison-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 16px 0;
+    }
+    
+    .comparison-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .comparison-item {
+      font-size: 14px;
+      color: var(--color-lux-dim);
+      margin: 0 0 10px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .comparison-item::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: bold;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .stat-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 16px rgba(94, 129, 172, 0.15);
+    }
+    
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin: 0 0 10px 0;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-header">
+    <div class="theme-controls">
+      <div class="theme-info">
+        <h1 class="theme-title">
+          AIBOS Twilight Theme
+          <span class="theme-badge">Balanced</span>
+        </h1>
+        <p class="theme-subtitle" id="current-theme-display">
+          A sophisticated mid-tone theme that elegantly balances between light and dark. 
+          Perfect for extended use with reduced eye strain.
+        </p>
+      </div>
+      <div class="theme-buttons">
+        <button class="theme-btn" onclick="switchTheme('default')" id="btn-default">Default</button>
+        <button class="theme-btn" onclick="switchTheme('light')" id="btn-light">Light</button>
+        <button class="theme-btn active" onclick="switchTheme('twilight')" id="btn-twilight">Twilight</button>
+        <button class="theme-btn" onclick="switchTheme('attractive')" id="btn-attractive">Attractive</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Twilight Theme</h1>
+      <p class="hero-description">
+        A sophisticated mid-tone theme inspired by GitHub Dimmed, Solarized, and Nord. 
+        Perfectly balanced between light and dark for comfortable extended use.
+      </p>
+      <div class="hero-features">
+        <div class="hero-feature">
+          <div class="hero-feature-icon">🌓</div>
+          <h3 class="hero-feature-title">Balanced</h3>
+          <p class="hero-feature-desc">Mid-tone between light & dark</p>
+        </div>
+        <div class="hero-feature">
+          <div class="hero-feature-icon">✨</div>
+          <h3 class="hero-feature-title">Pretty</h3>
+          <p class="hero-feature-desc">Sophisticated color palette</p>
+        </div>
+        <div class="hero-feature">
+          <div class="hero-feature-icon">🛡️</div>
+          <h3 class="hero-feature-title">Stable</h3>
+          <p class="hero-feature-desc">Reduced contrast, less eye strain</p>
+        </div>
+        <div class="hero-feature">
+          <div class="hero-feature-icon">🎨</div>
+          <h3 class="hero-feature-title">Fascinating</h3>
+          <p class="hero-feature-desc">Unique, professional colors</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <h2 class="section-title">Sophisticated Color Palette</h2>
+      <p class="section-description">
+        Five carefully selected colors that create a harmonious, professional, and fascinating experience.
+        Inspired by nature (Nord's arctic theme) and balanced contrast principles.
+      </p>
+      <div class="color-palette" id="color-palette">
+        <!-- Colors will be injected by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Primary Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Primary Buttons (Elegant Teal)</h2>
+      <p class="section-description">
+        Primary actions use elegant teal - a sophisticated, calming color that builds trust and professionalism.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Standard Primary</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="na-btn na-btn-primary">Primary Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="na-btn na-btn-primary" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Hover Effect</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Disabled</span>
+              <button class="na-btn na-btn-primary" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Sizes</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Small</span>
+              <button class="na-btn na-btn-primary" style="padding: 6px 12px; font-size: 13px;">Small</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Medium</span>
+              <button class="na-btn na-btn-primary">Medium (Default)</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Large</span>
+              <button class="na-btn na-btn-primary" style="padding: 12px 24px; font-size: 16px;">Large</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accent Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Accent Buttons (Muted Violet)</h2>
+      <p class="section-description">
+        Accent buttons use muted violet - a fascinating, unique color that adds creativity while maintaining professionalism.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Violet Accent</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold">Accent Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Hover Effect</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Status Buttons</h2>
+      <p class="section-description">
+        Status colors use natural, calming tones: Soft Sage (Success), Warm Terracotta (Warning), and Soft Red (Error).
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Success (Soft Sage)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-success text-success-foreground px-6 py-3 rounded-lg font-semibold">Confirm</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-success text-success-foreground px-6 py-3 rounded-lg font-semibold">✓ Success</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Warning (Terracotta)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-warning text-warning-foreground px-6 py-3 rounded-lg font-semibold">Warning</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-warning text-warning-foreground px-6 py-3 rounded-lg font-semibold">⚠️ Attention</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Error (Soft Red)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-error text-error-foreground px-6 py-3 rounded-lg font-semibold">Delete</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-error text-error-foreground px-6 py-3 rounded-lg font-semibold">🗑️ Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="section">
+      <h2 class="section-title">Why Twilight is Special</h2>
+      <p class="section-description">
+        Comparison with other themes and what makes Twilight unique for extended use.
+      </p>
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h3 class="comparison-title">Balanced Contrast</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Not too bright (reduces eye strain)</li>
+            <li class="comparison-item">Not too dark (works in bright light)</li>
+            <li class="comparison-item">Perfect middle ground</li>
+            <li class="comparison-item">Extended use comfort</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h3 class="comparison-title">Sophisticated Colors</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Cool, calming tones</li>
+            <li class="comparison-item">Muted saturation</li>
+            <li class="comparison-item">Professional appearance</li>
+            <li class="comparison-item">Nature-inspired palette</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h3 class="comparison-title">Stability & Comfort</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Reduced visual fatigue</li>
+            <li class="comparison-item">Long session friendly</li>
+            <li class="comparison-item">Consistent across lighting</li>
+            <li class="comparison-item">WCAG AA compliant</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+      <h2 class="section-title">Theme Statistics</h2>
+      <p class="section-description">
+        Current theme configuration and characteristics.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">5</div>
+          <p class="stat-label">Core Colors</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Mid</div>
+          <p class="stat-label">Tone Level</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">AA</div>
+          <p class="stat-label">WCAG Rating</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">∞</div>
+          <p class="stat-label">Extended Use</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    // Twilight theme definition
+    const twilightTheme = {
+      void: '#1c1e26',
+      paper: '#232530',
+      paper2: '#2e3440',
+      paperHover: '#3b4252',
+      white: '#ffffff',
+      lux: '#d8dee9',
+      luxDim: '#a5abb6',
+      clay: '#818896',
+      gold: '#5e81ac',
+      primary: '#5e81ac',
+      primaryForeground: '#eceff4',
+      accent: '#b48ead',
+      accentForeground: '#eceff4',
+      success: '#a3be8c',
+      successForeground: '#2e3440',
+      warning: '#d08770',
+      warningForeground: '#2e3440',
+      secondary: '#4c566a',
+      secondaryForeground: '#eceff4',
+      error: '#bf616a',
+      errorForeground: '#eceff4',
+      info: '#88c0d0',
+      stroke: '#3b4252',
+      strokeStrong: '#4c566a',
+      strokeSoft: '#2e3440',
+      background: '#1c1e26',
+      foreground: '#d8dee9',
+      muted: '#2e3440',
+      mutedForeground: '#818896',
+      card: '#232530',
+      cardForeground: '#d8dee9',
+      popover: '#232530',
+      popoverForeground: '#d8dee9',
+      border: '#3b4252',
+      input: '#3b4252',
+      destructive: '#bf616a',
+      destructiveForeground: '#eceff4',
+      ring: '#5e81ac',
+    };
+
+    // Default theme (for comparison)
+    const defaultTheme = {
+      void: '#09090b',
+      paper: '#121214',
+      paper2: '#18181b',
+      paperHover: '#27272a',
+      white: '#ffffff',
+      lux: '#f4f4f5',
+      luxDim: '#a1a1aa',
+      clay: '#71717a',
+      gold: '#eab308',
+      primary: '#eab308',
+      primaryForeground: '#09090b',
+      accent: '#18181b',
+      accentForeground: '#f4f4f5',
+      success: '#10b981',
+      warning: '#f59e0b',
+      error: '#f43f5e',
+      info: '#3b82f6',
+      stroke: '#27272a',
+      strokeStrong: '#3f3f46',
+      strokeSoft: '#1f1f22',
+      background: '#09090b',
+      foreground: '#f4f4f5',
+      muted: '#18181b',
+      mutedForeground: '#71717a',
+      card: '#121214',
+      cardForeground: '#f4f4f5',
+      popover: '#121214',
+      popoverForeground: '#f4f4f5',
+      border: '#27272a',
+      input: '#27272a',
+      destructive: '#f43f5e',
+      destructiveForeground: '#f4f4f5',
+      ring: '#eab308',
+    };
+
+    // Light theme
+    const lightTheme = {
+      void: '#ffffff',
+      paper: '#f8f9fa',
+      paper2: '#e9ecef',
+      paperHover: '#dee2e6',
+      white: '#ffffff',
+      lux: '#212529',
+      luxDim: '#495057',
+      clay: '#6c757d',
+      gold: '#d97706',
+      primary: '#d97706',
+      primaryForeground: '#ffffff',
+      accent: '#e9ecef',
+      accentForeground: '#212529',
+      success: '#059669',
+      warning: '#d97706',
+      error: '#dc2626',
+      info: '#0284c7',
+      stroke: '#dee2e6',
+      strokeStrong: '#ced4da',
+      strokeSoft: '#f1f3f5',
+      background: '#ffffff',
+      foreground: '#212529',
+      muted: '#e9ecef',
+      mutedForeground: '#6c757d',
+      card: '#f8f9fa',
+      cardForeground: '#212529',
+      popover: '#f8f9fa',
+      popoverForeground: '#212529',
+      border: '#dee2e6',
+      input: '#dee2e6',
+      destructive: '#dc2626',
+      destructiveForeground: '#ffffff',
+      ring: '#d97706',
+    };
+
+    // Attractive theme
+    const attractiveTheme = {
+      void: '#0f172a',
+      paper: '#1e293b',
+      paper2: '#334155',
+      paperHover: '#475569',
+      white: '#ffffff',
+      lux: '#f1f5f9',
+      luxDim: '#cbd5e1',
+      clay: '#94a3b8',
+      gold: '#3b82f6',
+      primary: '#3b82f6',
+      primaryForeground: '#ffffff',
+      accent: '#f97316',
+      accentForeground: '#ffffff',
+      success: '#10b981',
+      warning: '#f59e0b',
+      error: '#ef4444',
+      info: '#06b6d4',
+      stroke: '#334155',
+      strokeStrong: '#475569',
+      strokeSoft: '#1e293b',
+      background: '#0f172a',
+      foreground: '#f1f5f9',
+      muted: '#334155',
+      mutedForeground: '#94a3b8',
+      card: '#1e293b',
+      cardForeground: '#f1f5f9',
+      popover: '#1e293b',
+      popoverForeground: '#f1f5f9',
+      border: '#334155',
+      input: '#334155',
+      destructive: '#ef4444',
+      destructiveForeground: '#ffffff',
+      ring: '#3b82f6',
+    };
+
+    const tokenMap = {
+      void: '--color-void',
+      paper: '--color-paper',
+      paper2: '--color-paper-2',
+      paperHover: '--color-paper-hover',
+      white: '--color-white',
+      lux: '--color-lux',
+      luxDim: '--color-lux-dim',
+      clay: '--color-clay',
+      gold: '--color-gold',
+      stroke: '--color-stroke',
+      strokeStrong: '--color-stroke-strong',
+      strokeSoft: '--color-stroke-soft',
+      success: '--color-success',
+      warning: '--color-warning',
+      error: '--color-error',
+      info: '--color-info',
+      background: '--color-background',
+      foreground: '--color-foreground',
+      muted: '--color-muted',
+      mutedForeground: '--color-muted-foreground',
+      card: '--color-card',
+      cardForeground: '--color-card-foreground',
+      popover: '--color-popover',
+      popoverForeground: '--color-popover-foreground',
+      border: '--color-border',
+      input: '--color-input',
+      primary: '--color-primary',
+      primaryForeground: '--color-primary-foreground',
+      secondary: '--color-secondary',
+      secondaryForeground: '--color-secondary-foreground',
+      accent: '--color-accent',
+      accentForeground: '--color-accent-foreground',
+      destructive: '--color-destructive',
+      destructiveForeground: '--color-destructive-foreground',
+      ring: '--color-ring',
+    };
+
+    const coreColors = [
+      { name: 'Elegant Teal', value: '#5e81ac', token: 'primary', description: 'Primary actions - Calming, professional, trustworthy' },
+      { name: 'Muted Violet', value: '#b48ead', token: 'accent', description: 'Accent emphasis - Creative, sophisticated, unique' },
+      { name: 'Soft Sage', value: '#a3be8c', token: 'success', description: 'Success states - Natural, growth, reassuring' },
+      { name: 'Warm Terracotta', value: '#d08770', token: 'warning', description: 'Warnings - Warm, attention-grabbing, less aggressive' },
+      { name: 'Neutral Charcoal', value: '#4c566a', token: 'secondary', description: 'Secondary actions - Stable, versatile, professional' },
+    ];
+
+    function renderColorPalette() {
+      const palette = document.getElementById('color-palette');
+      palette.innerHTML = coreColors.map(color => `
+        <div class="color-card">
+          <div class="color-swatch" style="background: ${color.value};"></div>
+          <h3 class="color-name">${color.name}</h3>
+          <p class="color-value">${color.value}</p>
+          <p class="color-description">${color.description}</p>
+        </div>
+      `).join('');
+    }
+
+    function applyTheme(themeName) {
+      const root = document.documentElement;
+      let theme;
+      let description;
+
+      switch(themeName) {
+        case 'default':
+          theme = defaultTheme;
+          description = 'Default (Dark) - High contrast, traditional dark theme';
+          break;
+        case 'light':
+          theme = lightTheme;
+          description = 'Light - Bright, high contrast for daytime use';
+          break;
+        case 'twilight':
+          theme = twilightTheme;
+          description = 'Twilight - Balanced mid-tone theme for extended use';
+          break;
+        case 'attractive':
+          theme = attractiveTheme;
+          description = 'Attractive - Premium 5-color theme with vibrant accents';
+          break;
+        default:
+          theme = twilightTheme;
+          description = 'Twilight - Balanced mid-tone theme';
+      }
+
+      root.setAttribute('data-theme', themeName);
+      Object.entries(theme).forEach(([key, value]) => {
+        const cssVar = tokenMap[key];
+        if (cssVar) {
+          root.style.setProperty(cssVar, value);
+        }
+      });
+
+      document.getElementById('current-theme-display').textContent = description;
+      
+      // Update button states
+      ['default', 'light', 'twilight', 'attractive'].forEach(name => {
+        const btn = document.getElementById(`btn-${name}`);
+        if (btn) {
+          btn.classList.toggle('active', name === themeName);
+        }
+      });
+    }
+
+    window.switchTheme = applyTheme;
+    renderColorPalette();
+    
+    const savedTheme = localStorage.getItem('theme') || 'twilight';
+    applyTheme(savedTheme);
+
+    const originalSwitchTheme = window.switchTheme;
+    window.switchTheme = function(themeName) {
+      originalSwitchTheme(themeName);
+      localStorage.setItem('theme', themeName);
+    };
+  </script>
+</body>
+</html>
+

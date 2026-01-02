@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIBOS Light Theme Test</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Theme switching script will be injected here */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .theme-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--color-paper);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--color-stroke);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-controls button {
+            margin: 4px;
+            padding: 8px 16px;
+            border: 1px solid var(--color-stroke);
+            border-radius: 4px;
+            background: var(--color-paper-2);
+            color: var(--color-lux);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .theme-controls button:hover {
+            background: var(--color-paper-hover);
+        }
+
+        .theme-controls button.active {
+            background: var(--color-primary);
+            color: var(--color-primary-foreground);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="theme-controls">
+        <button onclick="switchTheme('default')" id="btn-default" class="active">Dark</button>
+        <button onclick="switchTheme('light')" id="btn-light">Light</button>
+    </div>
+
+    <div class="na-content">
+        <div class="na-card na-p-8">
+            <h1 class="na-h1">AIBOS Light Theme Test</h1>
+            <p class="na-metadata">Testing theme engine with light theme</p>
+
+            <div class="na-panel na-mt-6 na-p-6">
+                <h2 class="na-h3">Current Theme</h2>
+                <div class="na-data-large na-mt-4" id="current-theme">default</div>
+            </div>
+
+            <div class="na-panel na-mt-6 na-p-6">
+                <h2 class="na-h3">Tailwind v4 Utilities</h2>
+                <div class="bg-paper text-lux p-6 rounded-card border border-stroke na-mt-4">
+                    <p>This uses <code class="na-data">bg-paper</code> and <code class="na-data">text-lux</code></p>
+                    <p class="text-lux-dim na-mt-2">These should change with theme</p>
+                </div>
+            </div>
+
+            <div class="na-panel na-mt-6 na-p-6">
+                <h2 class="na-h3">Buttons</h2>
+                <div class="na-flex na-gap-4 na-mt-4">
+                    <button class="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold">
+                        Primary Button
+                    </button>
+                    <button class="bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-semibold">
+                        Secondary Button
+                    </button>
+                </div>
+            </div>
+
+            <div class="na-panel na-mt-6 na-p-6">
+                <h2 class="na-h3">Status Colors</h2>
+                <div class="na-grid na-grid-4 na-mt-4">
+                    <div class="bg-success text-white p-4 rounded-lg text-center">
+                        Success
+                    </div>
+                    <div class="bg-warning text-white p-4 rounded-lg text-center">
+                        Warning
+                    </div>
+                    <div class="bg-error text-white p-4 rounded-lg text-center">
+                        Error
+                    </div>
+                    <div class="bg-info text-white p-4 rounded-lg text-center">
+                        Info
+                    </div>
+                </div>
+            </div>
+
+            <div class="na-panel na-mt-6 na-p-6">
+                <h2 class="na-h3">Data Display</h2>
+                <div class="na-mt-4">
+                    <div class="na-data-large">$12,450.00</div>
+                    <div class="na-metadata na-mt-2">Revenue • Q4 2025</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Light theme definition
+        const lightTheme = {
+            void: '#ffffff',
+            paper: '#f8f9fa',
+            paper2: '#e9ecef',
+            paperHover: '#dee2e6',
+            white: '#ffffff',
+            lux: '#212529',
+            luxDim: '#495057',
+            clay: '#6c757d',
+            gold: '#d97706',
+            stroke: '#dee2e6',
+            strokeStrong: '#ced4da',
+            strokeSoft: '#f1f3f5',
+            success: '#059669',
+            warning: '#d97706',
+            error: '#dc2626',
+            info: '#0284c7',
+            background: '#ffffff',
+            foreground: '#212529',
+            muted: '#e9ecef',
+            mutedForeground: '#6c757d',
+            card: '#f8f9fa',
+            cardForeground: '#212529',
+            popover: '#f8f9fa',
+            popoverForeground: '#212529',
+            border: '#dee2e6',
+            input: '#dee2e6',
+            primary: '#d97706',
+            primaryForeground: '#ffffff',
+            secondary: '#e9ecef',
+            secondaryForeground: '#212529',
+            accent: '#e9ecef',
+            accentForeground: '#212529',
+            destructive: '#dc2626',
+            destructiveForeground: '#ffffff',
+            ring: '#d97706',
+        };
+
+        // Token registry mapping
+        const tokenMap = {
+            void: '--color-void',
+            paper: '--color-paper',
+            paper2: '--color-paper-2',
+            paperHover: '--color-paper-hover',
+            white: '--color-white',
+            lux: '--color-lux',
+            luxDim: '--color-lux-dim',
+            clay: '--color-clay',
+            gold: '--color-gold',
+            stroke: '--color-stroke',
+            strokeStrong: '--color-stroke-strong',
+            strokeSoft: '--color-stroke-soft',
+            success: '--color-success',
+            warning: '--color-warning',
+            error: '--color-error',
+            info: '--color-info',
+            background: '--color-background',
+            foreground: '--color-foreground',
+            muted: '--color-muted',
+            mutedForeground: '--color-muted-foreground',
+            card: '--color-card',
+            cardForeground: '--color-card-foreground',
+            popover: '--color-popover',
+            popoverForeground: '--color-popover-foreground',
+            border: '--color-border',
+            input: '--color-input',
+            primary: '--color-primary',
+            primaryForeground: '--color-primary-foreground',
+            secondary: '--color-secondary',
+            secondaryForeground: '--color-secondary-foreground',
+            accent: '--color-accent',
+            accentForeground: '--color-accent-foreground',
+            destructive: '--color-destructive',
+            destructiveForeground: '--color-destructive-foreground',
+            ring: '--color-ring',
+        };
+
+        function applyTheme(themeName) {
+            const root = document.documentElement;
+
+            if (themeName === 'default') {
+                // Remove all custom theme variables
+                root.removeAttribute('data-theme');
+                Object.values(tokenMap).forEach(cssVar => {
+                    root.style.removeProperty(cssVar);
+                });
+                document.getElementById('current-theme').textContent = 'default';
+                document.getElementById('btn-default').classList.add('active');
+                document.getElementById('btn-light').classList.remove('active');
+            } else if (themeName === 'light') {
+                // Apply light theme
+                root.setAttribute('data-theme', 'light');
+                Object.entries(lightTheme).forEach(([key, value]) => {
+                    const cssVar = tokenMap[key];
+                    if (cssVar) {
+                        root.style.setProperty(cssVar, value);
+                    }
+                });
+                document.getElementById('current-theme').textContent = 'light';
+                document.getElementById('btn-light').classList.add('active');
+                document.getElementById('btn-default').classList.remove('active');
+            }
+        }
+
+        // Make switchTheme available globally
+        window.switchTheme = applyTheme;
+
+        // Load saved theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'default';
+        applyTheme(savedTheme);
+
+        // Save theme preference
+        const originalSwitchTheme = window.switchTheme;
+        window.switchTheme = function (themeName) {
+            originalSwitchTheme(themeName);
+            localStorage.setItem('theme', themeName);
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub-Inspired Themes - Rosé Pine, Catppuccin Frappé, Kanagawa</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: var(--font-family-sans, system-ui, sans-serif);
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: color-mix(in oklab, var(--color-paper) 98%, transparent);
+            border-bottom: 1px solid var(--color-stroke);
+            padding: 24px 32px;
+            backdrop-filter: blur(16px) saturate(180%);
+        }
+
+        .theme-controls {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .theme-info {
+            flex: 1;
+            min-width: 350px;
+        }
+
+        .theme-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--color-lux);
+            margin: 0 0 10px 0;
+            letter-spacing: -0.03em;
+        }
+
+        .theme-subtitle {
+            font-size: 15px;
+            color: var(--color-clay);
+            margin: 0;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 12px 24px;
+            border: 1px solid var(--color-stroke);
+            border-radius: 10px;
+            background: var(--color-paper-2);
+            color: var(--color-lux);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: capitalize;
+        }
+
+        .theme-btn:hover {
+            background: var(--color-paper-hover);
+            border-color: var(--color-stroke-strong);
+            transform: translateY(-2px);
+        }
+
+        .theme-btn.active {
+            background: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 56px 32px;
+        }
+
+        .section {
+            margin-bottom: 72px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--color-lux);
+            margin: 0 0 20px 0;
+            padding-bottom: 24px;
+            border-bottom: 3px solid var(--color-stroke);
+            letter-spacing: -0.04em;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--color-lux-dim);
+            margin: 0 0 48px 0;
+            line-height: 1.8;
+            max-width: 1000px;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .theme-card {
+            background: var(--color-paper);
+            border: 2px solid var(--color-stroke);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--color-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-card:hover::before {
+            opacity: 1;
+        }
+
+        .theme-card-header {
+            margin-bottom: 32px;
+        }
+
+        .theme-card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-lux);
+            margin: 0 0 8px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .theme-card-tagline {
+            font-size: 14px;
+            color: var(--color-clay);
+            margin: 0 0 16px 0;
+            font-style: italic;
+        }
+
+        .theme-card-description {
+            font-size: 15px;
+            color: var(--color-lux-dim);
+            margin: 0 0 24px 0;
+            line-height: 1.7;
+        }
+
+        .theme-colors {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .theme-color-swatch {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 1px solid var(--color-stroke);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-color-label {
+            font-size: 11px;
+            color: var(--color-clay);
+            text-align: center;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            margin-top: 48px;
+        }
+
+        .button-group {
+            background: var(--color-paper);
+            border: 1px solid var(--color-stroke);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .button-group:hover {
+            border-color: var(--color-stroke-strong);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-group-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-lux);
+            margin: 0 0 24px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .button-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .button-label {
+            font-size: 12px;
+            color: var(--color-clay);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            min-width: 100px;
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 32px;
+            background: var(--color-paper);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--color-stroke);
+        }
+
+        .comparison-table th {
+            background: var(--color-paper-2);
+            padding: 20px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-lux);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 2px solid var(--color-stroke);
+        }
+
+        .comparison-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: var(--color-lux-dim);
+            border-bottom: 1px solid var(--color-stroke);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--color-paper-2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="theme-header">
+        <div class="theme-controls">
+            <div class="theme-info">
+                <h1 class="theme-title">GitHub-Inspired Themes</h1>
+                <p class="theme-subtitle" id="current-theme-display">
+                    Three sophisticated themes that balance between light and dark: Rosé Pine (Classy & Minimalist),
+                    Catppuccin Frappé (Soothing Middle Ground), and Kanagawa (Artistic & Warm).
+                </p>
+            </div>
+            <div class="theme-buttons">
+                <button class="theme-btn" onclick="switchTheme('default')" id="btn-default">Default</button>
+                <button class="theme-btn" onclick="switchTheme('gold-glow')" id="btn-gold-glow">Gold Glow</button>
+                <button class="theme-btn" onclick="switchTheme('gruvbox-material')"
+                    id="btn-gruvbox-material">Gruvbox</button>
+                <button class="theme-btn" onclick="switchTheme('rose-pine')" id="btn-rose-pine">Rosé Pine</button>
+                <button class="theme-btn" onclick="switchTheme('catppuccin-frappe')"
+                    id="btn-catppuccin-frappe">Catppuccin</button>
+                <button class="theme-btn" onclick="switchTheme('kanagawa')" id="btn-kanagawa">Kanagawa</button>
+                <button class="theme-btn" onclick="switchTheme('carbon-mist')" id="btn-carbon-mist">Carbon Mist</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Themes Overview Section -->
+        <section class="section">
+            <h2 class="section-title">Three GitHub-Inspired Themes</h2>
+            <p class="section-description">
+                Each theme offers a unique approach to the "between light and dark" aesthetic,
+                with distinct personalities and use cases.
+            </p>
+            <div class="themes-grid" id="themes-grid">
+                <!-- Theme cards will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Button Showcase Section -->
+        <section class="section">
+            <h2 class="section-title">AIBOS Button Showcase</h2>
+            <p class="section-description">
+                See how AIBOS buttons adapt to each theme's unique color palette and aesthetic.
+            </p>
+            <div class="button-showcase">
+                <div class="button-group">
+                    <h3 class="button-group-title">Primary Buttons</h3>
+                    <div class="button-demo">
+                        <div class="button-row">
+                            <span class="button-label">Base</span>
+                            <button class="na-btn na-btn-primary">Primary Action</button>
+                        </div>
+                        <div class="button-row">
+                            <span class="button-label">Hover</span>
+                            <button class="na-btn na-btn-primary" onmouseover="this.style.opacity='0.95'"
+                                onmouseout="this.style.opacity='1'">Hover Effect</button>
+                        </div>
+                        <div class="button-row">
+                            <span class="button-label">Disabled</span>
+                            <button class="na-btn na-btn-primary" disabled>Disabled</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <h3 class="button-group-title">Secondary Buttons</h3>
+                    <div class="button-demo">
+                        <div class="button-row">
+                            <span class="button-label">Base</span>
+                            <button class="na-btn">Secondary</button>
+                        </div>
+                        <div class="button-row">
+                            <span class="button-label">Hover</span>
+                            <button class="na-btn" onmouseover="this.style.opacity='0.95'"
+                                onmouseout="this.style.opacity='1'">Hover Effect</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <h3 class="button-group-title">Status Buttons</h3>
+                    <div class="button-demo">
+                        <div class="button-row">
+                            <span class="button-label">Success</span>
+                            <button
+                                class="bg-success text-success-foreground px-6 py-3 rounded-lg font-semibold">Success</button>
+                        </div>
+                        <div class="button-row">
+                            <span class="button-label">Warning</span>
+                            <button
+                                class="bg-warning text-warning-foreground px-6 py-3 rounded-lg font-semibold">Warning</button>
+                        </div>
+                        <div class="button-row">
+                            <span class="button-label">Error</span>
+                            <button
+                                class="bg-error text-error-foreground px-6 py-3 rounded-lg font-semibold">Error</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="section">
+            <h2 class="section-title">Theme Comparison</h2>
+            <p class="section-description">
+                Compare the three themes across key characteristics and use cases.
+            </p>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Characteristic</th>
+                        <th>Rosé Pine</th>
+                        <th>Catppuccin Frappé</th>
+                        <th>Kanagawa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Aesthetic Vibe</strong></td>
+                        <td>Soho, Luxury, Violet-Grey</td>
+                        <td>Pastel, Soft, Modern</td>
+                        <td>Ink, Paper, Warm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Brightness Level</strong></td>
+                        <td>Mid-Dark</td>
+                        <td>Mid-Tone</td>
+                        <td>Muted Dark</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>Fascination / Fancy</td>
+                        <td>Stable / Pop</td>
+                        <td>Prettily / Artistic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Color</strong></td>
+                        <td>Rosé (#eb6f92)</td>
+                        <td>Blue (#8caaee)</td>
+                        <td>Wave Blue (#7e9cd8)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accent Color</strong></td>
+                        <td>Pine (#31748f)</td>
+                        <td>Mauve (#ca9ee6)</td>
+                        <td>Spring Green (#98bb6c)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Feel</strong></td>
+                        <td>Filtered photograph</td>
+                        <td>Soothing pastel</td>
+                        <td>Old Japanese painting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stability</strong></td>
+                        <td>Very stable</td>
+                        <td>Extremely stable</td>
+                        <td>Extremely stable</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script type="module">
+        // Theme definitions
+        const themes = {
+            'default': {
+                void: '#09090b', paper: '#121214', lux: '#f4f4f5', primary: '#eab308',
+                stroke: '#27272a', background: '#09090b', foreground: '#f4f4f5',
+                card: '#121214', cardForeground: '#f4f4f5', border: '#27272a',
+                muted: '#18181b', mutedForeground: '#71717a', input: '#27272a',
+                destructive: '#f43f5e', destructiveForeground: '#f4f4f5', ring: '#eab308',
+                success: '#10b981', warning: '#f59e0b', error: '#f43f5e', info: '#3b82f6',
+                paper2: '#18181b', paperHover: '#27272a', white: '#ffffff',
+                luxDim: '#a1a1aa', clay: '#71717a', gold: '#eab308',
+                primaryForeground: '#09090b', accent: '#18181b', accentForeground: '#f4f4f5',
+                secondary: '#18181b', secondaryForeground: '#f4f4f5',
+                successForeground: '#f4f4f5', warningForeground: '#09090b', errorForeground: '#f4f4f5', infoForeground: '#f4f4f5',
+                strokeStrong: '#3f3f46', strokeSoft: '#1f1f22',
+            },
+            'rose-pine': {
+                void: '#191724', paper: '#1f1d2e', lux: '#e0def4', primary: '#eb6f92',
+                stroke: 'rgba(110, 106, 134, 0.25)', background: '#191724', foreground: '#e0def4',
+                card: '#1f1d2e', cardForeground: '#e0def4', border: 'rgba(110, 106, 134, 0.25)',
+                muted: '#26233a', mutedForeground: '#6e6a86', input: '#26233a',
+                destructive: '#eb6f92', destructiveForeground: '#191724', ring: '#eb6f92',
+                success: '#9ccfd8', warning: '#f6c177', error: '#eb6f92', info: '#31748f',
+                paper2: '#26233a', paperHover: '#2a273f', white: '#ffffff',
+                luxDim: '#908caa', clay: '#6e6a86', gold: '#eb6f92',
+                primaryForeground: '#191724', accent: '#31748f', accentForeground: '#e0def4',
+                secondary: '#26233a', secondaryForeground: '#e0def4',
+                successForeground: '#191724', warningForeground: '#191724', errorForeground: '#191724', infoForeground: '#e0def4',
+                strokeStrong: 'rgba(110, 106, 134, 0.4)', strokeSoft: 'rgba(110, 106, 134, 0.15)',
+            },
+            'catppuccin-frappe': {
+                void: '#303446', paper: '#292c3c', lux: '#c6d0f5', primary: '#8caaee',
+                stroke: 'rgba(131, 139, 167, 0.3)', background: '#303446', foreground: '#c6d0f5',
+                card: '#292c3c', cardForeground: '#c6d0f5', border: 'rgba(131, 139, 167, 0.3)',
+                muted: '#232634', mutedForeground: '#838ba7', input: '#232634',
+                destructive: '#e78284', destructiveForeground: '#303446', ring: '#8caaee',
+                success: '#a6d189', warning: '#e5c890', error: '#e78284', info: '#99d1db',
+                paper2: '#232634', paperHover: '#363a4f', white: '#ffffff',
+                luxDim: '#a5adce', clay: '#838ba7', gold: '#8caaee',
+                primaryForeground: '#303446', accent: '#ca9ee6', accentForeground: '#303446',
+                secondary: '#414559', secondaryForeground: '#c6d0f5',
+                successForeground: '#303446', warningForeground: '#303446', errorForeground: '#303446', infoForeground: '#303446',
+                strokeStrong: 'rgba(131, 139, 167, 0.45)', strokeSoft: 'rgba(131, 139, 167, 0.2)',
+            },
+            'kanagawa': {
+                void: '#1f1f28', paper: '#2a2a37', lux: '#dcd7ba', primary: '#7e9cd8',
+                stroke: 'rgba(114, 113, 105, 0.3)', background: '#1f1f28', foreground: '#dcd7ba',
+                card: '#2a2a37', cardForeground: '#dcd7ba', border: 'rgba(114, 113, 105, 0.3)',
+                muted: '#363646', mutedForeground: '#727169', input: '#363646',
+                destructive: '#c34043', destructiveForeground: '#dcd7ba', ring: '#7e9cd8',
+                success: '#76946a', warning: '#c0a36e', error: '#c34043', info: '#7e9cd8',
+                paper2: '#363646', paperHover: '#41414d', white: '#ffffff',
+                luxDim: '#c8c093', clay: '#727169', gold: '#7e9cd8',
+                primaryForeground: '#1f1f28', accent: '#98bb6c', accentForeground: '#1f1f28',
+                secondary: '#363646', secondaryForeground: '#dcd7ba',
+                successForeground: '#dcd7ba', warningForeground: '#1f1f28', errorForeground: '#dcd7ba', infoForeground: '#1f1f28',
+                strokeStrong: 'rgba(114, 113, 105, 0.45)', strokeSoft: 'rgba(114, 113, 105, 0.2)',
+            },
+            'carbon-mist': {
+                void: '#121417', paper: '#171A1F', lux: '#E6E8EB', primary: '#4FD1C5',
+                stroke: 'rgba(124, 132, 145, 0.2)', background: '#121417', foreground: '#E6E8EB',
+                card: '#171A1F', cardForeground: '#E6E8EB', border: 'rgba(124, 132, 145, 0.2)',
+                muted: '#1D2127', mutedForeground: '#7C8491', input: '#1D2127',
+                destructive: '#E5533D', destructiveForeground: '#E6E8EB', ring: '#4FD1C5',
+                success: '#48BB78', warning: '#F2C94C', error: '#E5533D', info: '#4299E1',
+                paper2: '#1D2127', paperHover: '#252932', white: '#ffffff',
+                luxDim: '#B3B8C2', clay: '#7C8491', gold: '#4FD1C5',
+                primaryForeground: '#121417', accent: '#4FD1C5', accentForeground: '#121417',
+                secondary: '#2D3748', secondaryForeground: '#E6E8EB',
+                successForeground: '#121417', warningForeground: '#121417', errorForeground: '#E6E8EB', infoForeground: '#E6E8EB',
+                strokeStrong: 'rgba(124, 132, 145, 0.35)', strokeSoft: 'rgba(124, 132, 145, 0.1)',
+            },
+            'gold-glow': {
+                void: '#1d2021', paper: '#282828', lux: '#ebdbb2', primary: '#eab308',
+                stroke: '#504945', background: '#1d2021', foreground: '#ebdbb2',
+                card: '#282828', cardForeground: '#ebdbb2', border: '#504945',
+                muted: '#3c3836', mutedForeground: '#928374', input: '#504945',
+                destructive: '#cc241d', destructiveForeground: '#ebdbb2', ring: '#eab308',
+                success: '#98971a', warning: '#d79921', error: '#cc241d', info: '#458588',
+                paper2: '#3c3836', paperHover: '#504945', white: '#ffffff',
+                luxDim: '#d5c4a1', clay: '#928374', gold: '#eab308',
+                primaryForeground: '#1d2021', accent: '#3c3836', accentForeground: '#ebdbb2',
+                secondary: '#3c3836', secondaryForeground: '#ebdbb2',
+                successForeground: '#ebdbb2', warningForeground: '#1d2021', errorForeground: '#ebdbb2', infoForeground: '#ebdbb2',
+                strokeStrong: '#665c54', strokeSoft: '#3c3836',
+            },
+            'gruvbox-material': {
+                void: '#292828', paper: '#32302f', lux: '#ebdbb2', primary: '#eab308',
+                stroke: '#504945', background: '#292828', foreground: '#ebdbb2',
+                card: '#32302f', cardForeground: '#ebdbb2', border: '#504945',
+                muted: '#3c3836', mutedForeground: '#a89984', input: '#504945',
+                destructive: '#cc241d', destructiveForeground: '#ebdbb2', ring: '#eab308',
+                success: '#98971a', warning: '#d79921', error: '#cc241d', info: '#458588',
+                paper2: '#3c3836', paperHover: '#504945', white: '#ffffff',
+                luxDim: '#d5c4a1', clay: '#a89984', gold: '#eab308',
+                primaryForeground: '#292828', accent: '#fe8019', accentForeground: '#292828',
+                secondary: '#3c3836', secondaryForeground: '#ebdbb2',
+                successForeground: '#ebdbb2', warningForeground: '#292828', errorForeground: '#ebdbb2', infoForeground: '#ebdbb2',
+                strokeStrong: '#665c54', strokeSoft: '#3c3836',
+            },
+        };
+
+        const themeInfo = {
+            'rose-pine': {
+                name: 'Rosé Pine',
+                tagline: '"All natural pine, faux fur and a bit of soho vibes"',
+                description: 'A sophisticated, luxurious theme with deep, rich, muted violet/charcoal backgrounds. Feels like a filtered photograph, not a screen. Very "pretty" and "stable" with warm, muted pastels.',
+                colors: [
+                    { name: 'Rosé', value: '#eb6f92', label: 'Primary' },
+                    { name: 'Pine', value: '#31748f', label: 'Accent' },
+                    { name: 'Foam', value: '#9ccfd8', label: 'Success' },
+                    { name: 'Gold', value: '#f6c177', label: 'Warning' },
+                    { name: 'Base', value: '#191724', label: 'Background' },
+                ],
+            },
+            'catppuccin-frappe': {
+                name: 'Catppuccin Frappé',
+                tagline: 'Soothing pastel - the middle ground',
+                description: 'Specifically designed to be lighter than dark, darker than light. Uses soothing pastel colors that feel modern, playful, and fancy without being distracting. Low-contrast, greyish-blue base.',
+                colors: [
+                    { name: 'Blue', value: '#8caaee', label: 'Primary' },
+                    { name: 'Mauve', value: '#ca9ee6', label: 'Accent' },
+                    { name: 'Green', value: '#a6d189', label: 'Success' },
+                    { name: 'Yellow', value: '#e5c890', label: 'Warning' },
+                    { name: 'Base', value: '#303446', label: 'Background' },
+                ],
+            },
+            'kanagawa': {
+                name: 'Kanagawa',
+                tagline: 'Inspired by "The Great Wave off Kanagawa"',
+                description: 'Completely ignores standard "blue/black" tech look in favor of "muddy," ink-inspired colors. Uses warm, dark blues and sumi-ink greys. Feels like looking at an old Japanese painting.',
+                colors: [
+                    { name: 'Wave Blue', value: '#7e9cd8', label: 'Primary' },
+                    { name: 'Spring Green', value: '#98bb6c', label: 'Accent' },
+                    { name: 'Winter Green', value: '#76946a', label: 'Success' },
+                    { name: 'Autumn Yellow', value: '#c0a36e', label: 'Warning' },
+                    { name: 'Sumi-Ink', value: '#1f1f28', label: 'Background' },
+                ],
+            },
+        };
+
+        const tokenMap = {
+            void: '--color-void', paper: '--color-paper', paper2: '--color-paper-2', paperHover: '--color-paper-hover',
+            white: '--color-white', lux: '--color-lux', luxDim: '--color-lux-dim', clay: '--color-clay',
+            gold: '--color-gold', stroke: '--color-stroke', strokeStrong: '--color-stroke-strong', strokeSoft: '--color-stroke-soft',
+            success: '--color-success', warning: '--color-warning', error: '--color-error', info: '--color-info',
+            background: '--color-background', foreground: '--color-foreground', muted: '--color-muted', mutedForeground: '--color-muted-foreground',
+            card: '--color-card', cardForeground: '--color-card-foreground', popover: '--color-popover', popoverForeground: '--color-popover-foreground',
+            border: '--color-border', input: '--color-input', primary: '--color-primary', primaryForeground: '--color-primary-foreground',
+            secondary: '--color-secondary', secondaryForeground: '--color-secondary-foreground',
+            accent: '--color-accent', accentForeground: '--color-accent-foreground',
+            destructive: '--color-destructive', destructiveForeground: '--color-destructive-foreground',
+            ring: '--color-ring',
+        };
+
+        function renderThemeCards() {
+            const grid = document.getElementById('themes-grid');
+            grid.innerHTML = Object.entries(themeInfo).map(([key, info]) => `
+        <div class="theme-card">
+          <div class="theme-card-header">
+            <h3 class="theme-card-title">${info.name}</h3>
+            <p class="theme-card-tagline">${info.tagline}</p>
+            <p class="theme-card-description">${info.description}</p>
+          </div>
+          <div class="theme-colors">
+            ${info.colors.map(color => `
+              <div>
+                <div class="theme-color-swatch" style="background: ${color.value};"></div>
+                <div class="theme-color-label">${color.label}</div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="na-btn na-btn-primary" onclick="switchTheme('${key}')" style="width: 100%; margin-top: 24px;">
+            Switch to ${info.name}
+          </button>
+        </div>
+      `).join('');
+        }
+
+        function applyTheme(themeName) {
+            const root = document.documentElement;
+            const theme = themes[themeName] || themes['default'];
+
+            let description;
+            switch (themeName) {
+                case 'default': description = 'Default (Dark) - Traditional dark theme with gold on pure black'; break;
+                case 'gold-glow': description = 'Gold Glow - Vibrant gold #eab308 on warm stone background. Gold glows instead of screams!'; break;
+                case 'gruvbox-material': description = 'Gruvbox Material - Classic choice for gold. Warm, deep stone background makes gold look sophisticated.'; break;
+                case 'rose-pine': description = 'Rosé Pine - "All natural pine, faux fur and a bit of soho vibes"'; break;
+                case 'catppuccin-frappe': description = 'Catppuccin Frappé - Soothing pastel, the middle ground between light and dark'; break;
+                case 'kanagawa': description = 'Kanagawa - Inspired by "The Great Wave off Kanagawa", ink-inspired colors'; break;
+                case 'carbon-mist': description = 'Carbon Mist - Enterprise platform theme'; break;
+                default: description = 'GitHub-Inspired Themes';
+            }
+
+            root.setAttribute('data-theme', themeName);
+            Object.entries(theme).forEach(([key, value]) => {
+                const cssVar = tokenMap[key];
+                if (cssVar) {
+                    root.style.setProperty(cssVar, value);
+                }
+            });
+
+            document.getElementById('current-theme-display').textContent = description;
+
+            ['default', 'gold-glow', 'gruvbox-material', 'rose-pine', 'catppuccin-frappe', 'kanagawa', 'carbon-mist'].forEach(name => {
+                const btn = document.getElementById(`btn-${name}`);
+                if (btn) {
+                    btn.classList.toggle('active', name === themeName);
+                }
+            });
+        }
+
+        window.switchTheme = applyTheme;
+        renderThemeCards();
+
+        const savedTheme = localStorage.getItem('theme') || 'rose-pine';
+        applyTheme(savedTheme);
+
+        const originalSwitchTheme = window.switchTheme;
+        window.switchTheme = function (themeName) {
+            originalSwitchTheme(themeName);
+            localStorage.setItem('theme', themeName);
+        };
+    </script>
+</body>
+
+</html>

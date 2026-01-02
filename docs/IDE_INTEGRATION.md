@@ -437,6 +437,56 @@ function isValidClass(className: string): boolean {
 
 ---
 
+## Theme System Integration ⭐ **NEW**
+
+### TypeScript Support
+
+```typescript
+import type {
+  CustomTheme,
+  ThemeState,
+  ThemeMode,
+  ThemeContext
+} from '@aibos/design-system/themes';
+
+// Full type safety for themes
+const theme: CustomTheme = {
+  name: 'my-theme',
+  tokens: { /* ... */ }
+};
+```
+
+### Theme Hooks IntelliSense
+
+```typescript
+import { useThemeSwitch, useCurrentTheme } from '@aibos/design-system/themes';
+
+// Auto-complete for theme names
+const { switchToCustom } = useThemeSwitch();
+switchToCustom('light'); // ✅ Auto-complete suggests all theme names
+
+// Type-safe current theme
+const currentTheme = useCurrentTheme();
+// TypeScript knows: 'default' | 'light' | string
+```
+
+### Theme Provider Props
+
+```typescript
+import { ThemeProvider } from '@aibos/design-system/themes';
+
+// Full IntelliSense for props
+<ThemeProvider
+  initialTheme="default"  // ✅ Auto-complete
+  customThemes={[...]}    // ✅ Type-checked
+  persistToCookie={true}  // ✅ Boolean type
+/>
+```
+
+📖 **See**: [IDE Integration - Themes](./IDE_INTEGRATION_THEMES.md) for complete theme IDE support
+
+---
+
 ## Complete Export List
 
 ✅ **API Documentation**: `@aibos/design-system/api-docs`  
@@ -446,7 +496,10 @@ function isValidClass(className: string): boolean {
 ✅ **Validation Rules**: `@aibos/design-system/validation-rules`  
 ✅ **Helpers Documentation**: `@aibos/design-system/helpers-docs`  
 ✅ **ESLint Configuration**: `@aibos/design-system/eslint-config`  
-✅ **Headless Map**: `@aibos/design-system/headless-map`
+✅ **Headless Map**: `@aibos/design-system/headless-map`  
+✅ **Theme System**: `@aibos/design-system/themes` ⭐ **NEW**  
+✅ **Theme SSR Utils**: `@aibos/design-system/themes/ssr-utils` ⭐ **NEW**  
+✅ **Token Registry**: `@aibos/design-system/themes/token-registry` ⭐ **NEW**
 
 All formats are automatically generated during build and available via npm package exports.
 

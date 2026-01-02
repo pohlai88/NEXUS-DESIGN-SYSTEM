@@ -2,7 +2,16 @@
  * Theme Machine
  * 
  * State machine for managing theme switching between default and custom themes
+ * 
+ * Enhanced with unified token registry for Tailwind v4, ShadCN, and Figma compatibility
  */
+
+import {
+  TOKEN_REGISTRY,
+  getTailwindToken,
+  getShadcnToken,
+  normalizeTokenKey,
+} from './token-registry';
 
 export type ThemeMode = 'default' | 'custom';
 
@@ -136,17 +145,38 @@ export function createThemeContext(): ThemeContext {
 
 /**
  * Apply theme to document
+ * 
+ * Enhanced to support:
+ * - Tailwind v4 token mapping (--color-*, --font-*, --spacing-*)
+ * - ShadCN UI variable mapping (--color-background, --color-primary, etc.)
+ * - Custom CSS variables
+ * - Fallback to --aibos-* for unknown tokens
  */
 export function applyTheme(theme: ThemeState): void {
+  // Check if we're in a browser environment (for SSR safety)
+  if (typeof document === 'undefined') {
+    return;
+  }
+
   const root = document.documentElement;
 
   if (theme.mode === 'default') {
     // Remove custom theme variables
     root.removeAttribute('data-theme');
-    // Reset to default - remove any custom CSS variables
-    const customVars = Array.from(root.style).filter(prop => 
-      prop.startsWith('--') && prop.startsWith('--aibos-')
-    );
+    
+    // Remove all custom CSS variables that might have been set
+    // This includes Tailwind v4, ShadCN, and custom variables
+    const customVars: string[] = [];
+    
+    // Collect all custom variables from style attribute
+    for (let i = 0; i < root.style.length; i++) {
+      const prop = root.style[i];
+      if (prop.startsWith('--')) {
+        customVars.push(prop);
+      }
+    }
+    
+    // Remove all custom variables
     customVars.forEach(prop => {
       root.style.removeProperty(prop);
     });
@@ -154,23 +184,48 @@ export function applyTheme(theme: ThemeState): void {
     // Apply custom theme
     root.setAttribute('data-theme', theme.theme.name);
     
-    // Apply CSS variables
+    // Apply direct CSS variables first (highest priority)
     if (theme.theme.cssVariables) {
       Object.entries(theme.theme.cssVariables).forEach(([key, value]) => {
         root.style.setProperty(key, value);
       });
     }
 
-    // Apply token overrides via CSS variables
+    // Apply token overrides with unified mapping
     Object.entries(theme.theme.tokens).forEach(([key, value]) => {
-      const cssVar = `--aibos-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-      root.style.setProperty(cssVar, String(value));
+      const stringValue = String(value);
+      
+      // 1. Try Tailwind v4 token mapping (for utility classes)
+      const tailwindVar = getTailwindToken(key);
+      if (tailwindVar) {
+        root.style.setProperty(tailwindVar, stringValue);
+      }
+      
+      // 2. Try ShadCN token mapping (for component theming)
+      const shadcnVar = getShadcnToken(key);
+      if (shadcnVar && shadcnVar !== tailwindVar) {
+        // Only set if different from Tailwind var to avoid duplicates
+        root.style.setProperty(shadcnVar, stringValue);
+      }
+      
+      // 3. Fallback to normalized key (--aibos-* or direct CSS var)
+      const normalizedVar = normalizeTokenKey(key);
+      if (!tailwindVar && !shadcnVar) {
+        // Only use fallback if not already mapped
+        root.style.setProperty(normalizedVar, stringValue);
+      }
     });
   }
 }
 
 /**
  * Get current theme CSS variables
+ * 
+ * Returns all CSS variables that would be applied, including:
+ * - Tailwind v4 tokens
+ * - ShadCN variables
+ * - Custom CSS variables
+ * - Fallback variables
  */
 export function getThemeCSSVariables(theme: ThemeState): Record<string, string> {
   if (theme.mode === 'default') {
@@ -179,14 +234,32 @@ export function getThemeCSSVariables(theme: ThemeState): Record<string, string> 
 
   const vars: Record<string, string> = {};
   
+  // Add direct CSS variables
   if (theme.theme.cssVariables) {
     Object.assign(vars, theme.theme.cssVariables);
   }
 
-  // Convert tokens to CSS variables
+  // Convert tokens to CSS variables with unified mapping
   Object.entries(theme.theme.tokens).forEach(([key, value]) => {
-    const cssVar = `--aibos-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-    vars[cssVar] = String(value);
+    const stringValue = String(value);
+    
+    // Add Tailwind v4 token
+    const tailwindVar = getTailwindToken(key);
+    if (tailwindVar) {
+      vars[tailwindVar] = stringValue;
+    }
+    
+    // Add ShadCN token (if different)
+    const shadcnVar = getShadcnToken(key);
+    if (shadcnVar && shadcnVar !== tailwindVar) {
+      vars[shadcnVar] = stringValue;
+    }
+    
+    // Add fallback variable (if not already mapped)
+    if (!tailwindVar && !shadcnVar) {
+      const normalizedVar = normalizeTokenKey(key);
+      vars[normalizedVar] = stringValue;
+    }
   });
 
   return vars;

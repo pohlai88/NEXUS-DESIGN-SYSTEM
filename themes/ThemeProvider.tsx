@@ -2,9 +2,17 @@
  * Theme Provider
  * 
  * React context provider for theme management
+ * 
+ * Enhanced with:
+ * - Next.js SSR support (serverTheme prop)
+ * - Hydration safety (mounted state)
+ * - Cookie persistence
+ * - Client-side theme sync
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
+'use client';
+
+import React, { createContext, useContext, useReducer, useEffect, useMemo, useState } from 'react';
 import {
   ThemeContext,
   ThemeAction,
@@ -13,11 +21,14 @@ import {
   applyTheme,
   type CustomTheme
 } from './theme-machine';
+import { getClientTheme, setClientTheme } from './ssr-utils';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
   initialTheme?: 'default' | string;
+  serverTheme?: string; // Theme from server (SSR)
   customThemes?: CustomTheme[];
+  persistToCookie?: boolean; // Whether to persist theme to cookie (default: true)
 }
 
 const ThemeContextValue = createContext<{
@@ -28,8 +39,13 @@ const ThemeContextValue = createContext<{
 export function ThemeProvider({
   children,
   initialTheme = 'default',
-  customThemes = []
+  serverTheme,
+  customThemes = [],
+  persistToCookie = true
 }: ThemeProviderProps) {
+  // Track mounted state to prevent hydration mismatches
+  const [mounted, setMounted] = useState(false);
+  
   const [state, dispatch] = useReducer(themeReducer, createThemeContext(), (initial) => {
     // Register initial custom themes
     const context = { ...initial };
@@ -38,25 +54,69 @@ export function ThemeProvider({
       context.availableThemes.push(theme.name);
     });
 
+    // Determine initial theme (priority: serverTheme > initialTheme > cookie > default)
+    let resolvedTheme = initialTheme;
+    
+    if (serverTheme && serverTheme !== 'default') {
+      resolvedTheme = serverTheme;
+    } else if (typeof window !== 'undefined') {
+      // Try to read from cookie on client
+      const cookieTheme = getClientTheme();
+      if (cookieTheme !== 'default') {
+        resolvedTheme = cookieTheme;
+      }
+    }
+
     // Set initial theme
-    if (initialTheme === 'default') {
+    if (resolvedTheme === 'default') {
       context.currentTheme = { mode: 'default' };
     } else {
-      const theme = context.customThemes.get(initialTheme);
+      const theme = context.customThemes.get(resolvedTheme);
       if (theme) {
         context.currentTheme = { mode: 'custom', theme };
+      } else {
+        // Fallback to default if theme not found
+        context.currentTheme = { mode: 'default' };
       }
     }
 
     return context;
   });
 
-  // Apply theme to document when it changes
+  // Sync with server theme on mount
   useEffect(() => {
+    if (serverTheme && serverTheme !== 'default') {
+      const theme = state.customThemes.get(serverTheme);
+      if (theme && state.currentTheme.mode !== 'custom' || state.currentTheme.theme?.name !== serverTheme) {
+        dispatch({ type: 'SWITCH_TO_CUSTOM', themeName: serverTheme });
+      }
+    }
+  }, [serverTheme, state.customThemes, state.currentTheme]);
+
+  // Apply theme to document when it changes (after hydration)
+  useEffect(() => {
+    setMounted(true);
     applyTheme(state.currentTheme);
-  }, [state.currentTheme]);
+    
+    // Persist to cookie if enabled
+    if (persistToCookie && state.currentTheme.mode === 'custom') {
+      setClientTheme(state.currentTheme.theme.name);
+    } else if (persistToCookie && state.currentTheme.mode === 'default') {
+      setClientTheme('default');
+    }
+  }, [state.currentTheme, persistToCookie]);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
+
+  // Prevent hydration mismatch by not applying theme until mounted
+  // This ensures server and client render the same initial HTML
+  if (!mounted) {
+    return (
+      <ThemeContextValue.Provider value={value}>
+        {children}
+      </ThemeContextValue.Provider>
+    );
+  }
 
   return (
     <ThemeContextValue.Provider value={value}>

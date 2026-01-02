@@ -1,8 +1,8 @@
 # Neo-Analog Design System v2.0
 
 **Version**: 2.0  
-**Last Updated**: 2026-01-02  
-**Status**: ✅ **Production-Ready | Beast Mode Enabled | shadcn/ui Integrated**
+**Last Updated**: 2025-01-27  
+**Status**: ✅ **Production-Ready | Beast Mode Enabled | Theme System Complete | shadcn/ui Integrated**
 
 ---
 
@@ -14,6 +14,8 @@ The Neo-Analog Design System is an enterprise-grade, production-ready design sys
 
 - ✅ **254 Design Tokens** - Comprehensive token system (colors, typography, spacing, shadows, motion)
 - ✅ **171 Semantic Classes** - Reusable `.na-*` component classes
+- ✅ **10 Production Themes** - From default dark to GitHub-inspired themes
+- ✅ **Theme Engine** - Enterprise-grade theme system with SSR support
 - ✅ **shadcn/ui Integration** - Complete mapping of 54 shadcn components to AIBOS classes (872 mappings)
 - ✅ **Beast Mode Patterns** - Advanced patterns (Radio State Machine, Bi-directional Grid, Omni Shell)
 - ✅ **100% Figma Compliant** - Full alignment with Figma design system standards
@@ -111,30 +113,45 @@ pnpm validate:all   # Combined validation
    - Common patterns
    - Troubleshooting
 
+### Theme System ⭐ **NEW**
+
+3. **[Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md)** ⭐ **START HERE**
+   - Complete theme system documentation
+   - All 10 production-ready themes
+   - Architecture and API reference
+   - Next.js SSR integration
+   - Tailwind v4 & ShadCN compatibility
+
+4. **[Themes Index](./docs/THEMES_INDEX.md)** ⭐ **QUICK NAVIGATION**
+   - All themes overview
+   - Quick links to theme guides
+   - Usage examples
+   - Testing guide
+
 ### Essential Guides
 
-3. **[Design System Guide](./docs/DESIGN_SYSTEM.md)** ⭐ **COMPLETE REFERENCE**
+5. **[Design System Guide](./docs/DESIGN_SYSTEM.md)** ⭐ **COMPLETE REFERENCE**
    - Complete design system reference
    - All tokens, components, and patterns
    - Usage guidelines and examples
 
-2. **[Advanced Patterns](./docs/ADVANCED_PATTERNS.md)** 🚀 **BEAST MODE**
+6. **[Advanced Patterns](./docs/ADVANCED_PATTERNS.md)** 🚀 **BEAST MODE**
    - Radio Button State Machine (0ms latency view switching)
    - Bi-directional Sticky Grid (Frozen panes)
    - Omni Shell Layout (Grid-based application shell)
    - Status Select Component
 
-3. **[Quick Start Guide](./docs/QUICK_START_GUIDE.md)**
+7. **[Quick Start Guide](./docs/QUICK_START_GUIDE.md)**
    - Single repository setup
    - Monorepo integration
    - Framework integration examples
 
-4. **[Color System Reference](./docs/COLOR_SYSTEM_REFERENCE.md)**
+8. **[Color System Reference](./docs/COLOR_SYSTEM_REFERENCE.md)**
    - Complete color token reference
    - Semantic color mappings
    - Usage examples
 
-5. **[Headless Architecture](./docs/HEADLESS_ARCHITECTURE_STRATEGY.md)**
+9. **[Headless Architecture](./docs/HEADLESS_ARCHITECTURE_STRATEGY.md)**
    - Platform-agnostic design API
    - Headless map extraction
    - Cross-platform usage
@@ -246,6 +263,32 @@ design_system/
 </div>
 ```
 
+### Theme System ⭐ **NEW**
+
+```tsx
+import { ThemeProvider, useThemeSwitch, lightTheme } from '@aibos/design-system/themes';
+import '@aibos/design-system/css';
+
+// Wrap your app
+<ThemeProvider customThemes={[lightTheme, twilightTheme, attractiveTheme]}>
+  <App />
+</ThemeProvider>
+
+// Switch themes
+function ThemeSwitcher() {
+  const { switchToDefault, switchToCustom } = useThemeSwitch();
+  return (
+    <div>
+      <button onClick={() => switchToDefault()}>Default</button>
+      <button onClick={() => switchToCustom('light')}>Light</button>
+      <button onClick={() => switchToCustom('twilight')}>Twilight</button>
+    </div>
+  );
+}
+```
+
+📖 **See [Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md) for full documentation**
+
 ### Beast Mode Patterns
 
 ```html
@@ -294,6 +337,12 @@ design_system/
 ```typescript
 // CSS
 import '@aibos/design-system/css'
+
+// Theme System ⭐ NEW
+import { ThemeProvider, defaultTheme, lightTheme } from '@aibos/design-system/themes'
+import { useThemeSwitch, useCurrentTheme } from '@aibos/design-system/themes'
+import { tokenRegistry } from '@aibos/design-system/themes/token-registry'
+import { getThemeFromCookiesSSR } from '@aibos/design-system/themes/ssr-utils'
 
 // Tokens (JSON)
 import tokens from '@aibos/design-system/tokens'
@@ -463,23 +512,26 @@ See [IDE_INTEGRATION.md](./docs/IDE_INTEGRATION.md) for complete IDE setup guide
 
 For questions or issues:
 
-1. **External users**: Check [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md) first
-2. **Developers**: Check [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) first
-3. Review [ADVANCED_PATTERNS.md](./docs/ADVANCED_PATTERNS.md) for Beast Mode patterns
-4. Run `pnpm quality` to check for issues
-5. Review validation output
+1. **Theme System**: Check [Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md) first
+2. **External users**: Check [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md) first
+3. **Developers**: Check [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) first
+4. **Theme Implementation**: Check [Developer Guide - Themes](./docs/DEVELOPER_GUIDE_THEMES.md)
+5. Review [ADVANCED_PATTERNS.md](./docs/ADVANCED_PATTERNS.md) for Beast Mode patterns
+6. Run `pnpm quality` to check for issues
+7. Review validation output
 
 ---
 
 ## Status
 
 **Version**: 2.0  
-**Last Updated**: 2026-01-02  
+**Last Updated**: 2025-01-27  
 **Status**: ✅ **Production Ready**  
 **Beast Mode**: ✅ **Enabled**  
+**Theme System**: ✅ **10 production themes**  
 **shadcn/ui Integration**: ✅ **54 components mapped (872 mappings)**  
 **Prototypes**: 8 production-ready modules  
-**Documentation**: Complete and consolidated
+**Documentation**: ✅ **Complete and organized**
 
 ---
 

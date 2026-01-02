@@ -167,18 +167,36 @@ describe('Theme Machine', () => {
       expect(vars).toEqual({});
     });
 
-    it('should convert tokens to CSS variables', () => {
+    it('should convert tokens to CSS variables with unified mapping', () => {
       const theme = {
         mode: 'custom' as const,
         theme: {
           name: 'dark',
-          tokens: { primaryColor: '#000000', fontSize: '16px' }
+          tokens: { 
+            primary: '#000000', // Should map to --color-primary (Tailwind) and --color-primary (ShadCN)
+            lux: '#ffffff', // Should map to --color-lux (Tailwind)
+            fontSizeBase: '18px' // Should map to --font-size-base (Tailwind)
+          }
         }
       };
 
       const vars = getThemeCSSVariables(theme);
-      expect(vars['--aibos-primary-color']).toBe('#000000');
-      expect(vars['--aibos-font-size']).toBe('16px');
+      
+      // Check Tailwind v4 mapping
+      expect(vars['--color-primary']).toBe('#000000');
+      expect(vars['--color-lux']).toBe('#ffffff');
+      expect(vars['--font-size-base']).toBe('18px');
+      
+      // Unknown tokens should use fallback
+      const themeWithUnknown = {
+        mode: 'custom' as const,
+        theme: {
+          name: 'dark',
+          tokens: { customToken: 'value' }
+        }
+      };
+      const unknownVars = getThemeCSSVariables(themeWithUnknown);
+      expect(unknownVars['--aibos-custom-token']).toBe('value');
     });
 
     it('should include custom CSS variables', () => {
