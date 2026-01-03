@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Analog CLI Filter - Interactive Demo</title>
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ===== THE SECRET: INPUT OVERLAY TECHNIQUE ===== */
+        .cli-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Background highlight layer (positioned behind) */
+        .cli-input-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: inherit;
+            font: inherit;
+            border: inherit;
+            color: transparent;
+            pointer-events: none; /* Let clicks pass through to input */
+            z-index: 1;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        /* The actual input (transparent but keeps caret visible) */
+        .cli-input-field {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            color: transparent;
+            caret-color: #09090b; /* Black caret so you can see where you're typing */
+            resize: none;
+            outline: none;
+        }
+
+        /* Wrapper styling (border, padding, etc) */
+        .cli-input-container {
+            position: relative;
+            border: 1px solid #27272a;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: #121214;
+            transition: border-color 0.2s;
+        }
+
+        .cli-input-container:focus-within {
+            border-color: #3f3f46;
+            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.1);
+        }
+
+        /* Token styling (matches Neo-Analog) */
+        .token-key {
+            @apply text-blue-500 font-semibold;
+        }
+
+        .token-operator {
+            @apply text-amber-500 font-bold;
+        }
+
+        .token-value {
+            @apply text-emerald-500;
+        }
+
+        .token-raw {
+            @apply text-gray-400;
+        }
+
+        .space {
+            display: inline;
+        }
+    </style>
+</head>
+<body class="bg-void text-lux p-12" style="background-color: #09090b; color: #f4f4f5;">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold mb-2" style="color: #eab308;">Neo-Analog CLI Filter</h1>
+            <p class="text-gray-400 mb-6">
+                Type a command. Watch the syntax highlighting appear in real-time.
+            </p>
+        </div>
+
+        <!-- CLI Input Demo -->
+        <div class="mb-12">
+            <label class="block text-sm font-medium mb-3" style="color: #a1a1aa;">
+                Filter Command
+            </label>
+
+            <div class="cli-input-container">
+                <!-- Overlay layer with syntax highlighting -->
+                <div class="cli-input-backdrop" id="backdrop"></div>
+
+                <!-- Actual input field (transparent) -->
+                <input
+                    id="cliInput"
+                    type="text"
+                    class="cli-input-field w-full"
+                    placeholder="Try: status:active >50 error"
+                    style="font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.5;"
+                />
+            </div>
+
+            <!-- Token debug output -->
+            <div class="mt-6 p-4 rounded" style="background-color: #18181b; border: 1px solid #27272a;">
+                <h3 class="text-sm font-semibold mb-3" style="color: #eab308;">Parsed Tokens</h3>
+                <pre id="tokenOutput" style="font-family: 'JetBrains Mono', monospace; color: #f4f4f5; overflow-x: auto;">[]</pre>
+            </div>
+        </div>
+
+        <!-- Example Commands -->
+        <div class="mb-12">
+            <h2 class="text-xl font-semibold mb-4" style="color: #eab308;">Example Syntax</h2>
+            <div class="grid gap-3">
+                <div class="p-3 rounded" style="background-color: #18181b; border-left: 2px solid #10b981;">
+                    <code style="color: #10b981; font-family: 'JetBrains Mono', monospace;">status:active</code>
+                    <span style="color: #71717a;" class="ml-2">→ Filter by status field</span>
+                </div>
+                <div class="p-3 rounded" style="background-color: #18181b; border-left: 2px solid #f59e0b;">
+                    <code style="color: #f59e0b; font-family: 'JetBrains Mono', monospace;">>100 &lt;500</code>
+                    <span style="color: #71717a;" class="ml-2">→ Numeric range operators</span>
+                </div>
+                <div class="p-3 rounded" style="background-color: #18181b; border-left: 2px solid #3b82f6;">
+                    <code style="color: #3b82f6; font-family: 'JetBrains Mono', monospace;">error "high priority"</code>
+                    <span style="color: #71717a;" class="ml-2">→ Mixed search terms</span>
+                </div>
+                <div class="p-3 rounded" style="background-color: #18181b; border-left: 2px solid #ec4899;">
+                    <code style="color: #ec4899; font-family: 'JetBrains Mono', monospace;">type:bug owner:alice >7</code>
+                    <span style="color: #71717a;" class="ml-2">→ Multiple filters</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Explanation -->
+        <div class="mb-12">
+            <h2 class="text-xl font-semibold mb-4" style="color: #eab308;">How It Works</h2>
+            <div class="space-y-4">
+                <div class="p-4 rounded" style="background-color: #18181b; border: 1px solid #27272a;">
+                    <h3 class="font-semibold mb-2" style="color: #10b981;">1. Overlay Technique</h3>
+                    <p style="color: #a1a1aa; font-size: 14px;">
+                        The input field is made transparent with a visible caret.
+                        A backdrop div behind it renders colored tokens at the exact same position.
+                    </p>
+                </div>
+                <div class="p-4 rounded" style="background-color: #18181b; border: 1px solid #27272a;">
+                    <h3 class="font-semibold mb-2" style="color: #3b82f6;">2. Token Parsing</h3>
+                    <p style="color: #a1a1aa; font-size: 14px;">
+                        CLI Parser regex recognizes: keys (text:), operators (><=), values, and quotes.
+                        Each token gets a semantic type for styled highlighting.
+                    </p>
+                </div>
+                <div class="p-4 rounded" style="background-color: #18181b; border: 1px solid #27272a;">
+                    <h3 class="font-semibold mb-2" style="color: #f59e0b;">3. Reactive UI</h3>
+                    <p style="color: #a1a1aa; font-size: 14px;">
+                        On every keystroke, the parser runs and the backdrop updates,
+                        creating a "live syntax highlighting" effect as the user types.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key-Value Extraction -->
+        <div>
+            <h2 class="text-xl font-semibold mb-4" style="color: #eab308;">Extracted Filters</h2>
+            <div class="p-4 rounded" style="background-color: #18181b; border: 1px solid #27272a;">
+                <pre id="filterOutput" style="font-family: 'JetBrains Mono', monospace; color: #f4f4f5; overflow-x: auto;">{}</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple CLI Parser (inline for demo purposes)
+        function parseSearchInput(input) {
+            const tokens = [];
+            const regex = /([a-zA-Z0-9_-]+:)|([><=!]+)|(".*?"|[^"\s]+)|(\s+)/g;
+            
+            let match;
+            while ((match = regex.exec(input)) !== null) {
+                const [fullMatch, key, operator, value, whitespace] = match;
+                const start = match.index;
+                const end = start + fullMatch.length;
+
+                if (whitespace) continue;
+
+                if (key) {
+                    tokens.push({ type: 'key', text: key, start, end });
+                } else if (operator) {
+                    tokens.push({ type: 'operator', text: operator, start, end });
+                } else if (value) {
+                    const cleanValue = value.startsWith('"') && value.endsWith('"')
+                        ? value.slice(1, -1)
+                        : value;
+                    tokens.push({ type: 'value', text: cleanValue, start, end });
+                } else {
+                    tokens.push({ type: 'raw', text: fullMatch, start, end });
+                }
+            }
+
+            return tokens;
+        }
+
+        function extractKeyValues(tokens) {
+            const result = {};
+
+            for (let i = 0; i < tokens.length; i++) {
+                const token = tokens[i];
+                if (token.type === 'key') {
+                    const key = token.text.slice(0, -1);
+                    const nextToken = tokens[i + 1];
+                    const value = nextToken?.type === 'value' ? nextToken.text : '';
+                    
+                    if (!result[key]) result[key] = [];
+                    if (value) result[key].push(value);
+                }
+            }
+
+            return result;
+        }
+
+        function highlightCommand(input) {
+            const tokens = parseSearchInput(input);
+            let html = '';
+
+            tokens.forEach(t => {
+                let className = 'token-raw';
+                if (t.type === 'key') className = 'token-key';
+                if (t.type === 'operator') className = 'token-operator';
+                if (t.type === 'value') className = 'token-value';
+
+                html += `<span class="${className}">${escapeHtml(t.text)}</span><span class="space"> </span>`;
+            });
+
+            return html || '<span class="space">&nbsp;</span>';
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+            };
+            return text.replace(/[&<>"']/g, char => map[char] || char);
+        }
+
+        // Wire up the input
+        const input = document.getElementById('cliInput');
+        const backdrop = document.getElementById('backdrop');
+        const tokenOutput = document.getElementById('tokenOutput');
+        const filterOutput = document.getElementById('filterOutput');
+
+        input.addEventListener('input', () => {
+            const value = input.value;
+            
+            // Update backdrop with highlighted tokens
+            backdrop.innerHTML = highlightCommand(value);
+
+            // Update token debug output
+            const tokens = parseSearchInput(value);
+            tokenOutput.textContent = JSON.stringify(tokens, null, 2);
+
+            // Update filter output
+            const filters = extractKeyValues(tokens);
+            filterOutput.textContent = JSON.stringify(filters, null, 2);
+        });
+
+        // Initialize
+        input.dispatchEvent(new Event('input'));
+    </script>
+</body>
+</html>

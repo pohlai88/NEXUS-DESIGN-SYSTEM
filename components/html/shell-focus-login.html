@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-doc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Focus Shell: Login/Centered variant */
+        .focus-shell {
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-6);
+            background: var(--color-void);
+        }
+
+        .focus-card {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Split variant (image left, form right) */
+        .focus-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100dvh;
+        }
+
+        @media (width <= 768px) {
+            .focus-split {
+                grid-template-columns: 1fr;
+            }
+            .focus-split-image {
+                display: none;
+            }
+        }
+
+        .focus-split-image {
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-8);
+        }
+
+        .focus-split-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-8);
+        }
+    </style>
+</head>
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Focus Shell: Centered Login -->
+    <div class="focus-shell">
+        <div class="focus-card">
+            <div class="na-card">
+                <!-- Optional exit button -->
+                <div class="flex justify-end mb-4">
+                    <a href="/" class="na-iconbtn" aria-label="Close">
+                        <span aria-hidden="true">✕</span>
+                    </a>
+                </div>
+
+                <!-- Login Form -->
+                <main id="main-content" role="main">
+                    <div class="text-center mb-8">
+                        <div class="na-mark mx-auto mb-4" aria-hidden="true">NA</div>
+                        <h1 class="na-h1 mb-2">Welcome Back</h1>
+                        <p class="na-body-sm text-lux-dim">Sign in to your account</p>
+                    </div>
+
+                    <form class="space-y-4">
+                        <div>
+                            <label for="email" class="na-label mb-1">Email</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                class="na-input" 
+                                placeholder="you@example.com"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="password" class="na-label mb-1">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="na-input" 
+                                placeholder="••••••••"
+                                required
+                                autocomplete="current-password"
+                            >
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="na-switch">
+                                <span class="na-body-sm">Remember me</span>
+                            </label>
+                            <a href="#" class="na-body-sm text-gold">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="na-btn-primary w-full">Sign In</button>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="na-body-sm text-lux-dim">
+                            Don't have an account? 
+                            <a href="#" class="text-gold">Sign up</a>
+                        </p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alternative: Split Layout (uncomment to use) -->
+    <!--
+    <div class="focus-split">
+        <div class="focus-split-image">
+            <div class="text-center">
+                <div class="na-mark mx-auto mb-4" style="width: 80px; height: 80px; font-size: 2rem;">NA</div>
+                <h2 class="na-h2 text-void">Neo-Analog</h2>
+                <p class="na-body text-void/80">Enterprise Design System</p>
+            </div>
+        </div>
+        <div class="focus-split-form">
+            <div class="focus-card">
+                <div class="na-card">
+                    <main id="main-content" role="main">
+                        <h1 class="na-h1 mb-6">Sign In</h1>
+                        <form class="space-y-4">
+                            <div>
+                                <label for="email" class="na-label mb-1">Email</label>
+                                <input type="email" id="email" class="na-input" required>
+                            </div>
+                            <div>
+                                <label for="password" class="na-label mb-1">Password</label>
+                                <input type="password" id="password" class="na-input" required>
+                            </div>
+                            <button type="submit" class="na-btn-primary w-full">Sign In</button>
+                        </form>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+</body>
+</html>
+

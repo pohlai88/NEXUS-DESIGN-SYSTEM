@@ -1,7 +1,7 @@
 # Token Reference
 
 > **Auto-generated** from `dist/tokens.json`  
-> **Last updated**: 2026-01-03T09:49:26.243Z  
+> **Last updated**: 2026-01-03T15:00:40.699Z  
 > **Source**: `styles/10-tokens.css`
 
 ---

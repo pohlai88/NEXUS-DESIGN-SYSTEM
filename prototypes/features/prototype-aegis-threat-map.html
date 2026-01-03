@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS // CYBERSECURITY THREAT MAP</title>
+    <!-- Design System: Beast Mode Patterns -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           PROJECT AEGIS: Pure CSS Cybersecurity Threat Map
+           Demonstrating: CSS Grid Maps, CSS Motion Paths, Hex-Grid Topology
+           Zero JavaScript Libraries: No D3.js, No WebGL, No Canvas
+           ================================================================= */
+        :root {
+            /* AEGIS Color Palette: "Tactile Dark Mode" */
+            --aegis-void: #050505;
+            --aegis-panel: #0a0a0b;
+            --aegis-surface: #121214;
+            --aegis-glow: #10b981; /* Emerald for safe zones */
+            --aegis-threat: #f43f5e; /* Rose for threats */
+            --aegis-warning: #f59e0b; /* Amber for warnings */
+            --aegis-info: #3b82f6; /* Blue for info */
+            --aegis-accent: #eab308; /* Gold for critical */
+            
+            /* Threat intensity levels */
+            --threat-low: rgba(16, 185, 129, 0.3);
+            --threat-medium: rgba(245, 158, 11, 0.5);
+            --threat-high: rgba(244, 63, 94, 0.7);
+            --threat-critical: rgba(234, 179, 8, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--aegis-void);
+            color: #e4e4e7;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 13px;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- AEGIS Shell (Using Design System Pattern) --- */
+        .aegis-shell {
+            display: grid;
+            grid-template-areas:
+                "head head head"
+                "sidebar main stats"
+                "foot foot foot";
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 56px 1fr 32px;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- HEADER: Command Center --- */
+        .aegis-head {
+            grid-area: head;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #27272a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .aegis-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .aegis-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--aegis-accent);
+            color: black;
+            font-weight: 900;
+            font-size: 16px;
+            display: grid;
+            place-items: center;
+            border-radius: 6px;
+            box-shadow: 0 0 16px rgba(234, 179, 8, 0.4);
+        }
+
+        .aegis-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 11px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--aegis-glow);
+            box-shadow: 0 0 8px var(--aegis-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* --- SIDEBAR: Threat Categories --- */
+        .aegis-sidebar {
+            grid-area: sidebar;
+            background: var(--aegis-panel);
+            border-right: 1px solid #27272a;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .threat-category {
+            margin-bottom: 20px;
+        }
+
+        .threat-category-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #71717a;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .threat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .threat-item:hover {
+            background: var(--aegis-surface);
+        }
+
+        .threat-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .threat-indicator.low { background: var(--aegis-glow); }
+        .threat-indicator.medium { background: var(--aegis-warning); }
+        .threat-indicator.high { background: var(--aegis-threat); }
+        .threat-indicator.critical { background: var(--aegis-accent); }
+
+        /* --- MAIN: Holo-Map Container --- */
+        .aegis-main {
+            grid-area: main;
+            background: var(--aegis-void);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- THE HOLO-MAP: CSS Grid World Map --- */
+        .holo-map {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(60, 1fr);
+            grid-template-rows: repeat(30, 1fr);
+            gap: 1px;
+            padding: 20px;
+        }
+
+        /* World Map Points (Simplified representation) */
+        .map-point {
+            background: rgba(39, 39, 42, 0.3);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        /* Active threat zones */
+        .map-point.active {
+            background: var(--aegis-threat);
+            box-shadow: 0 0 12px var(--aegis-threat);
+            animation: threat-pulse 2s infinite;
+        }
+
+        .map-point.active.critical {
+            background: var(--aegis-accent);
+            box-shadow: 0 0 20px var(--aegis-accent);
+            animation: threat-pulse 1s infinite;
+        }
+
+        @keyframes threat-pulse {
+            0%, 100% { 
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* --- ATTACK VECTORS: CSS Motion Path Animation --- */
+        .attack-vector {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--aegis-threat);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--aegis-threat);
+            animation: attack-flow 3s infinite;
+        }
+
+        @keyframes attack-flow {
+            0% {
+                offset-distance: 0%;
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                offset-distance: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* Attack paths (using offset-path) */
+        .attack-vector.path-1 {
+            offset-path: path("M 100 150 Q 300 100 500 200 T 900 250");
+            animation-duration: 4s;
+        }
+
+        .attack-vector.path-2 {
+            offset-path: path("M 200 200 Q 400 150 600 180 T 1000 220");
+            animation-duration: 3.5s;
+            animation-delay: 0.5s;
+        }
+
+        .attack-vector.path-3 {
+            offset-path: path("M 150 180 Q 350 120 550 190 T 950 240");
+            animation-duration: 5s;
+            animation-delay: 1s;
+        }
+
+        /* --- HEX-GRID TOPOLOGY: Network Defense Grid --- */
+        .hex-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(15, 1fr);
+            gap: 4px;
+            padding: 40px;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .hex-cell {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+            background: rgba(39, 39, 42, 0.5);
+            border: 1px solid rgba(39, 39, 42, 0.8);
+            transition: all 0.3s;
+        }
+
+        .hex-cell.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--aegis-glow);
+            box-shadow: 0 0 8px var(--aegis-glow);
+            opacity: 0.6;
+        }
+
+        .hex-cell.threat {
+            background: rgba(244, 63, 94, 0.3);
+            border-color: var(--aegis-threat);
+            box-shadow: 0 0 12px var(--aegis-threat);
+            opacity: 0.8;
+        }
+
+        /* --- STATS PANEL: Real-time Metrics --- */
+        .aegis-stats {
+            grid-area: stats;
+            background: var(--aegis-panel);
+            border-left: 1px solid #27272a;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .stat-card {
+            background: var(--aegis-surface);
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #71717a;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-value.safe { color: var(--aegis-glow); }
+        .stat-value.warning { color: var(--aegis-warning); }
+        .stat-value.danger { color: var(--aegis-threat); }
+        .stat-value.critical { color: var(--aegis-accent); }
+
+        .stat-trend {
+            font-size: 11px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up { color: var(--aegis-threat); }
+        .trend-down { color: var(--aegis-glow); }
+
+        /* --- FOOTER: Status Bar --- */
+        .aegis-foot {
+            grid-area: foot;
+            background: var(--aegis-surface);
+            border-top: 1px solid #27272a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 11px;
+            color: #71717a;
+        }
+
+        /* --- THREAT TIMELINE: Activity Stream --- */
+        .threat-timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 8px;
+            border-left: 2px solid transparent;
+            margin-bottom: 8px;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            background: var(--aegis-surface);
+            border-left-color: var(--aegis-threat);
+        }
+
+        .timeline-time {
+            color: #71717a;
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 60px;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-severity {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 4px;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="aegis-shell">
+        <!-- HEADER -->
+        <header class="aegis-head">
+            <div class="aegis-brand">
+                <div class="aegis-logo">AE</div>
+                <span>AEGIS THREAT MAP</span>
+                <span style="color: #71717a; font-weight: 400;">// REAL-TIME MONITORING</span>
+            </div>
+            <div class="aegis-status">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM ACTIVE</span>
+                </div>
+                <span>LAST UPDATE: <span style="color: var(--aegis-glow);">2s ago</span></span>
+            </div>
+        </header>
+
+        <!-- SIDEBAR -->
+        <aside class="aegis-sidebar">
+            <div class="threat-category">
+                <div class="threat-category-title">Active Threats</div>
+                <div class="threat-item">
+                    <div class="threat-indicator critical"></div>
+                    <span>DDoS Attack - US East</span>
+                </div>
+                <div class="threat-item">
+                    <div class="threat-indicator high"></div>
+                    <span>Malware Detection - EU</span>
+                </div>
+                <div class="threat-item">
+                    <div class="threat-indicator medium"></div>
+                    <span>Phishing Campaign - APAC</span>
+                </div>
+            </div>
+
+            <div class="threat-category">
+                <div class="threat-category-title">Network Status</div>
+                <div class="threat-item">
+                    <div class="threat-indicator low"></div>
+                    <span>Nodes Online: 1,247</span>
+                </div>
+                <div class="threat-item">
+                    <div class="threat-indicator low"></div>
+                    <span>Defense Grid: Active</span>
+                </div>
+            </div>
+
+            <div class="threat-timeline">
+                <div class="threat-category-title">Recent Activity</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">14:32:15</div>
+                    <div class="timeline-content">Threat detected: Port scan from 192.168.1.100</div>
+                    <div class="timeline-severity" style="background: var(--aegis-warning);"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">14:31:42</div>
+                    <div class="timeline-content">DDoS mitigation activated</div>
+                    <div class="timeline-severity" style="background: var(--aegis-threat);"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">14:30:18</div>
+                    <div class="timeline-content">Firewall rule updated</div>
+                    <div class="timeline-severity" style="background: var(--aegis-glow);"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN: Holo-Map -->
+        <main class="aegis-main">
+            <!-- Hex-Grid Topology (Background Layer) -->
+            <div class="hex-grid">
+                <!-- Generate hex cells -->
+                <script>
+                    for (let i = 0; i < 300; i++) {
+                        const hex = document.createElement('div');
+                        hex.className = 'hex-cell';
+                        // Randomly activate some cells
+                        if (Math.random() > 0.85) {
+                            hex.classList.add('active');
+                        }
+                        if (Math.random() > 0.95) {
+                            hex.classList.add('threat');
+                        }
+                        document.querySelector('.hex-grid').appendChild(hex);
+                    }
+                </script>
+            </div>
+
+            <!-- Holo-Map (World Map Grid) -->
+            <div class="holo-map">
+                <!-- Generate map points -->
+                <script>
+                    // Simplified world map representation
+                    const threatZones = [
+                        { col: 15, row: 10, severity: 'critical' },
+                        { col: 25, row: 12, severity: 'high' },
+                        { col: 35, row: 8, severity: 'medium' },
+                        { col: 45, row: 15, severity: 'high' },
+                        { col: 20, row: 18, severity: 'medium' },
+                    ];
+                    
+                    for (let row = 0; row < 30; row++) {
+                        for (let col = 0; col < 60; col++) {
+                            const point = document.createElement('div');
+                            point.className = 'map-point';
+                            
+                            // Check if this point is in a threat zone
+                            const threat = threatZones.find(t => 
+                                Math.abs(t.col - col) < 3 && Math.abs(t.row - row) < 3
+                            );
+                            
+                            if (threat) {
+                                point.classList.add('active', threat.severity);
+                            }
+                            
+                            document.querySelector('.holo-map').appendChild(point);
+                        }
+                    }
+                </script>
+            </div>
+
+            <!-- Attack Vectors (Animated Lines) -->
+            <div class="attack-vector path-1"></div>
+            <div class="attack-vector path-2"></div>
+            <div class="attack-vector path-3"></div>
+        </main>
+
+        <!-- STATS PANEL -->
+        <aside class="aegis-stats">
+            <div class="stat-card">
+                <div class="stat-label">Active Threats</div>
+                <div class="stat-value critical">23</div>
+                <div class="stat-trend">
+                    <span class="trend-up">▲ +4</span>
+                    <span style="color: #71717a;">vs last hour</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Blocked Attacks</div>
+                <div class="stat-value safe">1,247</div>
+                <div class="stat-trend">
+                    <span class="trend-up">▲ +89</span>
+                    <span style="color: #71717a;">last 5min</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Network Latency</div>
+                <div class="stat-value safe">12ms</div>
+                <div class="stat-trend">
+                    <span class="trend-down">▼ -2ms</span>
+                    <span style="color: #71717a;">improved</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">System Health</div>
+                <div class="stat-value safe">98.7%</div>
+                <div class="stat-trend">
+                    <span class="trend-down">▼ -0.3%</span>
+                    <span style="color: #71717a;">minor degradation</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Data Throughput</div>
+                <div class="stat-value warning">2.4 TB/s</div>
+                <div class="stat-trend">
+                    <span class="trend-up">▲ +0.3 TB/s</span>
+                    <span style="color: #71717a;">increased load</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- FOOTER -->
+        <footer class="aegis-foot">
+            <div style="display: flex; gap: 16px;">
+                <span>SYNC: <span style="color: var(--aegis-glow);">ACTIVE</span></span>
+                <span>LATENCY: 8ms</span>
+                <span>UPTIME: 99.97%</span>
+            </div>
+            <div>AEGIS-DEFENSE-GRID-01</div>
+        </footer>
+    </div>
+</body>
+</html>

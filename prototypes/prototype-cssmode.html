@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neo-Analog // Showcase (Beast Mode)</title>
+
+    <!-- Adjust this path to your real build -->
+    <link rel="stylesheet" href="../style.css" />
+
+    <style>
+        /* ============================================================
+      Neo-Analog Showcase (Beast Mode)
+      - Uses your existing system primitives: Omni Shell, Cards, Table, Chart, Buttons
+      - Beast mode is OPT-IN via body.na-beast
+      - Token-driven: uses your CSS vars from style.css
+    ============================================================ */
+
+        /* --- Fix: Prevent body scroll when using Omni shell --- */
+        body.na-mode-app:has(.na-shell-omni) {
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .na-shell-omni {
+            height: 100vh;
+            max-height: 100vh;
+        }
+
+        /* --- Omni Search (EXACT original CSS) --- */
+        .omni-search-wrap {
+            position: relative;
+        }
+
+        .omni-search-input {
+            background: var(--color-paper-2);
+            border: 1px solid var(--color-stroke);
+            padding: 6px 12px 6px 32px;
+            border-radius: var(--radius-sm);
+            color: var(--color-white);
+            width: 280px;
+            font-size: var(--font-size-sm);
+            transition: all var(--duration-200) var(--ease-premium);
+        }
+
+        .omni-search-input:focus {
+            border-color: var(--color-gold);
+            width: 360px;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.2), 0 16px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .omni-search-icon {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: var(--color-clay);
+            font-size: var(--font-size-sm);
+        }
+
+        .omni-search-kbd {
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            font-size: 9px;
+            color: var(--color-clay);
+            border: 1px solid var(--color-stroke);
+            padding: 1px 4px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-family-mono);
+        }
+
+        body:has(.omni-search-input:focus) .na-shell-main:not(:has(.omni-search-input)),
+        body:has(.omni-search-input:focus) .na-shell-rail {
+            filter: blur(3px) brightness(0.35);
+            pointer-events: none;
+            transition: filter var(--duration-300) var(--ease-premium);
+        }
+
+        /* --- Drawer/Overlay System (Inspector) - Shadcn Pattern --- */
+        .na-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-overlay);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--duration-300) var(--ease-premium);
+        }
+
+        .na-overlay__backdrop {
+            position: absolute;
+            inset: 0;
+            background: var(--color-overlay-backdrop);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .na-overlay__panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 25rem;
+            max-width: 90vw;
+            background: var(--color-paper);
+            border-left: 1px solid var(--color-stroke);
+            z-index: calc(var(--z-overlay) + 1);
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform var(--duration-300) var(--ease-premium);
+            pointer-events: auto;
+            box-shadow: -28px 0 90px -60px rgba(0, 0, 0, 0.95);
+        }
+
+        /* Overlay Open State */
+        body:has(#na-toggle-overlay:checked) .na-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        body:has(#na-toggle-overlay:checked) .na-overlay__panel {
+            transform: translateX(0);
+        }
+
+        /* Background: forensic cinematic (token vocabulary matches your chart filament language) */
+        .na-bg-forensic {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(1200px 900px at 18% 12%, color-mix(in oklab, var(--color-gold) 10%, transparent), transparent 60%),
+                radial-gradient(900px 700px at 82% 18%, color-mix(in oklab, var(--color-white) 6%, transparent), transparent 62%),
+                radial-gradient(1100px 800px at 50% 120%, rgba(0, 0, 0, 0.5), transparent 58%),
+                linear-gradient(180deg,
+                    color-mix(in oklab, var(--color-void) 92%, var(--color-paper) 8%),
+                    var(--color-void) 60%,
+                    color-mix(in oklab, var(--color-void) 88%, black 12%));
+        }
+
+        .na-bg-forensic::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.18;
+            background:
+                radial-gradient(circle at 12% 20%, var(--na-filament-soft), transparent 55%),
+                radial-gradient(circle at 80% 18%, var(--surface-tint-2), transparent 58%),
+                repeating-linear-gradient(90deg, transparent 0, transparent 18px, var(--surface-tint-1) 19px);
+            mix-blend-mode: soft-light;
+        }
+
+        .na-bg-forensic::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: 220px 220px;
+            mix-blend-mode: soft-light;
+        }
+
+        /* Beast mode guard (optional visual cues) */
+        body.na-beast .beast-only {
+            display: block;
+        }
+
+        /* Showcase layout helpers (do not compete with your system) */
+        .showcase-wrap {
+            max-width: var(--container-2xl);
+            margin-inline: auto;
+        }
+
+        .showcase-section {
+            margin-bottom: var(--spacing-12);
+        }
+
+        .showcase-head {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .showcase-head .line {
+            flex: 1;
+            height: 1px;
+            background: var(--color-stroke);
+        }
+
+        /* Hero cards: spotlight + selected state */
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            transition:
+                transform var(--duration-300) var(--ease-premium),
+                border-color var(--duration-300) var(--ease-premium),
+                box-shadow var(--duration-300) var(--ease-premium);
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+                    rgba(255, 255, 255, 0.06),
+                    transparent 42%);
+            opacity: 0;
+            transition: opacity var(--duration-300) var(--ease-premium);
+            pointer-events: none;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            opacity: 0;
+            transition: opacity var(--duration-300) var(--ease-premium);
+            z-index: 1;
+        }
+
+        body.na-beast .hero-card:hover {
+            transform: translateY(var(--motion-lift));
+            border-color: var(--color-stroke-strong);
+            box-shadow: var(--shadow-deep);
+        }
+
+        body.na-beast .hero-card:hover::after,
+        body.na-beast .hero-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Persistent selected state */
+        body.na-beast .hero-card.is-selected {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-deep);
+        }
+
+        body.na-beast .hero-card.is-selected::after {
+            opacity: 1;
+        }
+
+        /* Search focus mode: turn main content into “command palette context” */
+        body.na-beast:has(.launcher-search-input:focus) .na-shell-main>*:not(.showcase-topbar) {
+            filter: blur(var(--motion-blur)) brightness(0.45);
+            pointer-events: none;
+            transition: filter var(--duration-300) var(--ease-premium);
+        }
+
+        body.na-beast .launcher-search:focus-within {
+            transform: scale(1.02);
+            transition: transform var(--duration-200) var(--ease-premium);
+            z-index: var(--z-modal);
+            position: relative;
+        }
+
+        body.na-beast .launcher-search-input:focus {
+            background: var(--color-void);
+            border-color: var(--color-gold);
+            box-shadow:
+                0 0 0 4px rgba(234, 179, 8, 0.14),
+                0 20px 50px rgba(0, 0, 0, 0.75);
+        }
+
+        /* Left rail: make it “mini” and icon-centric */
+        .rail-mini {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-2);
+            padding: var(--spacing-4);
+        }
+
+        /* Right drawer: slight overlay polish (still your native drawer) */
+        .drawer-polish {
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* Pagination helper (uses your buttons) */
+        .na-pagination {
+            display: flex;
+            gap: var(--spacing-2);
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: var(--spacing-6);
+        }
+
+        /* Small “code tag” pill using existing surfaces */
+        .na-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-2);
+            border: 1px solid var(--color-stroke);
+            background: var(--color-paper-2);
+            border-radius: var(--radius-control);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            body.na-beast .hero-card,
+            body.na-beast .launcher-search:focus-within {
+                transition: none !important;
+            }
+
+            body.na-beast:has(.launcher-search-input:focus) .na-shell-main>*:not(.showcase-topbar) {
+                filter: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="na-mode-app na-density-comfort na-beast">
+    <a class="na-skip-link" href="#main">Skip to main content</a>
+
+    <!-- Required by Overlay (toggle) -->
+    <input type="checkbox" id="na-toggle-overlay" class="sr-only" />
+
+    <div class="na-bg-forensic" aria-hidden="true"></div>
+
+    <!-- =========================
+       OMNI SHELL (Left rail + Main + Right drawer)
+       ========================= -->
+    <div class="na-shell-omni">
+        <!-- Header -->
+        <header class="na-shell-head"
+            style="display: flex; align-items: center; justify-content: space-between; padding: 0 var(--spacing-4);">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gold rounded-control flex items-center justify-center text-void font-black shadow-gilded">
+                    NA
+                </div>
+                <div class="flex flex-col">
+                    <div class="na-metadata">NEO-ANALOG SHOWCASE</div>
+                    <div class="na-metadata-small">Beast Mode • Shell + Cards + Table + Graph</div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span class="na-status ok">LIVE</span>
+                <span class="na-pill na-metadata-small font-mono">BUILD 2026.01.03</span>
+                <!-- Enhanced Search with ⌘K -->
+                <div class="omni-search-wrap">
+                    <span class="omni-search-icon">⌕</span>
+                    <input type="text" class="omni-search-input" placeholder="Global Search (Cmd+K)" id="omni-search">
+                    <kbd class="omni-search-kbd">⌘K</kbd>
+                </div>
+                <div class="na-avatar"></div>
+                <label for="na-toggle-overlay" class="na-btn na-btn-ghost">Inspector</label>
+            </div>
+        </header>
+
+        <!-- Left Rail -->
+        <aside class="na-shell-rail" aria-label="Mini navigation">
+            <nav class="rail-mini">
+                <a class="na-nav-item is-active" href="#overview" title="Overview" aria-label="Overview">🏠</a>
+                <a class="na-nav-item" href="#cards" title="Cards" aria-label="Cards">🧩</a>
+                <a class="na-nav-item" href="#table" title="Table" aria-label="Table">🧾</a>
+                <a class="na-nav-item" href="#graph" title="Graph" aria-label="Graph">📊</a>
+                <a class="na-nav-item" href="#forms" title="Forms" aria-label="Forms">⌨️</a>
+                <a class="na-nav-item" href="#modals" title="Modal/Dropdown" aria-label="Modal/Dropdown">🪟</a>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <main id="main" class="na-shell-main" tabindex="-1">
+            <div class="showcase-wrap p-6">
+                <!-- Overview -->
+                <section class="showcase-section" id="overview" aria-label="Overview">
+
+                    <!-- KPI Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-kpi">
+                                <div class="na-kpi-icon" aria-hidden="true">🎨</div>
+                                <div>
+                                    <div class="na-kpi-label">Tokens</div>
+                                    <div class="na-kpi-value na-tabular">254</div>
+                                    <div class="na-trend"><span>Complete</span><span class="na-metadata-small">OKLCH +
+                                            Motion + Surfaces</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-kpi">
+                                <div class="na-kpi-icon" aria-hidden="true">🧩</div>
+                                <div>
+                                    <div class="na-kpi-label">Components</div>
+                                    <div class="na-kpi-value na-tabular">171+</div>
+                                    <div class="na-trend up"><span aria-hidden="true">▲</span><span>Growing</span><span
+                                            class="na-metadata-small">Semantic classes</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-kpi">
+                                <div class="na-kpi-icon" aria-hidden="true">✓</div>
+                                <div>
+                                    <div class="na-kpi-label">Compliance</div>
+                                    <div class="na-kpi-value na-tabular">100%</div>
+                                    <div class="na-trend"><span>Aligned</span><span
+                                            class="na-metadata-small">Design-to-code</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-kpi">
+                                <div class="na-kpi-icon" aria-hidden="true">⚡</div>
+                                <div>
+                                    <div class="na-kpi-label">Deps</div>
+                                    <div class="na-kpi-value na-tabular">0</div>
+                                    <div class="na-trend"><span>Pure</span><span
+                                            class="na-metadata-small">HTML/CSS-first</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cards -->
+                <section class="showcase-section" id="cards" aria-label="Cards">
+                    <div class="showcase-head">
+                        <div class="na-metadata">CARDS</div>
+                        <div class="line" aria-hidden="true"></div>
+                        <div class="na-metadata-small text-clay">Hover spotlight • Click to select</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="#graph"
+                            class="na-card na-card-interactive hero-card p-8 flex flex-col h-[340px] no-underline text-inherit">
+                            <div class="text-5xl mb-6" aria-hidden="true">📊</div>
+                            <h2 class="na-h4 m-0 mb-3">Graph Surface</h2>
+                            <div class="na-data text-clay">Built-in chart primitives (filament + bars).
+                                Token-consistent.</div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="na-metadata">OPEN</span>
+                                <span class="na-metadata-small text-clay">#graph</span>
+                            </div>
+                        </a>
+
+                        <a href="#table"
+                            class="na-card na-card-interactive hero-card p-8 flex flex-col h-[340px] no-underline text-inherit">
+                            <div class="text-5xl mb-6" aria-hidden="true">🧾</div>
+                            <h2 class="na-h4 m-0 mb-3">Table Surface</h2>
+                            <div class="na-data text-clay">Semantic table classes + interactive rows + paging controls.
+                            </div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="na-metadata">OPEN</span>
+                                <span class="na-metadata-small text-clay">#table</span>
+                            </div>
+                        </a>
+
+                        <a href="#forms"
+                            class="na-card na-card-interactive hero-card p-8 flex flex-col h-[340px] no-underline text-inherit">
+                            <div class="text-5xl mb-6" aria-hidden="true">⌨️</div>
+                            <h2 class="na-h4 m-0 mb-3">Form Surface</h2>
+                            <div class="na-data text-clay">Inputs, labels, help text, toggles — consistent
+                                accessibility.</div>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="na-metadata">OPEN</span>
+                                <span class="na-metadata-small text-clay">#forms</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="mt-6 na-metadata-small text-clay">
+                        Beast rule: hover = attention • selected = state (sticky) • everything token-driven.
+                    </div>
+                </section>
+
+                <!-- Table + Pagination -->
+                <section class="showcase-section" id="table" aria-label="Table">
+                    <div class="showcase-head">
+                        <div class="na-metadata">TABLE</div>
+                        <div class="line" aria-hidden="true"></div>
+                        <div class="na-metadata-small text-clay">Interactive rows + status badges + pagination</div>
+                    </div>
+
+                    <div class="na-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <div class="na-h5 m-0">Audit Runs</div>
+                                <div class="na-metadata-small text-clay">Example dataset for UI showcase</div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button class="na-btn na-btn-ghost" type="button">Export</button>
+                                <button class="na-btn na-btn-primary" type="button">New Run</button>
+                            </div>
+                        </div>
+
+                        <div class="na-table-wrap">
+                            <table class="na-table">
+                                <thead>
+                                    <tr>
+                                        <th class="na-th">Run ID</th>
+                                        <th class="na-th">Module</th>
+                                        <th class="na-th">Status</th>
+                                        <th class="na-th">Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="na-tr-interactive">
+                                        <td class="na-td font-mono">RUN_00041</td>
+                                        <td class="na-td">Audit</td>
+                                        <td class="na-td"><span class="na-status ok">OK</span></td>
+                                        <td class="na-td">2026-01-03</td>
+                                    </tr>
+                                    <tr class="na-tr-interactive">
+                                        <td class="na-td font-mono">RUN_00042</td>
+                                        <td class="na-td">Kernel</td>
+                                        <td class="na-td"><span class="na-status pending">PENDING</span></td>
+                                        <td class="na-td">2026-01-03</td>
+                                    </tr>
+                                    <tr class="na-tr-interactive">
+                                        <td class="na-td font-mono">RUN_00043</td>
+                                        <td class="na-td">Docs</td>
+                                        <td class="na-td"><span class="na-status bad">FAIL</span></td>
+                                        <td class="na-td">2026-01-02</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <nav class="na-pagination" aria-label="Pagination">
+                            <button class="na-btn na-btn-ghost" type="button">Prev</button>
+                            <button class="na-btn" type="button">1</button>
+                            <button class="na-btn na-btn-primary" type="button" aria-current="page">2</button>
+                            <button class="na-btn" type="button">3</button>
+                            <button class="na-btn na-btn-ghost" type="button">Next</button>
+                        </nav>
+                    </div>
+                </section>
+
+                <!-- Graph -->
+                <section class="showcase-section" id="graph" aria-label="Graph">
+                    <div class="showcase-head">
+                        <div class="na-metadata">GRAPH</div>
+                        <div class="line" aria-hidden="true"></div>
+                        <div class="na-metadata-small text-clay">Built-in chart surface (bars)</div>
+                    </div>
+
+                    <section class="na-chart" aria-label="Execution volume chart">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <div class="na-metadata">EXECUTION VOLUME</div>
+                                <div class="na-data">Last 12 windows</div>
+                            </div>
+                            <div class="na-trend up">▲ +12%</div>
+                        </div>
+
+                        <div class="na-bars" role="img" aria-label="Bar chart showing 12 periods">
+                            <div class="na-bar" style="height: 30%"></div>
+                            <div class="na-bar" style="height: 55%"></div>
+                            <div class="na-bar" style="height: 42%"></div>
+                            <div class="na-bar" style="height: 68%"></div>
+                            <div class="na-bar" style="height: 35%"></div>
+                            <div class="na-bar" style="height: 75%"></div>
+                            <div class="na-bar" style="height: 60%"></div>
+                            <div class="na-bar" style="height: 82%"></div>
+                            <div class="na-bar" style="height: 46%"></div>
+                            <div class="na-bar" style="height: 64%"></div>
+                            <div class="na-bar" style="height: 52%"></div>
+                            <div class="na-bar" style="height: 90%"></div>
+                        </div>
+                    </section>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-metadata">P95 LATENCY</div>
+                            <div class="na-data-large">182ms</div>
+                            <div class="na-metadata-small text-clay">Target: &lt; 250ms</div>
+                        </div>
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-metadata">ERROR RATE</div>
+                            <div class="na-data-large">0.7%</div>
+                            <div class="na-metadata-small text-clay">Downward trend</div>
+                        </div>
+                        <div class="na-card na-card-interactive p-6">
+                            <div class="na-metadata">THROUGHPUT</div>
+                            <div class="na-data-large">1.9k</div>
+                            <div class="na-metadata-small text-clay">Calls / hour</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Forms -->
+                <section class="showcase-section" id="forms" aria-label="Forms">
+                    <div class="showcase-head">
+                        <div class="na-metadata">FORMS</div>
+                        <div class="line" aria-hidden="true"></div>
+                        <div class="na-metadata-small text-clay">Inputs + switches + buttons</div>
+                    </div>
+
+                    <div class="na-card p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="na-field">
+                                <label class="na-label" for="f1">Concept name</label>
+                                <input id="f1" class="na-input" type="text" placeholder="e.g. AUDIT_RUN" />
+                                <p class="na-help">Use uppercase for canonical concepts.</p>
+                            </div>
+
+                            <div class="na-field">
+                                <label class="na-label" for="f2">Namespace</label>
+                                <input id="f2" class="na-input" type="text" placeholder="e.g. KERNEL.AUDIT" />
+                                <p class="na-help">Dot-delimited namespaces help keep drift zero.</p>
+                            </div>
+
+                            <div class="na-field">
+                                <label class="na-label" for="f3">Owner</label>
+                                <input id="f3" class="na-input" type="text" placeholder="CID / Platform" />
+                                <p class="na-help">Ownership is required for governance.</p>
+                            </div>
+
+                            <div class="na-field">
+                                <label class="na-label" for="f4">Status</label>
+                                <input id="f4" class="na-input" type="text"
+                                    placeholder="Approved / Draft / Deprecated" />
+                                <p class="na-help">Statuses should be controlled by value sets.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mt-6">
+                            <div class="flex items-center gap-3">
+                                <label class="na-switch">
+                                    <input type="checkbox" class="sr-only" checked />
+                                    <span class="na-switch-thumb"></span>
+                                </label>
+                                <span class="na-label">Enforce invariants</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button class="na-btn na-btn-ghost" type="button">Reset</button>
+                                <button class="na-btn na-btn-primary" type="button">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Modal + Dropdown -->
+                <section class="showcase-section" id="modals" aria-label="Modal and Dropdown">
+                    <div class="showcase-head">
+                        <div class="na-metadata">MODAL + DROPDOWN</div>
+                        <div class="line" aria-hidden="true"></div>
+                        <div class="na-metadata-small text-clay">CSS-first patterns</div>
+                    </div>
+
+                    <div class="na-card p-6 flex flex-wrap items-center gap-3">
+                        <a href="#demo-modal" class="na-btn na-btn-primary">Open Modal</a>
+
+                        <details class="na-dropdown">
+                            <summary class="na-btn">Actions</summary>
+                            <div class="na-dropdown-menu">
+                                <a href="#" class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Edit</a>
+                                <a href="#"
+                                    class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Duplicate</a>
+                                <a href="#" class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Archive</a>
+                            </div>
+                        </details>
+
+                        <span class="na-metadata-small text-clay">Tip: use drawer for “Inspector” and modal for “Deep
+                            task”.</span>
+                    </div>
+
+                    <!-- Modal (hash target) -->
+                    <div id="demo-modal" class="na-modal" aria-label="Demo modal" role="dialog" aria-modal="true">
+                        <div class="na-modal__backdrop"></div>
+                        <div class="na-modal__panel">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="na-h4 m-0">Demo Modal</div>
+                                    <div class="na-metadata-small text-clay">CSS-only target pattern</div>
+                                </div>
+                                <a href="#" class="na-btn na-btn-ghost" aria-label="Close modal">Close</a>
+                            </div>
+                            <div class="na-data text-clay">
+                                This is where you place “high intent” flows: export, destructive actions, confirmation,
+                                multi-step wizards.
+                            </div>
+                            <div class="flex items-center justify-end gap-2 mt-6">
+                                <a href="#" class="na-btn na-btn-ghost">Cancel</a>
+                                <a href="#" class="na-btn na-btn-primary">Confirm</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="border-t border-stroke pt-6 pb-12">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="na-metadata-small text-clay">
+                            Neo-Analog Showcase • Beast Mode = opt-in via <span class="font-mono">.na-beast</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a class="na-btn na-btn-ghost" href="#overview">Top</a>
+                            <label class="na-btn na-btn-primary" for="na-toggle-overlay">Inspector</label>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Footer slot (optional) -->
+        <footer class="na-shell-foot"></footer>
+    </div>
+
+    <!-- Right Drawer/Overlay (Inspector) - OUTSIDE shell for proper overlay behavior -->
+    <div class="na-overlay" id="inspector-overlay" aria-label="Inspector overlay" role="dialog" aria-modal="true">
+        <label for="na-toggle-overlay" class="na-overlay__backdrop" aria-label="Close drawer"></label>
+        <aside class="na-overlay__panel">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <div class="na-h4 m-0">Inspector</div>
+                        <div class="na-metadata-small text-clay">Live states + tokens</div>
+                    </div>
+                    <label for="na-toggle-overlay" class="na-btn na-btn-ghost">Close</label>
+                </div>
+
+                <div class="na-panel p-6">
+                    <div class="na-metadata mb-3">BEAST MODE RULES</div>
+                    <ul class="space-y-2">
+                        <li class="na-data text-clay">• Background = 3-layer forensic stack (base + filament + grain)
+                        </li>
+                        <li class="na-data text-clay">• Hover = spotlight + lift</li>
+                        <li class="na-data text-clay">• Selected = persistent gold border</li>
+                        <li class="na-data text-clay">• Focus search = command palette context blur</li>
+                    </ul>
+                </div>
+
+                <div class="na-panel p-6 mt-6">
+                    <div class="na-metadata mb-3">TOKENS (SAMPLES)</div>
+                    <div class="na-data text-clay">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="na-metadata-small">--color-void</span>
+                            <span class="na-pill font-mono">#09090b</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="na-metadata-small">--color-paper</span>
+                            <span class="na-pill font-mono">#121214</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="na-metadata-small">--color-gold</span>
+                            <span class="na-pill font-mono">#eab308</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="na-metadata-small">--shadow-deep</span>
+                            <span class="na-pill font-mono">…</span>
+                        </div>
+                    </div>
+                    <div class="na-metadata-small text-clay mt-3">
+                        (These values originate from your <span class="font-mono">style.css</span> theme layer.)
+                    </div>
+                </div>
+
+                <div class="na-panel p-6 mt-6">
+                    <div class="na-metadata mb-3">QUICK ACTIONS</div>
+                    <div class="flex flex-col gap-2">
+                        <button class="na-btn na-btn-primary" type="button" id="btnSelectFirst">Select first hero
+                            card</button>
+                        <button class="na-btn na-btn-ghost" type="button" id="btnClearSelection">Clear
+                            selection</button>
+                        <button class="na-btn na-btn-ghost" type="button" id="btnFocusSearch">Focus search (/)</button>
+                    </div>
+                </div>
+        </aside>
+    </div>
+
+    <script>
+        // ============================================================
+        // Showcase micro-logic (small, safe)
+        // - "/" focuses search; Esc clears
+        // - Hero spotlight pointer coords
+        // - Click hero card => persistent selected state
+        // ============================================================
+
+        (function () {
+            const search = document.getElementById("launcher-search-input");
+            const cards = Array.from(document.querySelectorAll(".hero-card"));
+
+            // Keyboard helpers
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "/" && document.activeElement !== search) {
+                    e.preventDefault();
+                    search?.focus();
+                }
+                if (e.key === "Escape" && document.activeElement === search) {
+                    search.value = "";
+                    search.blur();
+                }
+            });
+
+            // Spotlight tracking
+            cards.forEach((card) => {
+                card.addEventListener("pointermove", (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", x + "px");
+                    card.style.setProperty("--mouse-y", y + "px");
+                });
+            });
+
+            // Selected state
+            function clearSelected() {
+                cards.forEach((c) => c.classList.remove("is-selected"));
+            }
+
+            cards.forEach((card) => {
+                card.addEventListener("click", () => {
+                    clearSelected();
+                    card.classList.add("is-selected");
+                });
+            });
+
+            // Inspector quick actions
+            document.getElementById("btnSelectFirst")?.addEventListener("click", () => {
+                clearSelected();
+                if (cards[0]) cards[0].classList.add("is-selected");
+            });
+
+            document.getElementById("btnClearSelection")?.addEventListener("click", clearSelected);
+
+            document.getElementById("btnFocusSearch")?.addEventListener("click", () => {
+                search?.focus();
+            });
+        })();
+    </script>
+</body>
+
+</html>

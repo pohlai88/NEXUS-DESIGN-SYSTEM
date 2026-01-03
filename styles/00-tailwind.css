@@ -1,0 +1,9 @@
+﻿/* stylelint-disable-next-line */
+@import "tailwindcss";
+
+/* Make sure Tailwind v4 scans template files only */
+/* Exclude scripts, dist, and node_modules to prevent invalid class generation */
+/* stylelint-disable-next-line */
+@source "../prototypes/**/*.html";
+@source "../examples/**/*.{html,tsx}";
+@source "../components/**/*.{tsx,ts}";

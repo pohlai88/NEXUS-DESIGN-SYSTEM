@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Web Components Example - Neo-Analog Design System</title>
+  
+  <!-- Global Design System Styles -->
+  <link rel="stylesheet" href="../../../style.css">
+  
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+      background: var(--na-bg-primary, #0a0a0a);
+      color: var(--na-text-primary, #ffffff);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .component-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--na-bg-secondary, #1a1a1a);
+      border-radius: 8px;
+      border: 1px solid var(--na-border-primary, #333);
+    }
+    
+    .component-section h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .demo-item {
+      padding: 1rem;
+      background: var(--na-bg-primary, #0a0a0a);
+      border-radius: 4px;
+      border: 1px solid var(--na-border-primary, #333);
+    }
+    
+    .demo-item label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--na-text-secondary, #999);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>All Web Components Examples</h1>
+    
+    <!-- Buttons -->
+    <div class="component-section">
+      <h2>Buttons</h2>
+      <div class="button-group">
+        <na-button variant="primary">Primary</na-button>
+        <na-button variant="secondary">Secondary</na-button>
+        <na-button variant="danger">Danger</na-button>
+        <na-button variant="ghost">Ghost</na-button>
+        <na-button disabled>Disabled</na-button>
+        <na-button loading>Loading</na-button>
+        <na-button size="sm">Small</na-button>
+        <na-button size="lg">Large</na-button>
+      </div>
+    </div>
+    
+    <!-- Inputs -->
+    <div class="component-section">
+      <h2>Inputs</h2>
+      <div class="component-grid">
+        <div class="demo-item">
+          <label>Text Input</label>
+          <na-input type="text" placeholder="Enter text..."></na-input>
+        </div>
+        <div class="demo-item">
+          <label>Email Input</label>
+          <na-input type="email" placeholder="email@example.com"></na-input>
+        </div>
+        <div class="demo-item">
+          <label>Password Input</label>
+          <na-input type="password" placeholder="Password"></na-input>
+        </div>
+        <div class="demo-item">
+          <label>Disabled Input</label>
+          <na-input disabled placeholder="Disabled"></na-input>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Form Controls -->
+    <div class="component-section">
+      <h2>Form Controls</h2>
+      <div class="component-grid">
+        <div class="demo-item">
+          <label>Checkbox</label>
+          <na-checkbox></na-checkbox>
+          <na-label>Accept terms</na-label>
+        </div>
+        <div class="demo-item">
+          <label>Radio</label>
+          <na-radio name="option" value="1"></na-radio>
+          <na-label>Option 1</na-label>
+          <na-radio name="option" value="2"></na-radio>
+          <na-label>Option 2</na-label>
+        </div>
+        <div class="demo-item">
+          <label>Switch</label>
+          <na-toggle-switch></na-toggle-switch>
+          <na-label>Enable notifications</na-label>
+        </div>
+        <div class="demo-item">
+          <label>Select</label>
+          <na-select>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </na-select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Cards -->
+    <div class="component-section">
+      <h2>Cards</h2>
+      <div class="component-grid">
+        <na-card>
+          <div class="card-header">
+            <h3>Card Title</h3>
+          </div>
+          <div class="card-content">
+            <p>This is a card component example.</p>
+          </div>
+          <div class="card-footer">
+            <na-button variant="primary">Action</na-button>
+          </div>
+        </na-card>
+      </div>
+    </div>
+    
+    <!-- Dialog -->
+    <div class="component-section">
+      <h2>Dialog</h2>
+      <div class="button-group">
+        <na-button id="open-dialog" variant="primary">Open Dialog</na-button>
+      </div>
+      
+      <na-dialog id="demo-dialog" variant="default">
+        <div style="background: var(--na-bg-primary, #1a1a1a); padding: 2rem; border-radius: 8px; max-width: 500px; margin: 2rem auto;">
+          <h3>Dialog Example</h3>
+          <p>This is a dialog component example.</p>
+          <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+            <na-button variant="secondary" onclick="document.getElementById('demo-dialog').close()">Cancel</na-button>
+            <na-button variant="primary" onclick="document.getElementById('demo-dialog').close()">Confirm</na-button>
+          </div>
+        </div>
+      </na-dialog>
+    </div>
+    
+    <!-- Accordion -->
+    <div class="component-section">
+      <h2>Accordion</h2>
+      <na-accordion>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Section 1</button>
+          <div class="accordion-content">
+            <p>Content for section 1</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Section 2</button>
+          <div class="accordion-content">
+            <p>Content for section 2</p>
+          </div>
+        </div>
+      </na-accordion>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="component-section">
+      <h2>Tabs</h2>
+      <na-tabs>
+        <div class="tabs-list">
+          <button class="tab-trigger" data-tab="tab1">Tab 1</button>
+          <button class="tab-trigger" data-tab="tab2">Tab 2</button>
+          <button class="tab-trigger" data-tab="tab3">Tab 3</button>
+        </div>
+        <div class="tab-content" data-tab="tab1">Content for Tab 1</div>
+        <div class="tab-content" data-tab="tab2">Content for Tab 2</div>
+        <div class="tab-content" data-tab="tab3">Content for Tab 3</div>
+      </na-tabs>
+    </div>
+    
+    <!-- Tooltip -->
+    <div class="component-section">
+      <h2>Tooltip</h2>
+      <na-tooltip>
+        <na-button>Hover for tooltip</na-button>
+        <div class="tooltip-content">This is a tooltip</div>
+      </na-tooltip>
+    </div>
+  </div>
+  
+  <!-- Import All Web Components -->
+  <script type="module">
+    // Import all components
+    import '../../../dist/adapters/vanilla/button.js';
+    import '../../../dist/adapters/vanilla/input.js';
+    import '../../../dist/adapters/vanilla/label.js';
+    import '../../../dist/adapters/vanilla/checkbox.js';
+    import '../../../dist/adapters/vanilla/radio.js';
+    import '../../../dist/adapters/vanilla/switch.js';
+    import '../../../dist/adapters/vanilla/select.js';
+    import '../../../dist/adapters/vanilla/card.js';
+    import '../../../dist/adapters/vanilla/dialog.js';
+    import '../../../dist/adapters/vanilla/accordion.js';
+    import '../../../dist/adapters/vanilla/tabs.js';
+    import '../../../dist/adapters/vanilla/tooltip.js';
+    
+    // Wait for all components to be defined
+    const components = [
+      'na-button', 'na-input', 'na-label', 'na-checkbox', 'na-radio',
+      'na-toggle-switch', 'na-select', 'na-card', 'na-dialog',
+      'na-accordion', 'na-tabs', 'na-tooltip'
+    ];
+    
+    Promise.all(components.map(name => customElements.whenDefined(name)))
+      .then(() => {
+        console.log('✅ All Web Components loaded!');
+        
+        // Setup dialog
+        const openBtn = document.getElementById('open-dialog');
+        const dialog = document.getElementById('demo-dialog');
+        
+        if (openBtn && dialog) {
+          openBtn.addEventListener('click', () => {
+            dialog.open();
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Error loading components:', err);
+      });
+  </script>
+</body>
+</html>
+

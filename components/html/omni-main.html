@@ -1,0 +1,232 @@
+<!-- OMNI MAIN COMPONENT (Workspace)
+     Usage: Include in shell-omni.html
+     Features: Toolbar (breadcrumbs, view switcher), View Panes (Grid/Kanban/Gantt)
+-->
+<main id="main-content" class="na-shell-main" role="main">
+    <!-- Toolbar with Breadcrumbs and View Switcher -->
+    <div class="na-toolbar"
+        style="border-bottom: 1px solid var(--color-stroke); padding: 0 var(--spacing-4); display: flex; align-items: center; justify-content: space-between; background: var(--color-paper); min-height: 48px;">
+        <!-- Breadcrumbs -->
+        <div class="flex items-center gap-3">
+            <div class="na-crumbs"
+                style="display: flex; align-items: center; gap: var(--spacing-2); font-size: var(--font-size-sm); color: var(--color-clay);">
+                <span>Production</span>
+                <span class="na-crumb-sep" style="color: var(--color-stroke-strong);">/</span>
+                <span>Orders</span>
+                <span class="na-crumb-sep" style="color: var(--color-stroke-strong);">/</span>
+                <span class="na-crumb-active"
+                    style="color: var(--color-lux); font-weight: var(--font-weight-semibold);">Active Batch</span>
+            </div>
+        </div>
+
+        <!-- View Switcher (CSS-only Radio Logic) -->
+        <div class="na-view-controls"
+            style="display: flex; gap: 2px; background: var(--color-paper-2); padding: 3px; border-radius: var(--radius-md); border: 1px solid var(--color-stroke);">
+            <input type="radio" name="omni-view" id="omni-view-grid" class="sr-only" checked>
+            <label for="omni-view-grid" class="na-view-label" id="lbl-grid"
+                style="padding: 4px 12px; font-size: var(--font-size-xs); cursor: pointer; border-radius: var(--radius-sm); color: var(--color-clay); font-weight: var(--font-weight-medium); transition: var(--duration-100);">Grid</label>
+
+            <input type="radio" name="omni-view" id="omni-view-board" class="sr-only">
+            <label for="omni-view-board" class="na-view-label" id="lbl-board"
+                style="padding: 4px 12px; font-size: var(--font-size-xs); cursor: pointer; border-radius: var(--radius-sm); color: var(--color-clay); font-weight: var(--font-weight-medium); transition: var(--duration-100);">Board</label>
+
+            <input type="radio" name="omni-view" id="omni-view-gantt" class="sr-only">
+            <label for="omni-view-gantt" class="na-view-label" id="lbl-gantt"
+                style="padding: 4px 12px; font-size: var(--font-size-xs); cursor: pointer; border-radius: var(--radius-sm); color: var(--color-clay); font-weight: var(--font-weight-medium); transition: var(--duration-100);">Plan</label>
+        </div>
+
+        <!-- Toolbar Actions -->
+        <div class="flex items-center gap-2">
+            <button class="na-btn" type="button" aria-label="Filter">Filter</button>
+            <button class="na-btn-primary" type="button" aria-label="Create new order">+ Order</button>
+        </div>
+    </div>
+
+    <!-- View Panes Container -->
+    <div class="na-viewport" style="height: 100%; overflow: hidden; position: relative;">
+        <!-- Grid View -->
+        <div id="omni-view-grid" class="na-view-pane" style="display: block; height: 100%; overflow: auto;">
+            <div class="p-8">
+                <h1 class="na-h1 mb-6">Omni Shell Layout</h1>
+                <p class="na-body text-lux-dim mb-6">
+                    This is the main content area with a collapsible drawer on the right.
+                    The drawer can be toggled using the hamburger menu in the header.
+                </p>
+
+                <!-- Example Content with Gold Highlights -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="#" class="na-card na-card-interactive">
+                        <h3 class="na-h4 mb-2">Card 1</h3>
+                        <p class="na-body-sm text-lux-dim">Hover to see gold highlight effect</p>
+                    </a>
+                    <a href="#" class="na-card na-card-interactive">
+                        <h3 class="na-h4 mb-2">Card 2</h3>
+                        <p class="na-body-sm text-lux-dim">Gold border and glow on hover</p>
+                    </a>
+                    <a href="#" class="na-card na-card-interactive">
+                        <h3 class="na-h4 mb-2">Card 3</h3>
+                        <p class="na-body-sm text-lux-dim">Enterprise-grade interactivity</p>
+                    </a>
+                </div>
+
+                <!-- KPI Cards Example -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                    <a href="#" class="na-card na-card-interactive">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📦</div>
+                            <div>
+                                <div class="na-kpi-label">Open Orders</div>
+                                <div class="na-kpi-value na-tabular">1,247</div>
+                                <div class="na-metadata-small">+12 today</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="na-card na-card-interactive">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">💰</div>
+                            <div>
+                                <div class="na-kpi-label">Revenue (MTD)</div>
+                                <div class="na-kpi-value na-tabular">RM 2.48M</div>
+                                <div class="na-metadata-small">+12.4% vs last month</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="na-card na-card-interactive">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">⚠</div>
+                            <div>
+                                <div class="na-kpi-label">Pending</div>
+                                <div class="na-kpi-value na-tabular">36</div>
+                                <div class="na-metadata-small">Requires attention</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="na-card na-card-interactive">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">✓</div>
+                            <div>
+                                <div class="na-kpi-label">Quality</div>
+                                <div class="na-kpi-value na-tabular">94.2%</div>
+                                <div class="na-metadata-small">Data health</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban View -->
+        <div id="omni-view-board" class="na-view-pane"
+            style="display: none; height: 100%; overflow: auto; padding: var(--spacing-4);">
+            <div class="na-kanban"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-4);">
+                <div class="na-kanban-column"
+                    style="background: var(--color-paper); border: 1px solid var(--color-stroke); border-radius: var(--radius-md); min-width: 280px; display: flex; flex-direction: column;">
+                    <div class="na-kanban-header"
+                        style="padding: var(--spacing-3) var(--spacing-4); border-bottom: 1px solid var(--color-stroke); display: flex; justify-content: space-between; background: var(--color-paper-2);">
+                        <div>
+                            <div class="na-data">Backlog</div>
+                            <div class="na-metadata-small">12 items</div>
+                        </div>
+                    </div>
+                    <div class="na-kanban-body"
+                        style="flex: 1; overflow-y: auto; padding: var(--spacing-2); display: flex; flex-direction: column; gap: var(--spacing-2);">
+                        <div class="na-kanban-card"
+                            style="background: var(--color-paper-2); border: 1px solid var(--color-stroke); border-radius: var(--radius-sm); padding: var(--spacing-3); cursor: move;">
+                            <div class="na-data"
+                                style="font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-1);">
+                                ORD-2025-002</div>
+                            <div class="na-metadata-small">Component X-2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="na-kanban-column"
+                    style="background: var(--color-paper); border: 1px solid var(--color-stroke); border-radius: var(--radius-md); min-width: 280px; display: flex; flex-direction: column;">
+                    <div class="na-kanban-header"
+                        style="padding: var(--spacing-3) var(--spacing-4); border-bottom: 1px solid var(--color-stroke); display: flex; justify-content: space-between; background: var(--color-paper-2);">
+                        <div>
+                            <div class="na-data" style="color: var(--color-gold);">In Progress</div>
+                            <div class="na-metadata-small">2 items</div>
+                        </div>
+                    </div>
+                    <div class="na-kanban-body"
+                        style="flex: 1; overflow-y: auto; padding: var(--spacing-2); display: flex; flex-direction: column; gap: var(--spacing-2);">
+                        <div class="na-kanban-card"
+                            style="background: var(--color-paper-2); border: 1px solid var(--color-gold); border-left-width: 2px; border-radius: var(--radius-sm); padding: var(--spacing-3); cursor: move;">
+                            <div
+                                style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-1);">
+                                <span class="na-data"
+                                    style="font-weight: var(--font-weight-semibold);">ORD-2025-001</span>
+                                <span class="na-metadata-small" style="color: var(--color-gold);">75%</span>
+                            </div>
+                            <div class="na-metadata-small" style="margin-bottom: var(--spacing-2);">Circuit A1</div>
+                            <div
+                                style="height: 4px; background: var(--color-paper-hover); border-radius: 2px; overflow: hidden;">
+                                <div style="width: 75%; background: var(--color-gold); height: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="na-kanban-column"
+                    style="background: var(--color-paper); border: 1px solid var(--color-stroke); border-radius: var(--radius-md); min-width: 280px; display: flex; flex-direction: column;">
+                    <div class="na-kanban-header"
+                        style="padding: var(--spacing-3) var(--spacing-4); border-bottom: 1px solid var(--color-stroke); display: flex; justify-content: space-between; background: var(--color-paper-2);">
+                        <div>
+                            <div class="na-data" style="color: var(--color-success);">Done</div>
+                            <div class="na-metadata-small">48 items</div>
+                        </div>
+                    </div>
+                    <div class="na-kanban-body"
+                        style="flex: 1; overflow-y: auto; padding: var(--spacing-2); display: flex; flex-direction: column; gap: var(--spacing-2);">
+                        <div class="na-kanban-card"
+                            style="background: var(--color-paper-2); border: 1px solid var(--color-stroke); border-radius: var(--radius-sm); padding: var(--spacing-3); cursor: move; opacity: 0.6;">
+                            <div class="na-data">ORD-Legacy-99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gantt View -->
+        <div id="omni-view-gantt" class="na-view-pane"
+            style="display: none; height: 100%; overflow: auto; padding: var(--spacing-4);">
+            <div class="na-gantt"
+                style="display: grid; grid-template-columns: 200px 1fr; gap: 0; border: 1px solid var(--color-stroke); border-radius: var(--radius-md); overflow: hidden;">
+                <div class="na-gantt-row"
+                    style="display: grid; grid-template-columns: 200px 1fr; border-bottom: 1px solid var(--color-stroke); min-height: 40px;">
+                    <div class="na-gantt-label"
+                        style="padding: var(--spacing-2) var(--spacing-3); border-right: 1px solid var(--color-stroke); background: var(--color-paper-2); display: flex; align-items: center; font-weight: var(--font-weight-semibold);">
+                        Order Sequence</div>
+                    <div class="na-gantt-timeline"
+                        style="position: relative; background: var(--color-paper); padding: var(--spacing-2) 0; display: flex; justify-content: space-between; font-size: var(--font-size-xs); color: var(--color-clay); padding-right: var(--spacing-3);">
+                        <span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span>
+                    </div>
+                </div>
+                <div class="na-gantt-row"
+                    style="display: grid; grid-template-columns: 200px 1fr; border-bottom: 1px solid var(--color-stroke); min-height: 40px;">
+                    <div class="na-gantt-label"
+                        style="padding: var(--spacing-2) var(--spacing-3); border-right: 1px solid var(--color-stroke); background: var(--color-paper-2); display: flex; align-items: center;">
+                        ORD-2025-001</div>
+                    <div class="na-gantt-timeline"
+                        style="position: relative; background: var(--color-paper); padding: var(--spacing-2) 0;">
+                        <div class="na-gantt-bar"
+                            style="position: absolute; left: 8.33%; width: 20.83%; height: 24px; background: var(--color-gold); border-radius: 2px; opacity: 0.8; display: flex; align-items: center; padding: 0 var(--spacing-2); color: var(--color-void); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);">
+                            Assembly</div>
+                    </div>
+                </div>
+                <div class="na-gantt-row"
+                    style="display: grid; grid-template-columns: 200px 1fr; border-bottom: 1px solid var(--color-stroke); min-height: 40px;">
+                    <div class="na-gantt-label"
+                        style="padding: var(--spacing-2) var(--spacing-3); border-right: 1px solid var(--color-stroke); background: var(--color-paper-2); display: flex; align-items: center;">
+                        ORD-2025-002</div>
+                    <div class="na-gantt-timeline"
+                        style="position: relative; background: var(--color-paper); padding: var(--spacing-2) 0;">
+                        <div class="na-gantt-bar"
+                            style="position: absolute; left: 25%; width: 16.66%; height: 24px; background: var(--color-clay); border-radius: 2px; opacity: 0.8; display: flex; align-items: center; padding: 0 var(--spacing-2); color: var(--color-lux); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);">
+                            Prep</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

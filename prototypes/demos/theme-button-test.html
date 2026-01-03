@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIBOS Button Theme Test - 5 Color Premium Theme</title>
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: var(--font-family-sans, system-ui, sans-serif);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .theme-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--color-paper);
+      border-bottom: 1px solid var(--color-stroke);
+      padding: 16px 24px;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--color-paper) 95%, transparent);
+    }
+    
+    .theme-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .theme-info {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .theme-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 4px 0;
+    }
+    
+    .theme-subtitle {
+      font-size: 12px;
+      color: var(--color-clay);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .theme-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .theme-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--color-stroke);
+      border-radius: 6px;
+      background: var(--color-paper-2);
+      color: var(--color-lux);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      text-transform: capitalize;
+    }
+    
+    .theme-btn:hover {
+      background: var(--color-paper-hover);
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-1px);
+    }
+    
+    .theme-btn.active {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+    
+    .section {
+      margin-bottom: 48px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 8px 0;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-stroke);
+    }
+    
+    .section-description {
+      font-size: 14px;
+      color: var(--color-lux-dim);
+      margin: 0 0 24px 0;
+      line-height: 1.6;
+    }
+    
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .button-group {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+    
+    .button-group:hover {
+      border-color: var(--color-stroke-strong);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button-group-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 12px;
+    }
+    
+    .button-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .button-label {
+      font-size: 11px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 80px;
+      font-weight: 500;
+    }
+    
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    
+    .color-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .color-swatch {
+      width: 100%;
+      height: 80px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      border: 1px solid var(--color-stroke);
+    }
+    
+    .color-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 4px 0;
+    }
+    
+    .color-value {
+      font-size: 12px;
+      color: var(--color-clay);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .stat-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin: 0 0 8px 0;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    
+    .code-block {
+      background: var(--color-paper-2);
+      border: 1px solid var(--color-stroke);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--color-lux-dim);
+      overflow-x: auto;
+    }
+    
+    .code-block code {
+      color: var(--color-lux);
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-header">
+    <div class="theme-controls">
+      <div class="theme-info">
+        <h1 class="theme-title">AIBOS Button Theme Test</h1>
+        <p class="theme-subtitle" id="current-theme-display">Theme: Default</p>
+      </div>
+      <div class="theme-buttons">
+        <button class="theme-btn active" onclick="switchTheme('default')" id="btn-default">Default</button>
+        <button class="theme-btn" onclick="switchTheme('attractive')" id="btn-attractive">Attractive (5 Colors)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Color Palette Section -->
+    <section class="section">
+      <h2 class="section-title">5 Core Attractive Colors</h2>
+      <p class="section-description">
+        Premium theme featuring 5 carefully selected colors for modern, attractive applications.
+      </p>
+      <div class="color-palette" id="color-palette">
+        <!-- Colors will be injected by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Primary Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Primary Buttons</h2>
+      <p class="section-description">
+        AIBOS primary buttons using the theme's primary color (Deep Ocean Blue).
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Standard Primary</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="na-btn na-btn-primary">Primary Button</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="na-btn na-btn-primary" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Hover Effect</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Disabled</span>
+              <button class="na-btn na-btn-primary" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Sizes</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Small</span>
+              <button class="na-btn na-btn-primary" style="padding: 6px 12px; font-size: 13px;">Small</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Medium</span>
+              <button class="na-btn na-btn-primary">Medium (Default)</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Large</span>
+              <button class="na-btn na-btn-primary" style="padding: 12px 24px; font-size: 16px;">Large</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">With Icons</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Left</span>
+              <button class="na-btn na-btn-primary">✨ Primary Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Right</span>
+              <button class="na-btn na-btn-primary">Save Changes →</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Both</span>
+              <button class="na-btn na-btn-primary">← Previous • Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Secondary Buttons</h2>
+      <p class="section-description">
+        Secondary buttons using the elegant slate color for less prominent actions.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Standard Secondary</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="na-btn">Secondary Button</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="na-btn" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Hover Effect</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Disabled</span>
+              <button class="na-btn" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Variations</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Outline</span>
+              <button class="na-btn" style="border: 2px solid var(--color-stroke); background: transparent;">Outline</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Ghost</span>
+              <button class="na-btn" style="background: transparent; border: none;">Ghost</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Link</span>
+              <button class="na-btn" style="background: transparent; border: none; text-decoration: underline;">Link Style</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accent Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Accent Buttons (Vibrant Coral)</h2>
+      <p class="section-description">
+        Accent buttons using the vibrant coral color for special emphasis.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Coral Accent</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold">Accent Button</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Hover Effect</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Status Buttons</h2>
+      <p class="section-description">
+        Buttons using status colors: Rich Emerald (Success), Warm Amber (Warning), Vibrant Red (Error).
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Success (Emerald)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-success text-white px-6 py-3 rounded-lg font-semibold">Success Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-success text-white px-6 py-3 rounded-lg font-semibold">✓ Confirm</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Warning (Amber)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-warning text-white px-6 py-3 rounded-lg font-semibold">Warning Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-warning text-white px-6 py-3 rounded-lg font-semibold">⚠️ Warning</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Error (Red)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-error text-white px-6 py-3 rounded-lg font-semibold">Delete</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-error text-white px-6 py-3 rounded-lg font-semibold">🗑️ Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Button Combinations Section -->
+    <section class="section">
+      <h2 class="section-title">Button Combinations</h2>
+      <p class="section-description">
+        Real-world button combinations and patterns.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Action Group</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <button class="na-btn">Cancel</button>
+              <button class="na-btn na-btn-primary">Save</button>
+            </div>
+            <div class="button-row">
+              <button class="na-btn">Reset</button>
+              <button class="na-btn na-btn-primary">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Form Actions</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <button class="na-btn" style="flex: 1;">Back</button>
+              <button class="na-btn na-btn-primary" style="flex: 1;">Next</button>
+            </div>
+            <div class="button-row">
+              <button class="bg-success text-white px-6 py-3 rounded-lg font-semibold" style="flex: 1;">Submit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Destructive Actions</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <button class="na-btn">Keep</button>
+              <button class="bg-error text-white px-6 py-3 rounded-lg font-semibold">Delete</button>
+            </div>
+            <div class="button-row">
+              <button class="na-btn" style="flex: 1;">Cancel</button>
+              <button class="bg-error text-white px-6 py-3 rounded-lg font-semibold" style="flex: 1;">Confirm Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Theme Stats Section -->
+    <section class="section">
+      <h2 class="section-title">Theme Statistics</h2>
+      <p class="section-description">
+        Current theme configuration and applied CSS variables.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-colors">5</div>
+          <p class="stat-label">Core Colors</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-buttons">20+</div>
+          <p class="stat-label">Button Variants</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-tokens">50+</div>
+          <p class="stat-label">CSS Variables</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-theme">Active</div>
+          <p class="stat-label">Theme Status</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="section">
+      <h2 class="section-title">Usage Code</h2>
+      <p class="section-description">
+        Example code for using the attractive theme with AIBOS buttons.
+      </p>
+      <div class="code-block">
+        <code>
+// Import theme<br>
+import { attractiveTheme, ThemeProvider } from '@aibos/design-system/themes';<br><br>
+// Use in your app<br>
+&lt;ThemeProvider customThemes={[attractiveTheme]}&gt;<br>
+&nbsp;&nbsp;&lt;button className="na-btn na-btn-primary"&gt;Primary&lt;/button&gt;<br>
+&nbsp;&nbsp;&lt;button className="na-btn"&gt;Secondary&lt;/button&gt;<br>
+&nbsp;&nbsp;&lt;button className="bg-accent text-accent-foreground px-6 py-3 rounded-lg"&gt;Accent&lt;/button&gt;<br>
+&lt;/ThemeProvider&gt;
+        </code>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    // Attractive theme definition with 5 core colors
+    const attractiveTheme = {
+      // Color 1: Deep Ocean Blue (Primary)
+      void: '#0f172a',
+      paper: '#1e293b',
+      paper2: '#334155',
+      paperHover: '#475569',
+      white: '#ffffff',
+      lux: '#f1f5f9',
+      luxDim: '#cbd5e1',
+      clay: '#94a3b8',
+      
+      // Color 1: Deep Ocean Blue
+      gold: '#3b82f6',
+      primary: '#3b82f6',
+      primaryForeground: '#ffffff',
+      
+      // Color 2: Vibrant Coral
+      accent: '#f97316',
+      accentForeground: '#ffffff',
+      
+      // Color 3: Rich Emerald
+      success: '#10b981',
+      
+      // Color 4: Warm Amber
+      warning: '#f59e0b',
+      
+      // Color 5: Elegant Slate
+      secondary: '#475569',
+      secondaryForeground: '#f1f5f9',
+      
+      error: '#ef4444',
+      info: '#06b6d4',
+      
+      stroke: '#334155',
+      strokeStrong: '#475569',
+      strokeSoft: '#1e293b',
+      
+      background: '#0f172a',
+      foreground: '#f1f5f9',
+      muted: '#334155',
+      mutedForeground: '#94a3b8',
+      card: '#1e293b',
+      cardForeground: '#f1f5f9',
+      popover: '#1e293b',
+      popoverForeground: '#f1f5f9',
+      border: '#334155',
+      input: '#334155',
+      destructive: '#ef4444',
+      destructiveForeground: '#ffffff',
+      ring: '#3b82f6',
+    };
+
+    // Token registry mapping
+    const tokenMap = {
+      void: '--color-void',
+      paper: '--color-paper',
+      paper2: '--color-paper-2',
+      paperHover: '--color-paper-hover',
+      white: '--color-white',
+      lux: '--color-lux',
+      luxDim: '--color-lux-dim',
+      clay: '--color-clay',
+      gold: '--color-gold',
+      stroke: '--color-stroke',
+      strokeStrong: '--color-stroke-strong',
+      strokeSoft: '--color-stroke-soft',
+      success: '--color-success',
+      warning: '--color-warning',
+      error: '--color-error',
+      info: '--color-info',
+      background: '--color-background',
+      foreground: '--color-foreground',
+      muted: '--color-muted',
+      mutedForeground: '--color-muted-foreground',
+      card: '--color-card',
+      cardForeground: '--color-card-foreground',
+      popover: '--color-popover',
+      popoverForeground: '--color-popover-foreground',
+      border: '--color-border',
+      input: '--color-input',
+      primary: '--color-primary',
+      primaryForeground: '--color-primary-foreground',
+      secondary: '--color-secondary',
+      secondaryForeground: '--color-secondary-foreground',
+      accent: '--color-accent',
+      accentForeground: '--color-accent-foreground',
+      destructive: '--color-destructive',
+      destructiveForeground: '--color-destructive-foreground',
+      ring: '--color-ring',
+    };
+
+    // 5 Core Colors for display
+    const coreColors = [
+      { name: 'Deep Ocean Blue', value: '#3b82f6', token: 'primary', description: 'Primary actions' },
+      { name: 'Vibrant Coral', value: '#f97316', token: 'accent', description: 'Accent emphasis' },
+      { name: 'Rich Emerald', value: '#10b981', token: 'success', description: 'Success states' },
+      { name: 'Warm Amber', value: '#f59e0b', token: 'warning', description: 'Warnings' },
+      { name: 'Elegant Slate', value: '#475569', token: 'secondary', description: 'Secondary actions' },
+    ];
+
+    function renderColorPalette() {
+      const palette = document.getElementById('color-palette');
+      palette.innerHTML = coreColors.map(color => `
+        <div class="color-card">
+          <div class="color-swatch" style="background: ${color.value};"></div>
+          <h3 class="color-name">${color.name}</h3>
+          <p class="color-value">${color.value}</p>
+          <p class="color-value" style="font-size: 11px; margin-top: 4px;">${color.description}</p>
+        </div>
+      `).join('');
+    }
+
+    function applyTheme(themeName) {
+      const root = document.documentElement;
+      
+      if (themeName === 'default') {
+        root.removeAttribute('data-theme');
+        Object.values(tokenMap).forEach(cssVar => {
+          root.style.removeProperty(cssVar);
+        });
+        document.getElementById('current-theme-display').textContent = 'Theme: Default (Dark)';
+        document.getElementById('btn-default').classList.add('active');
+        document.getElementById('btn-attractive').classList.remove('active');
+        document.getElementById('stat-theme').textContent = 'Default';
+      } else if (themeName === 'attractive') {
+        root.setAttribute('data-theme', 'attractive');
+        Object.entries(attractiveTheme).forEach(([key, value]) => {
+          const cssVar = tokenMap[key];
+          if (cssVar) {
+            root.style.setProperty(cssVar, value);
+          }
+        });
+        document.getElementById('current-theme-display').textContent = 'Theme: Attractive (5 Colors)';
+        document.getElementById('btn-attractive').classList.add('active');
+        document.getElementById('btn-default').classList.remove('active');
+        document.getElementById('stat-theme').textContent = 'Attractive';
+      }
+    }
+
+    // Initialize
+    window.switchTheme = applyTheme;
+    renderColorPalette();
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    applyTheme(savedTheme);
+
+    // Save theme preference
+    const originalSwitchTheme = window.switchTheme;
+    window.switchTheme = function(themeName) {
+      originalSwitchTheme(themeName);
+      localStorage.setItem('theme', themeName);
+    };
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Æther // Predictive Mesh Console (Evo 4)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Only prototype-specific styles - all base styles from style.css
+           ================================================================= */
+
+        /* Enhanced Background Texture (evo4 variant) */
+        .evo4-bg {
+            background:
+                radial-gradient(1200px 900px at 14% 18%, rgba(255, 255, 255, 0.06), transparent 60%),
+                radial-gradient(1100px 800px at 86% 20%, rgba(255, 255, 255, 0.04), transparent 62%),
+                radial-gradient(1000px 800px at 50% 115%, rgba(0, 0, 0, 0.46), transparent 58%),
+                linear-gradient(180deg,
+                    color-mix(in oklab, var(--color-void) 92%, var(--color-clay) 8%),
+                    var(--color-void) 60%,
+                    color-mix(in oklab, var(--color-void) 86%, black 14%));
+        }
+
+        .evo4-bg::after {
+            background-image:
+                repeating-linear-gradient(35deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 10px),
+                repeating-linear-gradient(125deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 14px),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: auto, auto, 220px 220px;
+            opacity: 0.11;
+            filter: contrast(115%) brightness(95%);
+            mix-blend-mode: soft-light;
+        }
+
+        /* Chart Bar Active State */
+        .na-bar.active {
+            background: linear-gradient(to top, rgba(234, 179, 8, 0.05), rgba(234, 179, 8, 0.3));
+            border-color: rgba(234, 179, 8, 0.5);
+            opacity: 1;
+            box-shadow: 0 -4px 12px rgba(234, 179, 8, 0.1);
+        }
+
+        /* Custom Grid Layouts */
+        .evo4-grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .evo4-grid-2-1 {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        /* Toast Animation */
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .evo4-toast {
+            animation: slideUp 0.4s var(--ease-premium);
+        }
+
+        /* Modal Animation */
+        .evo4-modal:target .na-modal-panel {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body class="na-app">
+    <a class="na-skip-link" href="#main-content">Skip to main content</a>
+    <div class="na-bg-grain evo4-bg" aria-hidden="true"></div>
+
+    <div class="na-toast evo4-toast" role="status" aria-live="polite">
+        <div class="text-success">✓</div>
+        <div>
+            <div class="na-h5 m-0">Auto-Healed: SEA-EDGE-02</div>
+            <div class="na-metadata-small mt-1">Rerouted 1.2M reqs via JPN-04 (12ms)</div>
+        </div>
+    </div>
+
+    <div class="na-shell">
+        <aside class="na-sidebar na-scroll" aria-label="Primary navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">Æ</div>
+                <div>
+                    <div class="na-brand-title">ÆTHER NET</div>
+                    <div class="na-metadata-small">Predictive Mesh v3.0</div>
+                </div>
+            </div>
+
+            <nav class="na-nav" aria-label="Navigation">
+                <div class="na-nav-section">Control Plane</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                    <span class="na-badge">LIVE</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Mesh Topology</span>
+                    <span class="na-metadata-small opacity-50">892</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Routing Policies</span>
+                    <span class="na-badge">AUTO</span>
+                </a>
+
+                <div class="na-nav-section">Evolution Ledger</div>
+                <a href="#" class="na-nav-item">
+                    <span>Experiments</span>
+                    <span class="na-metadata-small opacity-50">3</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Drift Detection</span>
+                    <span class="na-status error na-badge-small">!</span>
+                </a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact">
+                    <div class="na-label">Tenant Status</div>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center gap-2">
+                            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+                            <span class="na-metadata-small text-success">Synced</span>
+                        </div>
+                        <span class="na-metadata-small">SOC2 Type II</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="na-main" id="main-content">
+            <header class="na-header">
+                <div>
+                    <h1 class="na-h2 m-0">Predictive Mesh Overview</h1>
+                    <div class="na-metadata-small mt-1">
+                        Governance Ledger: <span class="text-gold">Active</span> • Region: Global
+                    </div>
+                </div>
+                <div class="na-header-actions">
+                    <div class="na-search">
+                        <input class="na-search-input" type="search" placeholder="Search Node ID..."
+                            aria-label="Search Node ID" />
+                        <span class="na-search-icon" aria-hidden="true">⌕</span>
+                    </div>
+                    <a href="#modal-deploy" class="na-btn na-btn-primary">Deploy Change</a>
+                </div>
+            </header>
+
+            <div class="na-content">
+                <div class="na-grid evo4-grid-3 mb-8">
+                    <div class="na-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">Global Latency (p95)</div>
+                            <div class="na-kpi-value na-data-large na-tabular">14<span
+                                    class="text-clay text-sm">ms</span></div>
+                            <div class="na-trend down">
+                                <span aria-hidden="true">▼</span>
+                                <span>12%</span>
+                            </div>
+                            <div class="na-metadata-small mt-3">AI Predictive Prefetch</div>
+                        </div>
+                    </div>
+
+                    <div class="na-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">Cache Hit Ratio</div>
+                            <div class="na-kpi-value na-data-large na-tabular">98.2<span
+                                    class="text-clay text-sm">%</span></div>
+                            <div class="na-trend up">
+                                <span aria-hidden="true">▲</span>
+                                <span>0.4%</span>
+                            </div>
+                            <div class="na-metadata-small mt-3">Origin Shield Active</div>
+                        </div>
+                    </div>
+
+                    <div class="na-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">Config Drift</div>
+                            <div class="na-kpi-value na-data-large na-tabular text-clay">0</div>
+                            <div class="na-trend">
+                                <span>Synced</span>
+                            </div>
+                            <div class="na-metadata-small mt-3">Last Audit: 2 mins ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="na-grid evo4-grid-2-1 mb-8">
+                    <div class="na-card">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-label">Traffic Evolution</div>
+                                <h2 class="na-h3 mt-1">Legacy Origin vs. Edge Compute</h2>
+                            </div>
+                            <div class="text-right">
+                                <div class="na-metadata-small text-clay">LIVE WINDOW</div>
+                                <div class="na-metadata-small text-gold">14:00 - 14:45</div>
+                            </div>
+                        </div>
+
+                        <div class="na-chart-container">
+                            <div class="na-bar" style="height: 30%"></div>
+                            <div class="na-bar" style="height: 45%"></div>
+                            <div class="na-bar" style="height: 35%"></div>
+                            <div class="na-bar" style="height: 50%"></div>
+                            <div class="na-bar active" style="height: 65%"></div>
+                            <div class="na-bar active" style="height: 80%"></div>
+                            <div class="na-bar active" style="height: 75%"></div>
+                            <div class="na-bar active" style="height: 90%"></div>
+                            <div class="na-bar active" style="height: 85%"></div>
+                            <div class="na-bar" style="height: 60%"></div>
+                            <div class="na-bar" style="height: 40%"></div>
+                            <div class="na-bar" style="height: 25%"></div>
+                        </div>
+
+                        <div class="flex gap-6 mt-4 pt-3 border-t border-stroke-soft">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 bg-gold rounded-sm"></div>
+                                <span class="na-metadata-small">Edge (AI)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 bg-paper-2 border border-clay rounded-sm"></div>
+                                <span class="na-metadata-small">Origin (Legacy)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="na-card bg-paper-2">
+                        <div class="na-label">Pending Decision</div>
+                        <h3 class="na-h4 mt-2 mb-1">Routing Policy #8821</h3>
+                        <p class="na-metadata-small text-clay mb-6">
+                            Shift 25% of traffic from US-EAST to EU-CENTRAL due to latency spike detection.
+                        </p>
+
+                        <div class="na-grid gap-2 mb-4">
+                            <div class="na-card-compact bg-paper">
+                                <div class="na-label text-xs">Impact</div>
+                                <div class="na-data">High</div>
+                            </div>
+                            <div class="na-card-compact bg-paper">
+                                <div class="na-label text-xs">Confidence</div>
+                                <div class="na-data text-success">99.2%</div>
+                            </div>
+                        </div>
+
+                        <div class="na-grid grid-cols-2 gap-3">
+                            <button class="na-btn na-btn-primary">Approve</button>
+                            <button class="na-btn">Reject</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="na-card p-0">
+                    <div class="na-panel-head border-b border-stroke">
+                        <h3 class="na-h3 m-0">High-Velocity Nodes</h3>
+                        <div class="flex gap-2">
+                            <button class="na-btn na-btn-ghost text-xs">Filter</button>
+                            <button class="na-btn na-btn-ghost text-xs">Export</button>
+                        </div>
+                    </div>
+                    <div class="na-table-wrap">
+                        <table class="na-table">
+                            <thead>
+                                <tr>
+                                    <th class="na-th">Node ID</th>
+                                    <th class="na-th">Region</th>
+                                    <th class="na-th">Type</th>
+                                    <th class="na-th">Throughput</th>
+                                    <th class="na-th">Latency</th>
+                                    <th class="na-th">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">HK-091</span></td>
+                                    <td class="na-td">Hong Kong</td>
+                                    <td class="na-td">AI Edge (GPU)</td>
+                                    <td class="na-td">840 GB/s</td>
+                                    <td class="na-td"><span class="na-data text-success">4ms</span></td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">SG-221</span></td>
+                                    <td class="na-td">Singapore</td>
+                                    <td class="na-td">Standard Cache</td>
+                                    <td class="na-td">1.2 TB/s</td>
+                                    <td class="na-td"><span class="na-data text-success">8ms</span></td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">VN-HCM</span></td>
+                                    <td class="na-td">Ho Chi Minh</td>
+                                    <td class="na-td">Hybrid</td>
+                                    <td class="na-td">410 GB/s</td>
+                                    <td class="na-td"><span class="na-data text-warning">24ms</span></td>
+                                    <td class="na-td"><span class="na-status warn">Rerouting</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-deploy" class="na-modal evo4-modal">
+        <div class="na-modal-panel">
+            <div class="na-panel-head mb-6">
+                <h2 class="na-h3 m-0">Deploy Configuration</h2>
+                <a href="#" class="na-iconbtn" aria-label="Close modal">&times;</a>
+            </div>
+
+            <div class="na-field mb-6">
+                <label class="na-label">Change Description</label>
+                <input class="na-input" type="text" value="feat(routing): enable predictive prefetch v2" />
+            </div>
+
+            <div class="na-alert na-alert-warning mb-6">
+                <div class="na-alert-title">⚠️ Impact Analysis</div>
+                <div class="na-alert-desc">
+                    This will trigger a cache purge for <strong>128 nodes</strong> in the APAC region. Latency may spike
+                    for 30s during propagation.
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <a href="#" class="na-btn">Cancel</a>
+                <a href="#" class="na-btn na-btn-primary">Confirm Deploy</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

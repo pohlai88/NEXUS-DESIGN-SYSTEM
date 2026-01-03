@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Next‑Gen ERP UI Kit (Tables • Lists • Forms • Pagination)</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* =========================================================
+           PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Strategic optimization: Only prototype-specific styles
+           All reusable styles moved to style.css
+           ========================================================= */
+
+    /* --- Enhanced Background Texture --- */
+    .na-bg-grain {
+      background:
+        radial-gradient(1200px 900px at 14% 18%, rgba(255, 255, 255, var(--opacity-6)), transparent 60%),
+        radial-gradient(1100px 800px at 86% 20%, rgba(255, 255, 255, var(--opacity-4)), transparent 62%),
+        radial-gradient(1000px 800px at 50% 115%, rgba(0, 0, 0, 0.48), transparent 58%),
+        linear-gradient(180deg,
+          color-mix(in oklab, var(--color-void) 92%, var(--color-clay) 8%),
+          var(--color-void) 60%,
+          color-mix(in oklab, var(--color-void) 86%, black 14%));
+    }
+
+    .na-bg-grain::after {
+      background-image:
+        repeating-linear-gradient(35deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 10px),
+        repeating-linear-gradient(125deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 1px, transparent 1px, transparent 14px),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: auto, auto, 220px 220px;
+      background-repeat: repeat, repeat, repeat;
+      opacity: 0.1;
+      filter: contrast(115%) brightness(95%);
+      mix-blend-mode: soft-light;
+    }
+
+    /* --- Utility Classes for Layout --- */
+    .na-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .na-row-between {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .na-subtle {
+      color: color-mix(in oklab, var(--color-lux) 70%, var(--color-clay));
+    }
+
+    .na-divider-strong {
+      border-top: 1px solid var(--color-stroke);
+      margin: 16px 0;
+    }
+
+    /* --- Pagination Styles --- */
+    .na-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-top: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 92%, black 8%);
+    }
+
+    .na-pager {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .na-pagebtn {
+      height: 36px;
+      min-width: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      color: var(--color-lux);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s var(--ease-premium);
+    }
+
+    .na-pagebtn:hover {
+      border-color: var(--color-stroke-strong);
+      background: var(--color-paper-2);
+    }
+
+    .na-pagebtn[aria-current="page"] {
+      border-color: color-mix(in oklab, var(--color-gold) 45%, var(--color-stroke));
+      box-shadow: var(--shadow-gilded);
+      background: color-mix(in oklab, var(--color-paper) 95%, var(--color-gold) 5%);
+    }
+
+    /* --- Form Grid --- */
+    .na-form-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    /* --- Disclosure Component --- */
+    details.na-disclosure>summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    details.na-disclosure>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.na-disclosure>summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      transition: all 0.2s var(--ease-premium);
+    }
+
+    details.na-disclosure[open]>summary {
+      border-color: var(--color-stroke-strong);
+      background: var(--color-paper-2);
+    }
+
+    .na-disclosure-body {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 92%, black 8%);
+    }
+
+    /* --- Reduced Motion Support --- */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="na-app na-density-comfort">
+  <a href="#main" class="na-skip-link">Skip to main content</a>
+  <div class="na-bg-grain" aria-hidden="true"></div>
+
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">NA</div>
+        <div>
+          <div class="na-brand-title">Neo‑Analog</div>
+          <div class="na-metadata-small">Next‑Gen ERP UI Kit</div>
+        </div>
+      </div>
+
+      <div class="na-nav-section" role="heading" aria-level="2">Build blocks</div>
+      <a class="na-nav-item is-active" href="#" aria-current="page">
+        <span>Data Grid</span>
+        <span class="na-nav-meta">A</span>
+      </a>
+      <a class="na-nav-item" href="#">
+        <span>Data List</span>
+        <span class="na-nav-meta">B</span>
+      </a>
+      <a class="na-nav-item" href="#">
+        <span>Forms</span>
+        <span class="na-nav-meta">C</span>
+      </a>
+      <a class="na-nav-item" href="#">
+        <span>Containers</span>
+        <span class="na-nav-meta">D</span>
+      </a>
+
+      <div class="na-nav-section" role="heading" aria-level="2">ERP patterns</div>
+      <a class="na-nav-item" href="#">
+        <span>Approval Queue</span>
+        <span class="na-nav-meta">12</span>
+      </a>
+      <a class="na-nav-item" href="#">
+        <span>Reconciliation</span>
+        <span class="na-nav-meta">8</span>
+      </a>
+      <a class="na-nav-item" href="#">
+        <span>Audit Trail</span>
+        <span class="na-nav-meta">∞</span>
+      </a>
+
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Mode</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Shadow + Explain</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm" style="line-height:1.35;">
+          CSS‑first components • token driven • high density ready
+        </div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-search" role="search">
+          <label class="sr-only" for="q">Search</label>
+          <input id="q" class="na-search-input" type="search"
+            placeholder="Search invoices, vendors, journals, metadata…" />
+          <span class="na-search-icon" aria-hidden="true">⌘K</span>
+        </div>
+        <div class="na-header-actions">
+          <button class="na-btn" aria-label="Filter data">Filters</button>
+          <button class="na-btn" aria-label="Export data">Export</button>
+          <button class="na-btn-primary" aria-label="Create new record">New Record</button>
+          <button class="na-avatar" aria-label="Open user menu"></button>
+        </div>
+      </header>
+
+      <div class="na-content">
+        <div class="na-page-header">
+          <div>
+            <div class="na-metadata">Neo-Analog ERP UI Kit • v5.1 • Comfort Edition</div>
+            <h1 class="na-h1">Beyond Templates: Data‑First ERP UI</h1>
+            <p class="na-metadata na-page-meta">A single CSS system powering <strong>grid</strong>,
+              <strong>list</strong>, <strong>forms</strong>, and <strong>pagination</strong> with a
+              "tooling‑grade" feel.
+            </p>
+            <div class="na-page-stats">
+              <div class="na-stat-item">
+                <div class="na-metadata">Latency</div>
+                <div class="na-data na-stat-value">42ms p95</div>
+              </div>
+              <div class="na-stat-item">
+                <div class="na-metadata">Audit Mode</div>
+                <div class="na-data na-stat-value">Enabled</div>
+              </div>
+              <div class="na-stat-item">
+                <div class="na-metadata">Tenants</div>
+                <div class="na-data na-stat-value">128</div>
+              </div>
+              <div class="na-stat-item">
+                <div class="na-metadata">Schema</div>
+                <div class="na-data na-stat-value">v5.1</div>
+              </div>
+            </div>
+          </div>
+          <div class="na-page-actions">
+            <button class="na-btn" aria-label="Run health scan">Health Scan</button>
+            <button class="na-btn-primary" aria-label="Run reconciliation">Run Reconciliation</button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="na-grid na-grid-kpi">
+          <div class="na-card na-card-interactive" role="link" aria-label="Open Approvals: 36 pending">
+            <div class="na-kpi">
+              <div class="na-kpi-icon" aria-hidden="true">📋</div>
+              <div>
+                <div class="na-kpi-label">Open Approvals</div>
+                <div class="na-kpi-value na-tabular">36</div>
+                <div class="na-metadata-small na-kpi-meta">PO/GRN/Invoice pending sign‑off</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="na-card na-card-interactive" role="link" aria-label="Exceptions: 8 issues">
+            <div class="na-kpi">
+              <div class="na-kpi-icon" aria-hidden="true">⚠</div>
+              <div>
+                <div class="na-kpi-label">Exceptions</div>
+                <div class="na-kpi-value na-tabular">8</div>
+                <div class="na-metadata-small na-kpi-meta">3‑way mismatch + missing docs</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="na-card na-card-interactive" role="link" aria-label="Cash Forecast: RM 2.48M">
+            <div class="na-kpi">
+              <div class="na-kpi-icon" aria-hidden="true">💰</div>
+              <div>
+                <div class="na-kpi-label">Cash Forecast</div>
+                <div class="na-kpi-value na-tabular">RM 2.48M</div>
+                <div class="na-metadata-small na-kpi-meta">14‑day projected outflow</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="na-card na-card-interactive" role="link" aria-label="Data Quality: 94.2%">
+            <div class="na-kpi">
+              <div class="na-kpi-icon" aria-hidden="true">✓</div>
+              <div>
+                <div class="na-kpi-label">Data Quality</div>
+                <div class="na-kpi-value na-tabular">94.2%</div>
+                <div class="na-metadata-small na-kpi-meta">PII rules + validation health</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="na-divider-strong"></div>
+
+        <!-- Filter Bar -->
+        <div class="na-row-between na-mt-6">
+          <div class="na-row">
+            <span class="na-chip">Company: DLB</span>
+            <span class="na-chip">Period: 2025‑12</span>
+            <span class="na-chip">Status: Exception</span>
+            <span class="na-chip">Currency: MYR</span>
+          </div>
+          <div class="na-row">
+            <button class="na-btn" aria-label="Bulk assign">Bulk Assign</button>
+            <button class="na-btn" aria-label="Bulk export">Bulk Export</button>
+            <button class="na-btn-primary" aria-label="Create case">Create Case</button>
+          </div>
+        </div>
+
+        <!-- Data Grid Section -->
+        <section class="na-card na-mt-6">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3 na-panel-title">Case‑Grade Data Grid</h2>
+              <div class="na-metadata na-panel-meta">Sticky header • dense cells • meta/value separation
+                • row actions</div>
+            </div>
+            <div class="na-panel-actions">
+              <button class="na-btn" aria-label="Configure columns">Columns</button>
+              <button class="na-btn" aria-label="Group data">Group</button>
+              <button class="na-btn-primary" aria-label="Save view">Save View</button>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="na-table-wrap na-scroll" role="region" aria-label="Invoices table">
+            <table class="na-table" role="table">
+              <thead>
+                <tr>
+                  <th class="na-th" scope="col">Invoice</th>
+                  <th class="na-th" scope="col">Vendor</th>
+                  <th class="na-th" scope="col">3‑Way</th>
+                  <th class="na-th" scope="col">Amount</th>
+                  <th class="na-th" scope="col">Due</th>
+                  <th class="na-th" scope="col">Risk</th>
+                  <th class="na-th" scope="col">Evidence</th>
+                  <th class="na-th" scope="col" style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="na-tr na-tr-interactive" role="row" tabindex="0" aria-label="Invoice INV-2025-12984 details">
+                  <td class="na-td">
+                    <div class="na-data">INV‑2025‑12984</div>
+                    <div class="na-metadata-small na-td-meta">PO‑8841 • GRN‑4412 • Batch B‑92</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">Greenfeed Sdn Bhd</div>
+                    <div class="na-metadata-small na-td-meta">Tier‑2 • 6 disputes last 90d</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status pending">Mismatch</span>
+                    <div class="na-metadata-small na-td-meta">Qty variance 1.7%</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data na-tabular">RM 84,210.00</div>
+                    <div class="na-metadata-small na-td-meta">Tax: RM 4,764.00</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">2026‑01‑03</div>
+                    <div class="na-metadata-small na-td-meta">7 days</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status bad">High</span>
+                    <div class="na-metadata-small na-td-meta">Policy: AP‑03</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-lineage-badges">
+                      <span class="na-status ok">PO</span>
+                      <span class="na-status ok">GRN</span>
+                      <span class="na-status pending">POD</span>
+                    </div>
+                  </td>
+                  <td class="na-td" style="text-align:right;">
+                    <button class="na-rowbtn" aria-label="Actions for INV-2025-12984" aria-haspopup="true">⋯</button>
+                  </td>
+                </tr>
+
+                <tr class="na-tr na-tr-interactive" role="row" tabindex="0" aria-label="Invoice INV-2025-12976 details">
+                  <td class="na-td">
+                    <div class="na-data">INV‑2025‑12976</div>
+                    <div class="na-metadata-small na-td-meta">PO‑8820 • GRN‑4389</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">DeHeus</div>
+                    <div class="na-metadata-small na-td-meta">Tier‑1 • clean track</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status ok">Match</span>
+                    <div class="na-metadata-small na-td-meta">Exact within tolerance</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data na-tabular">RM 12,980.50</div>
+                    <div class="na-metadata-small na-td-meta">Tax: RM 0</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">2026‑01‑09</div>
+                    <div class="na-metadata-small na-td-meta">13 days</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status ok">Low</span>
+                    <div class="na-metadata-small na-td-meta">Auto‑approve eligible</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-lineage-badges">
+                      <span class="na-status ok">PO</span>
+                      <span class="na-status ok">GRN</span>
+                      <span class="na-status ok">POD</span>
+                    </div>
+                  </td>
+                  <td class="na-td" style="text-align:right;">
+                    <button class="na-rowbtn" aria-label="Actions for INV-2025-12976" aria-haspopup="true">⋯</button>
+                  </td>
+                </tr>
+
+                <tr class="na-tr na-tr-interactive" role="row" tabindex="0" aria-label="Invoice INV-2025-12961 details">
+                  <td class="na-td">
+                    <div class="na-data">INV‑2025‑12961</div>
+                    <div class="na-metadata-small na-td-meta">Missing: GRN</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">ANT</div>
+                    <div class="na-metadata-small na-td-meta">Tier‑3 • manual review</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status pending">Pending</span>
+                    <div class="na-metadata-small na-td-meta">Awaiting vendor upload</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data na-tabular">RM 6,432.00</div>
+                    <div class="na-metadata-small na-td-meta">Tax: RM 385.92</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-data">2025‑12‑30</div>
+                    <div class="na-metadata-small na-td-meta">3 days</div>
+                  </td>
+                  <td class="na-td">
+                    <span class="na-status pending">Medium</span>
+                    <div class="na-metadata-small na-td-meta">Doc SLA 24h</div>
+                  </td>
+                  <td class="na-td">
+                    <div class="na-lineage-badges">
+                      <span class="na-status ok">PO</span>
+                      <span class="na-status pending">GRN</span>
+                      <span class="na-status pending">POD</span>
+                    </div>
+                  </td>
+                  <td class="na-td" style="text-align:right;">
+                    <button class="na-rowbtn" aria-label="Actions for INV-2025-12961" aria-haspopup="true">⋯</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="na-pagination" role="navigation" aria-label="Pagination">
+              <div class="na-metadata-small">Showing <strong>1–3</strong> of <strong>1,842</strong> invoices
+                • Sort: Risk desc</div>
+              <div class="na-pager" aria-label="Page controls">
+                <button class="na-pagebtn" aria-label="Previous page">‹</button>
+                <button class="na-pagebtn" aria-current="page">1</button>
+                <button class="na-pagebtn" aria-label="Page 2">2</button>
+                <button class="na-pagebtn" aria-label="Page 3">3</button>
+                <button class="na-pagebtn" aria-label="Page 4">4</button>
+                <button class="na-pagebtn" aria-label="More pages">…</button>
+                <button class="na-pagebtn" aria-label="Page 42">42</button>
+                <button class="na-pagebtn" aria-label="Next page">›</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Data List and Containers -->
+        <div class="na-grid na-grid-chart-health na-mt-6">
+          <section class="na-card">
+            <div class="na-panel-head">
+              <div>
+                <h2 class="na-h3 na-panel-title">Data List (high‑signal, no noise)</h2>
+                <div class="na-metadata na-panel-meta">Uses the same tokens as grid; optimized for
+                  scanning</div>
+              </div>
+              <div class="na-panel-actions">
+                <button class="na-btn" aria-label="Toggle compact view">Compact</button>
+                <button class="na-btn" aria-label="Group by vendor">Group by Vendor</button>
+              </div>
+            </div>
+
+            <div class="na-divider na-my-3_5"></div>
+
+            <div class="na-activity-list">
+              <a href="#" class="na-activity-item" aria-label="Exception created">
+                <div class="na-row-between">
+                  <div class="na-data">Case opened: INV‑2025‑12984</div>
+                  <span class="na-status bad">High risk</span>
+                </div>
+                <div class="na-activity-data na-subtle">Mismatch detected • Qty variance 1.7% • Rule:
+                  AP‑03‑TOL</div>
+                <div class="na-activity-time na-metadata-small">2 minutes ago • by System</div>
+              </a>
+
+              <a href="#" class="na-activity-item" aria-label="Vendor uploaded POD">
+                <div class="na-row-between">
+                  <div class="na-data">Vendor uploaded POD</div>
+                  <span class="na-status ok">Evidence</span>
+                </div>
+                <div class="na-activity-data na-subtle">POD.pdf attached • INV‑2025‑12961</div>
+                <div class="na-activity-time na-metadata-small">18 minutes ago • by Vendor</div>
+              </a>
+
+              <a href="#" class="na-activity-item" aria-label="Approval completed">
+                <div class="na-row-between">
+                  <div class="na-data">Approved for payment</div>
+                  <span class="na-status ok">Approved</span>
+                </div>
+                <div class="na-activity-data na-subtle">Auto‑approve threshold met • INV‑2025‑12976
+                </div>
+                <div class="na-activity-time na-metadata-small">1 hour ago • by Andy (FM)</div>
+              </a>
+            </div>
+          </section>
+
+          <aside class="na-card">
+            <div class="na-panel-head">
+              <div>
+                <h2 class="na-h3 na-panel-title">Containers</h2>
+                <div class="na-metadata na-panel-meta">Disclosures • status blocks • no‑JS behaviors
+                </div>
+              </div>
+            </div>
+
+            <div class="na-divider na-my-3_5"></div>
+
+            <details class="na-disclosure" open>
+              <summary>
+                <span class="na-data">Reconciliation Summary</span>
+                <span class="na-status pending">8 exceptions</span>
+              </summary>
+              <div class="na-disclosure-body">
+                <div class="na-row-between">
+                  <div class="na-metadata-small">Tolerance: ±2% qty • ±1 day date • currency locked
+                  </div>
+                  <button class="na-btn" aria-label="Open rules">Open Rules</button>
+                </div>
+                <div class="na-divider-strong"></div>
+                <div class="na-row">
+                  <span class="na-status ok">Pass‑1 exact</span>
+                  <span class="na-status ok">Pass‑2 tolerance</span>
+                  <span class="na-status pending">Pass‑3 evidence</span>
+                </div>
+              </div>
+            </details>
+
+            <div style="height:14px;"></div>
+
+            <details class="na-disclosure">
+              <summary>
+                <span class="na-data">Audit Stream</span>
+                <span class="na-status ok">Running</span>
+              </summary>
+              <div class="na-disclosure-body">
+                <div class="na-metadata-small">All mutations are logged (CRUD + ENUM updates). Evidence
+                  is immutable once accepted.</div>
+                <div class="na-divider-strong"></div>
+                <ul class="na-list">
+                  <li>INV‑2025‑12984: status → <strong>Mismatch</strong></li>
+                  <li>INV‑2025‑12961: doc_request → <strong>uploaded</strong></li>
+                  <li>INV‑2025‑12976: approval → <strong>approved</strong></li>
+                </ul>
+              </div>
+            </details>
+          </aside>
+        </div>
+
+        <!-- Advanced Form Section -->
+        <section class="na-card na-mt-6">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3 na-panel-title">Advanced Form (ERP‑grade)</h2>
+              <div class="na-metadata na-panel-meta">Clear label/value separation • tokenized spacing •
+                validation ready</div>
+            </div>
+            <div class="na-panel-actions">
+              <button class="na-btn" aria-label="Reset form">Reset</button>
+              <button class="na-btn-primary" aria-label="Submit form">Submit</button>
+            </div>
+          </div>
+
+          <div class="na-divider na-my-3_5"></div>
+
+          <form class="na-form-grid" aria-label="Create document request">
+            <div class="na-field" style="grid-column: span 4;">
+              <label class="na-label" for="vendor">Vendor</label>
+              <select id="vendor" class="na-select">
+                <option>Greenfeed Sdn Bhd</option>
+                <option>DeHeus</option>
+                <option>ANT</option>
+              </select>
+              <div class="na-help">Select the vendor tenant to request evidence from.</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 4;">
+              <label class="na-label" for="docType">Document Type</label>
+              <select id="docType" class="na-select">
+                <option>PO</option>
+                <option>GRN</option>
+                <option>POD</option>
+                <option>Invoice Copy</option>
+                <option>SOA</option>
+                <option>Other</option>
+              </select>
+              <div class="na-help">Fixed ENUM set (prevents drift).</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 4;">
+              <label class="na-label" for="due">Due Date</label>
+              <input id="due" class="na-input" type="date" value="2026-01-03" />
+              <div class="na-help">SLA policy will be enforced on submit.</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 6;">
+              <label class="na-label" for="ref">Reference</label>
+              <input id="ref" class="na-input" type="text" value="INV‑2025‑12984 / PO‑8841 / GRN‑4412" />
+              <div class="na-help">Any identifier that helps vendor locate the record.</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 6;">
+              <label class="na-label" for="reason">Reason</label>
+              <input id="reason" class="na-input" type="text" value="3‑way mismatch requires POD + GRN verification" />
+              <div class="na-help">Be specific. This message is part of the audit trail.</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 8;">
+              <label class="na-label" for="notes">Notes</label>
+              <textarea id="notes"
+                class="na-textarea">Please upload POD and GRN for INV‑2025‑12984. Variance detected in quantity (1.7%).</textarea>
+              <div class="na-help">No HTML. Stored as plain text. Immutable after vendor acceptance.</div>
+            </div>
+
+            <div class="na-field" style="grid-column: span 4;" data-state="error">
+              <label class="na-label" for="policy">Policy</label>
+              <input id="policy" class="na-input" type="text" value="AP‑03‑TOL" />
+              <div class="na-error">Example error: policy code not found (ref_policy).</div>
+            </div>
+
+            <div style="grid-column: 1 / -1;" class="na-mt-4">
+              <div class="na-row-between">
+                <div class="na-metadata-small">Submit will create a request + notify vendor tenant.
+                  Status flow: requested → uploaded → accepted/rejected/cancelled.</div>
+                <div class="na-row">
+                  <button class="na-btn" type="button" aria-label="Preview notification">Preview
+                    Notification</button>
+                  <button class="na-btn-primary" type="button" aria-label="Create request">Create
+                    Request</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <div class="na-footnote na-mt-6">
+          Showing 3 of 1,842 invoices • Last updated: 2025-01-27 14:30:00 UTC •
+          <a href="#" class="na-footnote-link">View all invoices</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

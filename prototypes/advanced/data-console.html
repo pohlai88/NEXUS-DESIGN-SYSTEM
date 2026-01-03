@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Analog // Architect BI Console</title>
+    <link rel="stylesheet" href="../../style.css">
+    
+    <style>
+        /* =========================================
+           LEVEL 5 CSS: THE ARCHITECT'S OVERRIDES
+           Pushing CSS Grid and Paint API to the limit.
+           ========================================= */
+
+        :root {
+            --grid-header-height: 48px;
+            --sidebar-width: 260px;
+            --col-1-width: 180px; /* Frozen column width */
+        }
+
+        body { overflow: hidden; } /* App-like feel */
+
+        /* --- LAYOUT: 3-Pane Resizable-feel --- */
+        .na-workspace {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr 320px;
+            grid-template-rows: 60px 1fr 40px;
+            height: 100vh;
+            width: 100vw;
+            background: var(--color-void);
+        }
+
+        /* --- COMPONENT 1: CSS-ONLY LINEAGE TREE --- 
+           Using <details> with border-left hacks to create 
+           perfect hierarchy lines without JS or SVGs.
+        */
+        .na-tree {
+            padding: 16px 8px;
+            user-select: none;
+        }
+
+        .na-tree details {
+            margin-left: 12px;
+            position: relative;
+        }
+
+        .na-tree summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 4px;
+            color: var(--color-clay);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .na-tree summary:hover { background: var(--color-paper-2); color: var(--color-lux); }
+        .na-tree summary::-webkit-details-marker { display: none; }
+
+        /* The Connector Lines */
+        .na-tree details::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -8px; bottom: 8px;
+            width: 1px;
+            background: var(--color-stroke);
+        }
+        
+        /* The Horizontal Connector */
+        .na-tree details > summary::before {
+            content: "";
+            position: absolute;
+            left: -20px; top: 50%;
+            width: 12px; height: 1px;
+            background: var(--color-stroke);
+        }
+
+        /* Root node exception */
+        .na-tree > details::before, .na-tree > details > summary::before { display: none; }
+        .na-tree > details { margin-left: 0; }
+
+        /* Status dots in tree */
+        .tree-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-clay); }
+        .tree-dot.live { background: var(--color-success); box-shadow: 0 0 6px var(--color-success); }
+        .tree-dot.warn { background: var(--color-gold); }
+
+        /* --- COMPONENT 2: THE SUPER GRID (Frozen Panes) --- 
+           Uses sticky positioning on BOTH axes.
+        */
+        .na-super-grid-container {
+            overflow: auto;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            background: var(--color-paper);
+            /* Scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-stroke-strong) var(--color-paper);
+        }
+
+        .na-super-grid {
+            border-collapse: separate; /* Required for sticky */
+            border-spacing: 0;
+            width: max-content; /* Allow horizontal scroll */
+            min-width: 100%;
+        }
+
+        .na-super-grid th, .na-super-grid td {
+            padding: 0 16px;
+            height: 40px;
+            border-bottom: 1px solid var(--color-stroke-soft);
+            border-right: 1px solid var(--color-stroke-soft);
+            font-size: 13px;
+            white-space: nowrap;
+            background: var(--color-paper); /* Opaque for scrolling underneath */
+        }
+
+        /* STICKY HEADER (Top) */
+        .na-super-grid thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--color-paper-2);
+            border-bottom: 1px solid var(--color-stroke);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-clay);
+            font-weight: 600;
+        }
+
+        /* STICKY COLUMN (Left) - The "Frozen Pane" */
+        .na-super-grid td:first-child, 
+        .na-super-grid th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11; /* Higher than normal cells */
+            background: var(--color-paper);
+            border-right: 2px solid var(--color-stroke); /* Separation line */
+            width: var(--col-1-width);
+            max-width: var(--col-1-width);
+        }
+
+        /* THE CORNER (Top-Left intersection) - Must be highest Z */
+        .na-super-grid thead th:first-child {
+            z-index: 20;
+            background: var(--color-paper-2);
+        }
+
+        /* Row Hover: Use mix-blend-mode to tint stickies correctly */
+        .na-super-grid tr:hover td {
+            background-color: var(--color-paper-hover);
+        }
+
+        /* --- COMPONENT 3: CSS DATA VISUALIZATION (Sparklines) --- 
+           Using linear-gradient to draw charts inside cells.
+        */
+        .viz-bar {
+            height: 100%; width: 100%;
+            display: flex; align-items: center;
+        }
+        
+        /* A micro-bar chart using a single div and background-size */
+        .css-spark-bar {
+            height: 6px;
+            border-radius: 2px;
+            background: var(--color-paper-2);
+            position: relative;
+            overflow: hidden;
+            width: 100px;
+        }
+        .css-spark-bar::after {
+            content: "";
+            position: absolute; top:0; left:0; bottom:0;
+            width: var(--val); /* CSS Variable injection */
+            background: var(--color-gold);
+        }
+
+        /* A heatmap cell */
+        .css-heatmap {
+            /* Alpha based on value */
+            background-color: color-mix(in srgb, var(--color-success) var(--val), transparent);
+            color: var(--color-lux);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        /* --- COMPONENT 4: BI ANALYTICS PANE --- */
+        .na-bi-panel {
+            background: var(--color-paper-2);
+            border-left: 1px solid var(--color-stroke);
+            display: flex; flex-direction: column;
+        }
+
+        /* Gantt Chart via CSS Grid */
+        .css-gantt {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr); /* 12 Hours/Months */
+            gap: 2px;
+            background: var(--color-stroke);
+            padding: 1px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        .gantt-bar {
+            height: 8px;
+            border-radius: 2px;
+            grid-column: var(--start) / span var(--span);
+            background: var(--color-gold);
+            opacity: 0.8;
+        }
+        .gantt-bar.blue { background: var(--color-info); }
+        .gantt-bar.green { background: var(--color-success); }
+
+    </style>
+</head>
+<body class="na-app">
+    <div class="na-bg-grain"></div>
+
+    <div class="na-workspace">
+        
+        <header class="na-header" style="grid-column: 1 / -1; border-bottom: 1px solid var(--color-stroke);">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div class="na-mark">NA</div>
+                <h1 class="na-h3">Global Logistics Stream</h1>
+                <div class="na-chip">Live WebSocket</div>
+            </div>
+            <div class="na-header-actions">
+                <div style="display:flex; background:var(--color-paper-2); padding:2px; border-radius:6px; border:1px solid var(--color-stroke);">
+                    <button class="na-btn-ghost" style="height:28px; font-size:11px; background:var(--color-paper); color:var(--color-lux); shadow:sm;">Grid View</button>
+                    <button class="na-btn-ghost" style="height:28px; font-size:11px;">Pivot</button>
+                    <button class="na-btn-ghost" style="height:28px; font-size:11px;">Graph</button>
+                </div>
+                <button class="na-btn-primary" style="height:32px;">Export CSV</button>
+            </div>
+        </header>
+
+        <aside class="na-sidebar" style="grid-row: 2 / -1; border-right: 1px solid var(--color-stroke); padding:0;">
+            <div style="padding: 16px; border-bottom: 1px solid var(--color-stroke);">
+                <div class="na-label">Data Sources</div>
+                <input type="text" class="na-search-input" placeholder="Filter hierarchy..." style="height:32px; margin-top:8px;">
+            </div>
+            
+            <div class="na-tree na-scroll" style="overflow-y:auto; height: calc(100% - 70px);">
+                <details open>
+                    <summary><span class="tree-dot live"></span> <strong>Master_Logistics_DB</strong></summary>
+                    
+                    <details open>
+                        <summary>📁 raw_telemetry</summary>
+                        <details>
+                            <summary>📄 fleet_gps_signals <span class="na-metadata-small" style="margin-left:auto;">12GB</span></summary>
+                        </details>
+                        <details>
+                            <summary>📄 warehouse_iot_sensors</summary>
+                        </details>
+                    </details>
+
+                    <details open>
+                        <summary>📁 transformed_silver</summary>
+                        <details open>
+                            <summary>📄 shipment_events_enriched</summary>
+                            <details>
+                                <summary style="color:var(--color-gold);">🔑 shipment_id (PK)</summary>
+                            </details>
+                            <details>
+                                <summary>📌 origin_lat_long</summary>
+                            </details>
+                            <details>
+                                <summary>🔢 calculated_eta</summary>
+                            </details>
+                        </details>
+                    </details>
+
+                    <details>
+                        <summary>📁 analytics_gold</summary>
+                        <details>
+                            <summary>📊 exec_dashboard_view</summary>
+                        </details>
+                    </details>
+                </details>
+            </div>
+        </aside>
+
+        <main style="grid-column: 2; grid-row: 2; overflow:hidden; position:relative;">
+            
+            <div style="height:48px; border-bottom:1px solid var(--color-stroke); display:flex; align-items:center; padding:0 16px; gap:12px; background:var(--color-paper);">
+                <span class="na-label">Query:</span>
+                <code class="na-mono" style="color:var(--color-gold); font-size:12px;">SELECT * FROM shipment_events WHERE status = 'IN_TRANSIT' LIMIT 1000</code>
+                <span class="na-metadata" style="margin-left:auto;">142ms execution</span>
+            </div>
+
+            <div class="na-super-grid-container">
+                <table class="na-super-grid">
+                    <thead>
+                        <tr>
+                            <th style="width:180px;">Shipment ID</th>
+                            <th>Status</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Progress (Est)</th>
+                            <th>Payload Vol</th>
+                            <th>Temp (°C)</th>
+                            <th>Revenue Impact</th>
+                            <th>Driver</th>
+                            <th>Last Ping</th>
+                            <th>Meta Tags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="na-mono" style="color:var(--color-lux);">SHP-8821-Alpha</td>
+                            <td><span class="na-status ok">In Transit</span></td>
+                            <td>Singapore (SIN)</td>
+                            <td>Tokyo (NRT)</td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="css-spark-bar" style="--val: 72%;"></div>
+                                    <span class="na-mono" style="font-size:11px;">72%</span>
+                                </div>
+                            </td>
+                            <td>4,200 kg</td>
+                            <td><span class="css-heatmap" style="--val: 10%;">4.2°C</span></td>
+                            <td class="na-mono">$12,450.00</td>
+                            <td>D. Chen</td>
+                            <td class="na-mono">14:02:11</td>
+                            <td><span class="na-chip">Priority</span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="na-mono" style="color:var(--color-lux);">SHP-9942-Beta</td>
+                            <td><span class="na-status warn">Customs</span></td>
+                            <td>Shenzhen (SZX)</td>
+                            <td>Hamburg (HAM)</td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="css-spark-bar" style="--val: 15%; background:var(--color-stroke);"></div>
+                                    <span class="na-mono" style="font-size:11px;">15%</span>
+                                </div>
+                            </td>
+                            <td>12,100 kg</td>
+                            <td><span class="css-heatmap" style="--val: 40%;">18.5°C</span></td>
+                            <td class="na-mono">$45,200.00</td>
+                            <td>H. Muller</td>
+                            <td class="na-mono">11:45:00</td>
+                            <td><span class="na-chip">Hazmat</span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="na-mono" style="color:var(--color-lux);">SHP-7721-Gamma</td>
+                            <td><span class="na-status ok">Arrived</span></td>
+                            <td>London (LHR)</td>
+                            <td>New York (JFK)</td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="css-spark-bar" style="--val: 100%; background:var(--color-success);"></div>
+                                    <span class="na-mono" style="font-size:11px;">100%</span>
+                                </div>
+                            </td>
+                            <td>890 kg</td>
+                            <td><span class="css-heatmap" style="--val: 80%;">2.1°C</span></td>
+                            <td class="na-mono">$8,900.00</td>
+                            <td>J. Smith</td>
+                            <td class="na-mono">09:30:22</td>
+                            <td><span class="na-chip">Pharma</span></td>
+                        </tr>
+                        
+                        <script>
+                            // Just for the prototype to fill the grid without 100 lines of HTML
+                            // In production this is server-side rendered
+                            for(let i=0; i<20; i++) {
+                                document.write(`
+                                <tr>
+                                    <td class="na-mono" style="color:var(--color-lux-dim);">SHP-AUTO-${1000+i}</td>
+                                    <td><span class="na-status pending">Processing</span></td>
+                                    <td>Auto-Origin ${i}</td>
+                                    <td>Auto-Dest ${i}</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div class="css-spark-bar" style="--val: ${Math.random()*100}%;"></div>
+                                            <span class="na-mono" style="font-size:11px;">${Math.floor(Math.random()*100)}%</span>
+                                        </div>
+                                    </td>
+                                    <td>${Math.floor(Math.random()*5000)} kg</td>
+                                    <td><span class="na-mono">--</span></td>
+                                    <td class="na-mono">$${(Math.random()*10000).toFixed(2)}</td>
+                                    <td>Bot Worker</td>
+                                    <td class="na-mono">--:--:--</td>
+                                    <td>-</td>
+                                </tr>
+                                `);
+                            }
+                        </script>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <aside class="na-bi-panel" style="grid-column: 3; grid-row: 2; padding: 24px;">
+            <div class="na-label">Row Inspection</div>
+            <h2 class="na-h3" style="margin-top:8px;">SHP-8821-Alpha</h2>
+            <div class="na-mono" style="font-size:11px; color:var(--color-clay); margin-bottom:24px;">UUID: 9f8c...1a2b</div>
+
+            <div class="na-card" style="padding:16px; margin-bottom:16px;">
+                <div class="na-label">Transit Timeline (Gantt)</div>
+                <div class="css-gantt">
+                    <div class="gantt-bar blue" style="--start: 1; --span: 3;"></div>
+                    <div class="gantt-bar green" style="--start: 3; --span: 5;"></div>
+                    <div class="gantt-bar warn" style="--start: 8; --span: 2;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                    <span class="na-mono" style="font-size:10px;">Pickup</span>
+                    <span class="na-mono" style="font-size:10px;">Transit</span>
+                    <span class="na-mono" style="font-size:10px;">Delivery</span>
+                </div>
+            </div>
+
+            <div class="na-card" style="padding:16px; margin-bottom:16px;">
+                <div class="na-label">Payload Distribution</div>
+                <div style="display:flex; height:12px; border-radius:4px; overflow:hidden; margin-top:8px;">
+                    <div style="width:60%; background:var(--color-gold);"></div>
+                    <div style="width:30%; background:var(--color-success);"></div>
+                    <div style="width:10%; background:var(--color-stroke-strong);"></div>
+                </div>
+                <div class="na-list" style="margin-top:12px;">
+                    <li><span class="tree-dot warn"></span> Electronics (60%)</li>
+                    <li><span class="tree-dot live"></span> Textiles (30%)</li>
+                    <li><span class="tree-dot"></span> Packaging (10%)</li>
+                </div>
+            </div>
+
+            <div style="margin-top:auto;">
+                <button class="na-btn na-btn-full">View Bill of Lading</button>
+                <button class="na-btn-ghost na-btn-full" style="margin-top:8px;">Audit Logs</button>
+            </div>
+        </aside>
+
+        <footer style="grid-column: 1 / -1; grid-row: 3; border-top:1px solid var(--color-stroke); background:var(--color-paper); display:flex; align-items:center; padding:0 16px; justify-content:space-between;">
+            <div style="display:flex; gap:16px; align-items:center;">
+                <span class="na-metadata">Showing 1-25 of 14,204 rows</span>
+                <div style="height:16px; width:1px; background:var(--color-stroke);"></div>
+                <span class="na-status ok" style="border:none; padding:0;">Sync: 24ms</span>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="na-iconbtn" style="height:24px; width:24px; font-size:10px;">«</button>
+                <button class="na-iconbtn" style="height:24px; width:24px; font-size:10px;">‹</button>
+                <span class="na-mono" style="font-size:12px; padding:0 8px;">Page 1</span>
+                <button class="na-iconbtn" style="height:24px; width:24px; font-size:10px;">›</button>
+                <button class="na-iconbtn" style="height:24px; width:24px; font-size:10px;">»</button>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

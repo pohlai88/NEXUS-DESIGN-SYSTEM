@@ -1,0 +1,54 @@
+<testsuites id="" name="" tests="12" failures="0" skipped="12" errors="0" time="0.125624">
+<testsuite name="button.spec.ts" timestamp="2026-01-03T06:42:20.527Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Button Web Component › should render button with text" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should handle click events" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should be disabled when disabled attribute is set" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should show loading state" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should support keyboard navigation" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should apply variant classes" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Button Web Component › should apply size classes" classname="button.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="dialog.spec.ts" timestamp="2026-01-03T06:42:20.527Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Dialog Web Component - Critical Flows › CRITICAL: component is registered" classname="dialog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dialog Web Component - Critical Flows › CRITICAL: opens and closes dialog" classname="dialog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dialog Web Component - Critical Flows › CRITICAL: closes on Escape key" classname="dialog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dialog Web Component - Critical Flows › CRITICAL: traps focus within dialog" classname="dialog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dialog Web Component - Critical Flows › CRITICAL: restores focus after closing" classname="dialog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

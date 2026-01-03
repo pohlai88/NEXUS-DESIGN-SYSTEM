@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-doc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Workflow Shell: Multi-step wizard */
+        .workflow-shell {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--spacing-8);
+        }
+
+        /* Progress Bar */
+        .workflow-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-8);
+            position: relative;
+        }
+
+        .workflow-progress::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-stroke);
+            z-index: 0;
+        }
+
+        .workflow-step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-2);
+            flex: 1;
+        }
+
+        .workflow-step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-paper-2);
+            border: 2px solid var(--color-stroke);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-clay);
+            transition: all var(--duration-200);
+        }
+
+        .workflow-step.is-active .workflow-step-number {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: var(--color-void);
+        }
+
+        .workflow-step.is-complete .workflow-step-number {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .workflow-step-label {
+            font-size: var(--font-size-xs);
+            color: var(--color-clay);
+            text-align: center;
+        }
+
+        .workflow-step.is-active .workflow-step-label {
+            color: var(--color-lux);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        /* Step Panes (CSS-only switching) */
+        .workflow-pane {
+            display: none;
+        }
+
+        /* Radio buttons for step control */
+        .workflow-radio {
+            display: none;
+        }
+
+        /* Show pane when corresponding radio is checked */
+        #step-1:checked ~ .workflow-content #pane-1,
+        #step-2:checked ~ .workflow-content #pane-2,
+        #step-3:checked ~ .workflow-content #pane-3,
+        #step-4:checked ~ .workflow-content #pane-4 {
+            display: block;
+        }
+
+        /* Update progress bar based on current step */
+        #step-1:checked ~ .workflow-progress .step-1,
+        #step-2:checked ~ .workflow-progress .step-1,
+        #step-2:checked ~ .workflow-progress .step-2,
+        #step-3:checked ~ .workflow-progress .step-1,
+        #step-3:checked ~ .workflow-progress .step-2,
+        #step-3:checked ~ .workflow-progress .step-3,
+        #step-4:checked ~ .workflow-progress .step-1,
+        #step-4:checked ~ .workflow-progress .step-2,
+        #step-4:checked ~ .workflow-progress .step-3,
+        #step-4:checked ~ .workflow-progress .step-4 {
+            /* Active state handled by is-active class */
+        }
+
+        /* Navigation Buttons */
+        .workflow-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-8);
+            gap: var(--spacing-4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Workflow Shell: Multi-step wizard -->
+    <div class="na-content">
+        <div class="workflow-shell">
+            <!-- Step Radio Buttons (Hidden, control state) -->
+            <input type="radio" name="workflow-step" id="step-1" class="workflow-radio" checked>
+            <input type="radio" name="workflow-step" id="step-2" class="workflow-radio">
+            <input type="radio" name="workflow-step" id="step-3" class="workflow-radio">
+            <input type="radio" name="workflow-step" id="step-4" class="workflow-radio">
+
+            <!-- Progress Bar -->
+            <div class="workflow-progress">
+                <div class="workflow-step step-1 is-active">
+                    <div class="workflow-step-number">1</div>
+                    <div class="workflow-step-label">Welcome</div>
+                </div>
+                <div class="workflow-step step-2">
+                    <div class="workflow-step-number">2</div>
+                    <div class="workflow-step-label">Profile</div>
+                </div>
+                <div class="workflow-step step-3">
+                    <div class="workflow-step-number">3</div>
+                    <div class="workflow-step-label">Preferences</div>
+                </div>
+                <div class="workflow-step step-4">
+                    <div class="workflow-step-number">4</div>
+                    <div class="workflow-step-label">Complete</div>
+                </div>
+            </div>
+
+            <!-- Step Content -->
+            <main id="main-content" class="workflow-content" role="main">
+                <!-- Step 1: Welcome -->
+                <div id="pane-1" class="workflow-pane">
+                    <div class="na-card">
+                        <h2 class="na-h2 mb-4">Welcome</h2>
+                        <p class="na-body mb-6 text-lux-dim">
+                            Welcome to the setup wizard. This will guide you through the initial configuration.
+                        </p>
+                        <div class="workflow-nav">
+                            <div></div>
+                            <label for="step-2" class="na-btn-primary">Next →</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Profile -->
+                <div id="pane-2" class="workflow-pane">
+                    <div class="na-card">
+                        <h2 class="na-h2 mb-4">Profile Information</h2>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="na-label mb-1">Name</label>
+                                <input type="text" class="na-input" placeholder="Enter your name">
+                            </div>
+                            <div>
+                                <label class="na-label mb-1">Email</label>
+                                <input type="email" class="na-input" placeholder="Enter your email">
+                            </div>
+                        </form>
+                        <div class="workflow-nav">
+                            <label for="step-1" class="na-btn-ghost">← Back</label>
+                            <label for="step-3" class="na-btn-primary">Next →</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Preferences -->
+                <div id="pane-3" class="workflow-pane">
+                    <div class="na-card">
+                        <h2 class="na-h2 mb-4">Preferences</h2>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="na-label mb-1">Theme</label>
+                                <select class="na-input">
+                                    <option>Dark</option>
+                                    <option>Light</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="na-label mb-1">Language</label>
+                                <select class="na-input">
+                                    <option>English</option>
+                                    <option>Spanish</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div class="workflow-nav">
+                            <label for="step-2" class="na-btn-ghost">← Back</label>
+                            <label for="step-4" class="na-btn-primary">Next →</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Complete -->
+                <div id="pane-4" class="workflow-pane">
+                    <div class="na-card">
+                        <h2 class="na-h2 mb-4">Setup Complete!</h2>
+                        <p class="na-body mb-6 text-lux-dim">
+                            Your account has been configured successfully. You can now start using the system.
+                        </p>
+                        <div class="workflow-nav">
+                            <label for="step-3" class="na-btn-ghost">← Back</label>
+                            <button type="button" class="na-btn-primary">Finish</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+

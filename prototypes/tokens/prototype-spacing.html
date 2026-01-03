@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Spacing Scale (Myna UI)</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Spacing scale derived from Figma node 20:1530 */
+    :root {
+      --space-0: 0px;
+      --space-1: 1px;
+      --space-2: 2px;
+      --space-4: 4px;
+      --space-6: 6px;
+      --space-8: 8px;
+      --space-10: 10px;
+      --space-12: 12px;
+      --space-14: 14px;
+      --space-16: 16px;
+      --space-20: 20px;
+      --space-24: 24px;
+      --space-28: 28px;
+      --space-32: 32px;
+      --space-36: 36px;
+      --space-40: 40px;
+      --space-44: 44px;
+      --space-48: 48px;
+      --space-56: 56px;
+      --space-64: 64px;
+      --space-80: 80px;
+      --space-96: 96px;
+      --space-112: 112px;
+      --space-128: 128px;
+      --space-144: 144px;
+      --space-160: 160px;
+      --space-176: 176px;
+      --space-192: 192px;
+      --space-208: 208px;
+      --space-224: 224px;
+      --space-240: 240px;
+      --space-256: 256px;
+      --space-288: 288px;
+      --space-320: 320px;
+      --space-384: 384px;
+    }
+
+    /* Semantic spacing hook */
+    .na-space-0 { --na-space: var(--space-0); }
+    .na-space-1 { --na-space: var(--space-1); }
+    .na-space-2 { --na-space: var(--space-2); }
+    .na-space-4 { --na-space: var(--space-4); }
+    .na-space-6 { --na-space: var(--space-6); }
+    .na-space-8 { --na-space: var(--space-8); }
+    .na-space-10 { --na-space: var(--space-10); }
+    .na-space-12 { --na-space: var(--space-12); }
+    .na-space-14 { --na-space: var(--space-14); }
+    .na-space-16 { --na-space: var(--space-16); }
+    .na-space-20 { --na-space: var(--space-20); }
+    .na-space-24 { --na-space: var(--space-24); }
+    .na-space-28 { --na-space: var(--space-28); }
+    .na-space-32 { --na-space: var(--space-32); }
+    .na-space-36 { --na-space: var(--space-36); }
+    .na-space-40 { --na-space: var(--space-40); }
+    .na-space-44 { --na-space: var(--space-44); }
+    .na-space-48 { --na-space: var(--space-48); }
+    .na-space-56 { --na-space: var(--space-56); }
+    .na-space-64 { --na-space: var(--space-64); }
+    .na-space-80 { --na-space: var(--space-80); }
+    .na-space-96 { --na-space: var(--space-96); }
+    .na-space-112 { --na-space: var(--space-112); }
+    .na-space-128 { --na-space: var(--space-128); }
+    .na-space-144 { --na-space: var(--space-144); }
+    .na-space-160 { --na-space: var(--space-160); }
+    .na-space-176 { --na-space: var(--space-176); }
+    .na-space-192 { --na-space: var(--space-192); }
+    .na-space-208 { --na-space: var(--space-208); }
+    .na-space-224 { --na-space: var(--space-224); }
+    .na-space-240 { --na-space: var(--space-240); }
+    .na-space-256 { --na-space: var(--space-256); }
+    .na-space-288 { --na-space: var(--space-288); }
+    .na-space-320 { --na-space: var(--space-320); }
+    .na-space-384 { --na-space: var(--space-384); }
+
+    /* Property helpers that consume --na-space */
+    .na-gap { display: grid; gap: var(--na-space, var(--space-0)); }
+    .na-pad { padding: var(--na-space, var(--space-0)); }
+    .na-pad-x { padding-inline: var(--na-space, var(--space-0)); }
+    .na-pad-y { padding-block: var(--na-space, var(--space-0)); }
+    .na-stack { display: flex; flex-direction: column; gap: var(--na-space, var(--space-0)); }
+    .na-inline { display: flex; align-items: center; gap: var(--na-space, var(--space-0)); }
+
+    .scale-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacing-5);
+    }
+
+    .scale-card {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      padding: var(--spacing-5);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .space-bar {
+      height: 10px;
+      border-radius: var(--radius-control);
+      background: linear-gradient(90deg, var(--color-info) 0%, var(--color-gold) 100%);
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-stroke) 70%, var(--color-lux) 30%);
+      width: var(--na-space, var(--space-0));
+    }
+
+    .space-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-clay);
+      letter-spacing: 0.02em;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--spacing-6);
+    }
+
+    .usage-card {
+      padding: var(--spacing-6);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper-2);
+      font-size: 12px;
+      color: var(--color-void);
+      padding-inline: var(--spacing-3);
+      padding-block: 6px;
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">📏</div>
+        <div>
+          <div class="na-brand-title">Spacing Scale</div>
+          <div class="na-metadata-small">Myna UI • Figma 20:1530</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#scale" aria-current="page">Scale</a>
+      <a class="na-nav-item" href="#usage">Usage</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Headless • Semantic • Drift-Proof</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Spacing System</h1>
+            <p class="na-metadata">0 → 384px semantic spacing mapped from Figma</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scale -->
+      <section class="na-content" id="scale">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Spacing Scale</h2>
+              <p class="na-metadata">Visual bars show each token with px and rem values</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="scale-grid">
+            <div class="scale-card na-space-0">
+              <div class="space-labels"><span class="na-label">space-0</span><span>0px / 0rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-1">
+              <div class="space-labels"><span class="na-label">space-1</span><span>1px / 0.0625rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-2">
+              <div class="space-labels"><span class="na-label">space-2</span><span>2px / 0.125rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-4">
+              <div class="space-labels"><span class="na-label">space-4</span><span>4px / 0.25rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-6">
+              <div class="space-labels"><span class="na-label">space-6</span><span>6px / 0.375rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-8">
+              <div class="space-labels"><span class="na-label">space-8</span><span>8px / 0.5rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-10">
+              <div class="space-labels"><span class="na-label">space-10</span><span>10px / 0.625rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-12">
+              <div class="space-labels"><span class="na-label">space-12</span><span>12px / 0.75rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-14">
+              <div class="space-labels"><span class="na-label">space-14</span><span>14px / 0.875rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-16">
+              <div class="space-labels"><span class="na-label">space-16</span><span>16px / 1rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-20">
+              <div class="space-labels"><span class="na-label">space-20</span><span>20px / 1.25rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-24">
+              <div class="space-labels"><span class="na-label">space-24</span><span>24px / 1.5rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-28">
+              <div class="space-labels"><span class="na-label">space-28</span><span>28px / 1.75rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-32">
+              <div class="space-labels"><span class="na-label">space-32</span><span>32px / 2rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-36">
+              <div class="space-labels"><span class="na-label">space-36</span><span>36px / 2.25rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-40">
+              <div class="space-labels"><span class="na-label">space-40</span><span>40px / 2.5rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-44">
+              <div class="space-labels"><span class="na-label">space-44</span><span>44px / 2.75rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-48">
+              <div class="space-labels"><span class="na-label">space-48</span><span>48px / 3rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-56">
+              <div class="space-labels"><span class="na-label">space-56</span><span>56px / 3.5rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-64">
+              <div class="space-labels"><span class="na-label">space-64</span><span>64px / 4rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-80">
+              <div class="space-labels"><span class="na-label">space-80</span><span>80px / 5rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-96">
+              <div class="space-labels"><span class="na-label">space-96</span><span>96px / 6rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-112">
+              <div class="space-labels"><span class="na-label">space-112</span><span>112px / 7rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-128">
+              <div class="space-labels"><span class="na-label">space-128</span><span>128px / 8rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-144">
+              <div class="space-labels"><span class="na-label">space-144</span><span>144px / 9rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-160">
+              <div class="space-labels"><span class="na-label">space-160</span><span>160px / 10rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-176">
+              <div class="space-labels"><span class="na-label">space-176</span><span>176px / 11rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-192">
+              <div class="space-labels"><span class="na-label">space-192</span><span>192px / 12rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-208">
+              <div class="space-labels"><span class="na-label">space-208</span><span>208px / 13rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-224">
+              <div class="space-labels"><span class="na-label">space-224</span><span>224px / 14rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-240">
+              <div class="space-labels"><span class="na-label">space-240</span><span>240px / 15rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-256">
+              <div class="space-labels"><span class="na-label">space-256</span><span>256px / 16rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-288">
+              <div class="space-labels"><span class="na-label">space-288</span><span>288px / 18rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-320">
+              <div class="space-labels"><span class="na-label">space-320</span><span>320px / 20rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+            <div class="scale-card na-space-384">
+              <div class="space-labels"><span class="na-label">space-384</span><span>384px / 24rem</span></div>
+              <div class="space-bar"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage -->
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Usage Patterns</h2>
+              <p class="na-metadata">Use the hook + helpers to apply spacing without arbitrary values</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <div class="usage-card na-space-16 na-stack">
+              <h4 class="na-h5">Vertical Stack</h4>
+              <p class="na-metadata">Compose columns using the gap helper.</p>
+              <div class="na-stack" style="--na-space: var(--space-16);">
+                <div class="na-card na-card-compact">Row A</div>
+                <div class="na-card na-card-compact">Row B</div>
+                <div class="na-card na-card-compact">Row C</div>
+              </div>
+              <div class="na-metadata">Set with class: .na-space-16 + .na-stack</div>
+            </div>
+
+            <div class="usage-card na-space-12 na-inline">
+              <h4 class="na-h5">Inline Cluster</h4>
+              <p class="na-metadata">Apply consistent inline gap.</p>
+              <div class="na-inline" style="--na-space: var(--space-12);">
+                <button class="na-btn">Primary</button>
+                <button class="na-btn na-btn-secondary">Ghost</button>
+                <button class="na-btn na-btn-quiet">Tertiary</button>
+              </div>
+              <div class="na-metadata">Set with class: .na-space-12 + .na-inline</div>
+            </div>
+
+            <div class="usage-card na-space-24 na-pad">
+              <h4 class="na-h5">Card Padding</h4>
+              <p class="na-metadata">Uniform inset padding.</p>
+              <div class="na-card" style="padding: 0;">
+                <div class="na-pad" style="--na-space: var(--space-24);">
+                  <div class="na-label">Title</div>
+                  <p class="na-metadata">Content with 24px padding</p>
+                </div>
+              </div>
+              <div class="na-metadata">Set with class: .na-space-24 + .na-pad</div>
+            </div>
+
+            <div class="usage-card na-space-8 na-stack">
+              <h4 class="na-h5">Badge Line</h4>
+              <p class="na-metadata">Compact pills with 8px gap.</p>
+              <div class="na-inline" style="--na-space: var(--space-8); flex-wrap: wrap;">
+                <span class="pill">Design</span>
+                <span class="pill">Engineering</span>
+                <span class="pill">Marketing</span>
+                <span class="pill">Growth</span>
+              </div>
+              <div class="na-metadata">Set with class: .na-space-8 + .na-inline</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tokens -->
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">Spacing variables and hook utilities</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="na-panel">
+            <h4 class="na-h5">Spacing Tokens</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>--space-0: 0px;
+--space-1: 1px;
+--space-2: 2px;
+--space-4: 4px;
+--space-6: 6px;
+--space-8: 8px;
+--space-10: 10px;
+--space-12: 12px;
+--space-14: 14px;
+--space-16: 16px;
+--space-20: 20px;
+--space-24: 24px;
+--space-28: 28px;
+--space-32: 32px;
+--space-36: 36px;
+--space-40: 40px;
+--space-44: 44px;
+--space-48: 48px;
+--space-56: 56px;
+--space-64: 64px;
+--space-80: 80px;
+--space-96: 96px;
+--space-112: 112px;
+--space-128: 128px;
+--space-144: 144px;
+--space-160: 160px;
+--space-176: 176px;
+--space-192: 192px;
+--space-208: 208px;
+--space-224: 224px;
+--space-240: 240px;
+--space-256: 256px;
+--space-288: 288px;
+--space-320: 320px;
+--space-384: 384px;</code></pre>
+          </div>
+
+          <div class="na-panel" style="margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Semantic Helpers</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>.na-space-16 { --na-space: var(--space-16); }
+
+&lt;div class="na-space-16 na-stack"&gt;
+  &lt;!-- children spaced by 16px --&gt;
+&lt;/div&gt;
+
+&lt;div class="na-space-24 na-pad"&gt;
+  Card content with 24px padding
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 12%, var(--color-paper) 88%); border-color: var(--color-gold); margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Figma → Neo-Analog</h4>
+            <div class="na-metadata" style="margin-top: var(--spacing-2);">❌ gap-4 → ✅ .na-space-16 + .na-stack</div>
+            <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ px-[10px] → ✅ .na-space-10</div>
+            <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ p-[28px] → ✅ .na-space-28 + .na-pad</div>
+          </div>
+
+          <div class="na-panel" style="margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Compliance Checklist</h4>
+            <div class="na-metadata">✓ Semantic utilities • ✓ Design tokens • ✓ No arbitrary Tailwind values • ✓ Matches Figma 20:1530</div>
+          </div>
+        </div>
+      </section>
+
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Spacing • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • Drift-Proof</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neo-Analog ERP // Next-Generation Enterprise Platform</title>
+    <link rel="stylesheet" href="../../style.css" />
+</head>
+
+<body class="na-app">
+    <a class="na-skip-link" href="#main">Skip to content</a>
+    <div class="na-bg-grain" aria-hidden="true"></div>
+
+    <!-- =========================
+       CSS-only toast notifications
+       ========================= -->
+    <div class="na-toasts" aria-live="polite" aria-relevant="additions text">
+        <input class="na-toast-toggle" type="checkbox" id="t-order" checked />
+        <div class="na-toast na-toast--success" role="status">
+            <div class="na-toast-row">
+                <div class="na-toast-icon" aria-hidden="true">✓</div>
+                <div class="na-toast-body">
+                    <div class="na-toast-title">Order #INV-2025-001 processed</div>
+                    <div class="na-toast-desc">$12,450.00 • Customer: Acme Corp • Payment confirmed</div>
+                    <div class="na-toast-meta">2 minutes ago • Auto-invoice generated</div>
+                </div>
+                <label class="na-toast-close" for="t-order" aria-label="Dismiss">×</label>
+            </div>
+        </div>
+
+        <input class="na-toast-toggle" type="checkbox" id="t-inventory" checked />
+        <div class="na-toast na-toast--warning" role="status">
+            <div class="na-toast-row">
+                <div class="na-toast-icon" aria-hidden="true">⚠</div>
+                <div class="na-toast-body">
+                    <div class="na-toast-title">Low stock alert</div>
+                    <div class="na-toast-desc">SKU: PRD-8921 • Current: 12 units • Reorder threshold: 50</div>
+                    <div class="na-toast-meta">5 minutes ago • Auto-reorder suggested</div>
+                </div>
+                <label class="na-toast-close" for="t-inventory" aria-label="Dismiss">×</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="na-shell">
+        <!-- =========================
+         ENHANCED SIDEBAR - ERP Modules
+         ========================= -->
+        <aside class="na-sidebar na-scroll" aria-label="Primary navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <div class="na-brand-title">Neo-Analog ERP</div>
+                    <div class="na-metadata">Next-Generation Platform</div>
+                </div>
+            </div>
+
+            <div class="na-nav-section">CORE MODULES</div>
+            <nav class="na-nav" aria-label="Core modules navigation">
+                <a class="na-nav-item is-active" href="#dashboard" aria-current="page">
+                    <span>Dashboard</span>
+                    <span class="na-nav-meta">LIVE</span>
+                </a>
+                <a class="na-nav-item" href="#sales">
+                    <span>Sales</span>
+                    <span class="na-nav-meta">24</span>
+                </a>
+                <a class="na-nav-item" href="#inventory">
+                    <span>Inventory</span>
+                    <span class="na-status warn na-badge-small">3</span>
+                </a>
+                <a class="na-nav-item" href="#purchasing">
+                    <span>Purchasing</span>
+                    <span class="na-nav-meta">8</span>
+                </a>
+                <a class="na-nav-item" href="#finance">
+                    <span>Finance</span>
+                    <span class="na-nav-meta">AUTO</span>
+                </a>
+            </nav>
+
+            <div class="na-nav-section">OPERATIONS</div>
+            <nav class="na-nav" aria-label="Operations navigation">
+                <a class="na-nav-item" href="#manufacturing">
+                    <span>Manufacturing</span>
+                </a>
+                <a class="na-nav-item" href="#warehouse">
+                    <span>Warehouse</span>
+                    <span class="na-nav-meta">12</span>
+                </a>
+                <a class="na-nav-item" href="#quality">
+                    <span>Quality Control</span>
+                </a>
+                <a class="na-nav-item" href="#projects">
+                    <span>Projects</span>
+                    <span class="na-nav-meta">5</span>
+                </a>
+            </nav>
+
+            <div class="na-nav-section">ANALYTICS</div>
+            <nav class="na-nav" aria-label="Analytics navigation">
+                <a class="na-nav-item" href="#reports">
+                    <span>Reports</span>
+                </a>
+                <a class="na-nav-item" href="#insights">
+                    <span>AI Insights</span>
+                    <span class="na-nav-meta">NEW</span>
+                </a>
+                <a class="na-nav-item" href="#forecasting">
+                    <span>Forecasting</span>
+                </a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact">
+                    <div class="na-label">System Health</div>
+                    <div class="na-status-indicator">
+                        <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+                        <span class="na-mono na-status-text-success">All Systems Operational</span>
+                    </div>
+                </div>
+                <div class="na-divider" style="margin:12px 0;"></div>
+                <div class="na-stack" style="gap:8px;">
+                    <div class="na-chip">Company: Acme Industries</div>
+                    <div class="na-chip">Fiscal: Q1 2025</div>
+                </div>
+                <div class="na-muted" style="font-size:12px; line-height:1.35; margin-top:12px;">
+                    ERP v4.2 • AI-Enhanced • Real-time Sync
+                </div>
+            </div>
+        </aside>
+
+        <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+        <main class="na-main" id="main">
+            <header class="na-header" id="dashboard">
+                <div class="na-search" role="search">
+                    <label for="search-input-erp" class="sr-only">Search orders, customers, products, invoices</label>
+                    <input class="na-search-input" type="search" id="search-input-erp"
+                        placeholder="Search orders, customers, products, invoices…" aria-label="Search ERP data" />
+                    <span class="na-search-icon" aria-hidden="true">⌕</span>
+                </div>
+
+                <div class="na-header-actions" style="flex-wrap:wrap;">
+                    <a class="na-btn na-btn-ghost" href="#modal-order" aria-label="Create new order">+ New Order</a>
+                    <a class="na-btn na-btn-primary" href="#modal-invoice" aria-label="Create invoice">+ Invoice</a>
+                    <button class="na-iconbtn" type="button" aria-label="Notifications">
+                        <span aria-hidden="true">🔔</span>
+                        <span class="na-dot" aria-label="3 notifications"></span>
+                    </button>
+                    <button class="na-iconbtn" type="button" aria-label="Open settings">⚙</button>
+                    <div class="na-avatar" aria-label="User profile" role="button" tabindex="0"></div>
+                </div>
+            </header>
+
+            <div class="na-content na-scroll">
+                <!-- Page Header -->
+                <div class="na-page-header">
+                    <div>
+                        <div class="na-metadata">ERP Dashboard • Real-time Data • Last sync: 2 minutes ago</div>
+                        <h1 class="na-h1">Business Overview</h1>
+                        <p class="na-metadata na-page-meta">Comprehensive view of sales, inventory, finance, and
+                            operations</p>
+                    </div>
+                    <div class="na-page-actions">
+                        <button class="na-btn" aria-label="Export report">Export Report</button>
+                        <button class="na-btn-primary" aria-label="Refresh data">Refresh</button>
+                    </div>
+                </div>
+
+                <!-- =========================
+                     FINANCIAL KPIs
+                     ========================= -->
+                <section class="na-grid na-grid-kpi">
+                    <a href="#sales" class="na-card na-card-interactive" role="link"
+                        aria-label="Total Revenue: $2,847,392, up 18.5% from last month">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">💰</div>
+                            <div>
+                                <div class="na-kpi-label">Total Revenue</div>
+                                <div class="na-kpi-value na-tabular">$2,847,392</div>
+                                <div class="na-trend up">
+                                    <span aria-hidden="true">↗</span>
+                                    <span>+18.5%</span>
+                                    <span class="na-metadata-small">vs last month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#orders" class="na-card na-card-interactive" role="link"
+                        aria-label="Active Orders: 124, 8 pending approval">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📦</div>
+                            <div>
+                                <div class="na-kpi-label">Active Orders</div>
+                                <div class="na-kpi-value na-tabular">124</div>
+                                <div class="na-trend warn">
+                                    <span>8 pending</span>
+                                    <span class="na-metadata-small">approval required</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#inventory" class="na-card na-card-interactive" role="link"
+                        aria-label="Inventory Value: $1,234,567, 3 low stock alerts">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📊</div>
+                            <div>
+                                <div class="na-kpi-label">Inventory Value</div>
+                                <div class="na-kpi-value na-tabular">$1,234,567</div>
+                                <div class="na-trend bad">
+                                    <span>3 alerts</span>
+                                    <span class="na-metadata-small">low stock items</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#customers" class="na-card na-card-interactive" role="link"
+                        aria-label="Active Customers: 892, 12 new this week">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">👥</div>
+                            <div>
+                                <div class="na-kpi-label">Active Customers</div>
+                                <div class="na-kpi-value na-tabular">892</div>
+                                <div class="na-trend up">
+                                    <span>+12</span>
+                                    <span class="na-metadata-small">new this week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#profit" class="na-card na-card-interactive" role="link"
+                        aria-label="Gross Profit: $892,145, margin 31.3%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📈</div>
+                            <div>
+                                <div class="na-kpi-label">Gross Profit</div>
+                                <div class="na-kpi-value na-tabular">$892,145</div>
+                                <div class="na-trend ok">
+                                    <span>31.3%</span>
+                                    <span class="na-metadata-small">profit margin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </section>
+
+                <!-- =========================
+                     MAIN DASHBOARD GRID
+                     ========================= -->
+                <section class="na-grid" style="grid-template-columns: 2fr 1fr;">
+                    <!-- LEFT: Recent Orders & Activity -->
+                    <div class="na-stack" style="gap:14px;">
+                        <!-- Recent Orders Table -->
+                        <div class="na-card">
+                            <div class="na-panel-head">
+                                <div>
+                                    <div class="na-card-title">Recent Orders</div>
+                                    <div class="na-card-meta">Last 24 hours • Auto-refresh enabled</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="na-chip">Filter: Today</div>
+                                    <a class="na-btn na-btn-ghost" href="#orders">View All</a>
+                                </div>
+                            </div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-table-wrap na-scroll" role="region" aria-label="Recent orders table">
+                                <table class="na-table">
+                                    <thead>
+                                        <tr class="na-tr">
+                                            <th class="na-th">Order #</th>
+                                            <th class="na-th">Customer</th>
+                                            <th class="na-th">Amount</th>
+                                            <th class="na-th">Status</th>
+                                            <th class="na-th">Date</th>
+                                            <th class="na-th" style="text-align:right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                            aria-label="Order INV-2025-001 details">
+                                            <td class="na-td">
+                                                <span class="na-data na-data-emphasis">INV-2025-001</span>
+                                                <div class="na-metadata-small na-td-meta">Priority: High</div>
+                                            </td>
+                                            <td class="na-td">
+                                                <strong>Acme Corporation</strong>
+                                                <div class="na-metadata-small na-td-meta">Enterprise Account</div>
+                                            </td>
+                                            <td class="na-td na-tabular">$12,450.00</td>
+                                            <td class="na-td"><span class="na-status ok">Confirmed</span></td>
+                                            <td class="na-td na-tabular">2025-01-27</td>
+                                            <td class="na-td" style="text-align:right;">
+                                                <a class="na-rowbtn" href="#modal-order"
+                                                    aria-label="View INV-2025-001">↗</a>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                            aria-label="Order INV-2025-002 details">
+                                            <td class="na-td">
+                                                <span class="na-data na-data-emphasis">INV-2025-002</span>
+                                                <div class="na-metadata-small na-td-meta">Standard</div>
+                                            </td>
+                                            <td class="na-td">
+                                                <strong>TechStart Inc</strong>
+                                                <div class="na-metadata-small na-td-meta">SMB Account</div>
+                                            </td>
+                                            <td class="na-td na-tabular">$3,890.50</td>
+                                            <td class="na-td"><span class="na-status pending">Pending</span></td>
+                                            <td class="na-td na-tabular">2025-01-27</td>
+                                            <td class="na-td" style="text-align:right;">
+                                                <a class="na-rowbtn" href="#modal-order"
+                                                    aria-label="Approve INV-2025-002">✓</a>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                            aria-label="Order INV-2025-003 details">
+                                            <td class="na-td">
+                                                <span class="na-data na-data-emphasis">INV-2025-003</span>
+                                                <div class="na-metadata-small na-td-meta">Rush Order</div>
+                                            </td>
+                                            <td class="na-td">
+                                                <strong>Global Dynamics</strong>
+                                                <div class="na-metadata-small na-td-meta">Enterprise Account</div>
+                                            </td>
+                                            <td class="na-td na-tabular">$45,678.90</td>
+                                            <td class="na-td"><span class="na-status ok">Shipped</span></td>
+                                            <td class="na-td na-tabular">2025-01-26</td>
+                                            <td class="na-td" style="text-align:right;">
+                                                <a class="na-rowbtn" href="#modal-order"
+                                                    aria-label="Track INV-2025-003">📦</a>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                            aria-label="Order INV-2025-004 details">
+                                            <td class="na-td">
+                                                <span class="na-data na-data-emphasis">INV-2025-004</span>
+                                                <div class="na-metadata-small na-td-meta">Standard</div>
+                                            </td>
+                                            <td class="na-td">
+                                                <strong>Innovation Labs</strong>
+                                                <div class="na-metadata-small na-td-meta">SMB Account</div>
+                                            </td>
+                                            <td class="na-td na-tabular">$8,234.00</td>
+                                            <td class="na-td"><span class="na-status warn">On Hold</span></td>
+                                            <td class="na-td na-tabular">2025-01-26</td>
+                                            <td class="na-td" style="text-align:right;">
+                                                <a class="na-rowbtn" href="#modal-order"
+                                                    aria-label="Review INV-2025-004">⚑</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-muted">
+                                Showing 4 of 124 active orders • <a href="#orders" class="na-footnote-link">View all
+                                    orders</a>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Alerts -->
+                        <div class="na-card">
+                            <div class="na-panel-head">
+                                <div>
+                                    <div class="na-card-title">Inventory Alerts</div>
+                                    <div class="na-card-meta">Low stock & reorder recommendations</div>
+                                </div>
+                                <div class="na-chip">3 Active</div>
+                            </div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-stack" style="gap:10px;">
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div>
+                                            <div class="na-panel-title">SKU: PRD-8921</div>
+                                            <div class="na-muted">Premium Widget Pro</div>
+                                        </div>
+                                        <div class="na-chip">LOW</div>
+                                    </div>
+                                    <div class="na-grid"
+                                        style="grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+                                        <div>
+                                            <div class="na-metadata">Current Stock</div>
+                                            <div class="na-data na-tabular">12 units</div>
+                                        </div>
+                                        <div>
+                                            <div class="na-metadata">Reorder Point</div>
+                                            <div class="na-data na-tabular">50 units</div>
+                                        </div>
+                                    </div>
+                                    <div class="na-progress-bar" style="margin-top:8px;">
+                                        <div class="na-progress-fill na-progress-fill-warning" style="width: 24%;"
+                                            aria-label="Stock level: 24%"></div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <button class="na-btn na-btn-primary" style="width:100%;">Create Purchase
+                                            Order</button>
+                                    </div>
+                                </div>
+
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div>
+                                            <div class="na-panel-title">SKU: PRD-3456</div>
+                                            <div class="na-muted">Standard Component A</div>
+                                        </div>
+                                        <div class="na-chip">LOW</div>
+                                    </div>
+                                    <div class="na-grid"
+                                        style="grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+                                        <div>
+                                            <div class="na-metadata">Current Stock</div>
+                                            <div class="na-data na-tabular">28 units</div>
+                                        </div>
+                                        <div>
+                                            <div class="na-metadata">Reorder Point</div>
+                                            <div class="na-data na-tabular">100 units</div>
+                                        </div>
+                                    </div>
+                                    <div class="na-progress-bar" style="margin-top:8px;">
+                                        <div class="na-progress-fill na-progress-fill-warning" style="width: 28%;"
+                                            aria-label="Stock level: 28%"></div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <button class="na-btn na-btn-primary" style="width:100%;">Create Purchase
+                                            Order</button>
+                                    </div>
+                                </div>
+
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div>
+                                            <div class="na-panel-title">SKU: PRD-7890</div>
+                                            <div class="na-muted">Specialty Material X</div>
+                                        </div>
+                                        <div class="na-chip">CRITICAL</div>
+                                    </div>
+                                    <div class="na-grid"
+                                        style="grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+                                        <div>
+                                            <div class="na-metadata">Current Stock</div>
+                                            <div class="na-data na-tabular">5 units</div>
+                                        </div>
+                                        <div>
+                                            <div class="na-metadata">Reorder Point</div>
+                                            <div class="na-data na-tabular">30 units</div>
+                                        </div>
+                                    </div>
+                                    <div class="na-progress-bar" style="margin-top:8px;">
+                                        <div class="na-progress-fill na-progress-fill-warning" style="width: 16.7%;"
+                                            aria-label="Stock level: 16.7%"></div>
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        <button class="na-btn na-btn-danger" style="width:100%;">Urgent Reorder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Financial Summary & AI Insights -->
+                    <div class="na-stack" style="gap:14px;">
+                        <!-- Financial Summary -->
+                        <div class="na-card na-card-alt">
+                            <div class="na-card-title">Financial Summary</div>
+                            <div class="na-card-meta">Current month performance</div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-stack" style="gap:12px;">
+                                <div>
+                                    <div class="na-metadata">Revenue</div>
+                                    <div class="na-data-large na-tabular">$2,847,392</div>
+                                    <div class="na-trend up" style="margin-top:4px;">
+                                        <span>+18.5%</span>
+                                        <span class="na-metadata-small">vs last month</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="na-metadata">Expenses</div>
+                                    <div class="na-data-large na-tabular">$1,955,247</div>
+                                    <div class="na-trend down" style="margin-top:4px;">
+                                        <span>-3.2%</span>
+                                        <span class="na-metadata-small">cost optimization</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="na-metadata">Net Profit</div>
+                                    <div class="na-data-large na-tabular">$892,145</div>
+                                    <div class="na-trend ok" style="margin-top:4px;">
+                                        <span>31.3%</span>
+                                        <span class="na-metadata-small">profit margin</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-chart-container" style="height:120px;">
+                                <div class="na-bars">
+                                    <div class="na-bar" style="height: 45%;"></div>
+                                    <div class="na-bar" style="height: 52%;"></div>
+                                    <div class="na-bar gold" style="height: 68%;"></div>
+                                    <div class="na-bar gold" style="height: 75%;"></div>
+                                    <div class="na-bar gold" style="height: 82%;"></div>
+                                    <div class="na-bar gold" style="height: 90%;"></div>
+                                    <div class="na-bar gold" style="height: 88%;"></div>
+                                    <div class="na-bar" style="height: 65%;"></div>
+                                </div>
+                            </div>
+                            <div class="na-muted" style="margin-top:8px; font-size:11px;">
+                                Revenue trend (last 8 months)
+                            </div>
+                        </div>
+
+                        <!-- AI Insights -->
+                        <div class="na-card">
+                            <div class="na-card-title">AI Insights</div>
+                            <div class="na-card-meta">Predictive analytics & recommendations</div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-stack" style="gap:10px;">
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div class="na-panel-title">Sales Forecast</div>
+                                        <div class="na-chip">HIGH</div>
+                                    </div>
+                                    <div class="na-muted">Next month projected: $3.2M (+12% confidence)</div>
+                                </div>
+
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div class="na-panel-title">Customer Churn Risk</div>
+                                        <div class="na-chip">MED</div>
+                                    </div>
+                                    <div class="na-muted">3 accounts flagged • Action recommended</div>
+                                </div>
+
+                                <div class="na-panel">
+                                    <div class="na-panel-head">
+                                        <div class="na-panel-title">Optimization</div>
+                                        <div class="na-chip">LOW</div>
+                                    </div>
+                                    <div class="na-muted">Inventory turnover can improve by 8%</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:12px;">
+                                <button class="na-btn na-btn-full">View All Insights</button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="na-card na-card-alt">
+                            <div class="na-card-title">Quick Actions</div>
+                            <div class="na-card-meta">Frequently used operations</div>
+
+                            <div class="na-divider" style="margin:14px 0;"></div>
+
+                            <div class="na-stack" style="gap:8px;">
+                                <a href="#modal-order" class="na-btn na-btn-full">Create Order</a>
+                                <a href="#modal-invoice" class="na-btn na-btn-full">Generate Invoice</a>
+                                <a href="#purchasing" class="na-btn na-btn-full">New Purchase Order</a>
+                                <a href="#reports" class="na-btn na-btn-ghost na-btn-full">View Reports</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================
+                     WORKFLOW AUTOMATION
+                     ========================= -->
+                <section style="margin-top:16px;">
+                    <div class="na-card">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-card-title">Workflow Automation</div>
+                                <div class="na-card-meta">Active processes & pending approvals</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="na-chip">12 Active</div>
+                                <a class="na-btn na-btn-ghost" href="#workflows">Configure</a>
+                            </div>
+                        </div>
+
+                        <div class="na-divider" style="margin:14px 0;"></div>
+
+                        <div class="na-grid" style="grid-template-columns: repeat(3, 1fr); gap:12px;">
+                            <div class="na-panel">
+                                <div class="na-panel-head">
+                                    <div class="na-panel-title">Order Processing</div>
+                                    <div class="na-chip">AUTO</div>
+                                </div>
+                                <div class="na-muted" style="margin-top:6px;">
+                                    124 orders processed • 98% success rate
+                                </div>
+                                <div class="na-progress-bar" style="margin-top:8px;">
+                                    <div class="na-progress-fill" style="width: 98%;" aria-label="Success: 98%"></div>
+                                </div>
+                            </div>
+
+                            <div class="na-panel">
+                                <div class="na-panel-head">
+                                    <div class="na-panel-title">Invoice Generation</div>
+                                    <div class="na-chip">AUTO</div>
+                                </div>
+                                <div class="na-muted" style="margin-top:6px;">
+                                    89 invoices created • 100% accuracy
+                                </div>
+                                <div class="na-progress-bar" style="margin-top:8px;">
+                                    <div class="na-progress-fill" style="width: 100%;" aria-label="Accuracy: 100%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="na-panel">
+                                <div class="na-panel-head">
+                                    <div class="na-panel-title">Inventory Sync</div>
+                                    <div class="na-chip">AUTO</div>
+                                </div>
+                                <div class="na-muted" style="margin-top:6px;">
+                                    Real-time updates • 3 alerts triggered
+                                </div>
+                                <div class="na-progress-bar" style="margin-top:8px;">
+                                    <div class="na-progress-fill" style="width: 95%;" aria-label="Sync: 95%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================
+                     ADVANCED FEATURES DISCLOSURE
+                     ========================= -->
+                <details class="na-details">
+                    <summary class="na-summary na-summary-layout">
+                        <div>
+                            <div class="na-summary-title">Advanced Analytics & Reporting</div>
+                            <div class="na-mono na-summary-sub">Custom reports, data exports, and AI-powered insights
+                            </div>
+                        </div>
+                        <div class="na-summary-right">
+                            <span class="na-summary-chip">Available</span>
+                            <span class="na-summary-chevron"></span>
+                        </div>
+                    </summary>
+                    <div class="na-details-body">
+                        <div class="na-grid" style="grid-template-columns: 1fr 1fr; gap:14px;">
+                            <div class="na-details-section">
+                                <div class="na-metadata">Custom Reports</div>
+                                <div class="na-h5">Build Your Own</div>
+                                <div class="na-muted">Create custom reports with drag-and-drop builder. Export to PDF,
+                                    Excel, or CSV.</div>
+                                <div style="margin-top:10px;">
+                                    <button class="na-btn na-btn-primary">Create Report</button>
+                                </div>
+                            </div>
+
+                            <div class="na-details-section">
+                                <div class="na-metadata">Data Export</div>
+                                <div class="na-h5">Bulk Operations</div>
+                                <div class="na-muted">Export large datasets with advanced filtering. Schedule automated
+                                    exports.</div>
+                                <div style="margin-top:10px;">
+                                    <button class="na-btn na-btn-primary">Export Data</button>
+                                </div>
+                            </div>
+
+                            <div class="na-details-section">
+                                <div class="na-metadata">AI Insights</div>
+                                <div class="na-h5">Predictive Analytics</div>
+                                <div class="na-muted">Get AI-powered forecasts, anomaly detection, and optimization
+                                    recommendations.</div>
+                                <div style="margin-top:10px;">
+                                    <button class="na-btn na-btn-primary">View Insights</button>
+                                </div>
+                            </div>
+
+                            <div class="na-details-section">
+                                <div class="na-metadata">API Access</div>
+                                <div class="na-h5">Integration Ready</div>
+                                <div class="na-muted">RESTful API with comprehensive documentation. Webhooks for
+                                    real-time events.</div>
+                                <div style="margin-top:10px;">
+                                    <button class="na-btn na-btn-primary">API Docs</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </main>
+    </div>
+
+    <!-- =========================
+       MODAL: Create Order
+       ========================= -->
+    <section id="modal-order" class="na-modal" aria-label="Create new order">
+        <a class="na-modal__backdrop" href="#" aria-label="Close"></a>
+
+        <div class="na-modal__panel" role="dialog" aria-modal="true" aria-labelledby="m-order-title">
+            <header class="na-modal__header">
+                <div>
+                    <div class="na-metadata">Order Management</div>
+                    <h2 class="na-h3" id="m-order-title">Create New Order</h2>
+                </div>
+                <a class="na-iconbtn" href="#" aria-label="Close">×</a>
+            </header>
+
+            <div class="na-modal__body">
+                <div class="na-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="na-field">
+                        <label class="na-label" for="order-customer">Customer</label>
+                        <select class="na-select" id="order-customer">
+                            <option>Select customer...</option>
+                            <option>Acme Corporation</option>
+                            <option>TechStart Inc</option>
+                            <option>Global Dynamics</option>
+                        </select>
+                        <p class="na-help">Select existing customer or create new</p>
+                    </div>
+
+                    <div class="na-field">
+                        <label class="na-label" for="order-date">Order Date</label>
+                        <input class="na-input" id="order-date" type="date" value="2025-01-27" />
+                        <p class="na-help">Default: Today</p>
+                    </div>
+                </div>
+
+                <div class="na-field" style="margin-top:12px;">
+                    <label class="na-label" for="order-notes">Notes</label>
+                    <textarea class="na-textarea" id="order-notes"
+                        placeholder="Add order notes, special instructions, or delivery requirements..."></textarea>
+                    <p class="na-help">Optional: Internal notes and customer instructions</p>
+                </div>
+
+                <div class="na-divider" style="margin:14px 0;"></div>
+
+                <div class="na-modal__actions">
+                    <a class="na-btn na-btn-ghost" href="#">Cancel</a>
+                    <a class="na-btn na-btn-primary" href="#">Create Order</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+       MODAL: Create Invoice
+       ========================= -->
+    <section id="modal-invoice" class="na-modal" aria-label="Create invoice">
+        <a class="na-modal__backdrop" href="#" aria-label="Close"></a>
+
+        <div class="na-modal__panel" role="dialog" aria-modal="true" aria-labelledby="m-invoice-title">
+            <header class="na-modal__header">
+                <div>
+                    <div class="na-metadata">Invoice Management</div>
+                    <h2 class="na-h3" id="m-invoice-title">Generate Invoice</h2>
+                </div>
+                <a class="na-iconbtn" href="#" aria-label="Close">×</a>
+            </header>
+
+            <div class="na-modal__body">
+                <div class="na-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="na-field">
+                        <label class="na-label" for="invoice-order">Order Reference</label>
+                        <select class="na-select" id="invoice-order">
+                            <option>Select order...</option>
+                            <option>INV-2025-001 - Acme Corporation</option>
+                            <option>INV-2025-002 - TechStart Inc</option>
+                            <option>INV-2025-003 - Global Dynamics</option>
+                        </select>
+                        <p class="na-help">Link invoice to existing order</p>
+                    </div>
+
+                    <div class="na-field">
+                        <label class="na-label" for="invoice-due">Due Date</label>
+                        <input class="na-input" id="invoice-due" type="date" value="2025-02-10" />
+                        <p class="na-help">Payment terms: Net 30</p>
+                    </div>
+                </div>
+
+                <div class="na-field" data-state="info" style="margin-top:12px;">
+                    <label class="na-label" for="invoice-amount">Amount</label>
+                    <div class="na-inline">
+                        <span class="na-inline-icon" aria-hidden="true">$</span>
+                        <input class="na-input" id="invoice-amount" type="text" value="12,450.00" />
+                    </div>
+                    <p class="na-help">Auto-calculated from order items. Can be adjusted manually.</p>
+                </div>
+
+                <div class="na-divider" style="margin:14px 0;"></div>
+
+                <div class="na-modal__actions">
+                    <a class="na-btn na-btn-ghost" href="#">Cancel</a>
+                    <a class="na-btn na-btn-primary" href="#">Generate Invoice</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

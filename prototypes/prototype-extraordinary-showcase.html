@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Analog Design System - Extraordinary Showcase | Pure HTML/CSS Excellence</title>
+    <meta name="description"
+        content="A stunning demonstration of pure HTML/CSS power - proving HTML is the source of origin. Zero JavaScript frameworks, maximum performance.">
+
+    <!-- Import the compiled CSS (built from styles/input.css) -->
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        /* Demo-specific enhancements */
+        .hero-gradient {
+            background: linear-gradient(135deg,
+                    var(--color-void) 0%,
+                    color-mix(in srgb, var(--color-void) 95%, var(--color-gold)) 100%);
+        }
+
+        .stat-card {
+            transition: all var(--duration-300) var(--ease-premium);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .demo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-3);
+            border-radius: var(--radius-full);
+            background: var(--color-paper-2);
+            border: 1px solid var(--color-stroke);
+            font-size: var(--font-size-xs);
+            color: var(--color-lux-dim);
+        }
+
+        .demo-badge::before {
+            content: "✨";
+            font-size: var(--font-size-sm);
+        }
+
+        .interactive-demo {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-demo::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            /* Filament line - fixed 2px for visual consistency */
+            background: linear-gradient(90deg,
+                    transparent,
+                    var(--na-filament),
+                    transparent);
+            opacity: 0;
+            transition: opacity var(--duration-300);
+        }
+
+        .interactive-demo:hover::after {
+            opacity: 1;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 12.5rem;
+            /* 200px using rem */
+            display: flex;
+            align-items: flex-end;
+            gap: var(--spacing-2);
+            padding: var(--spacing-4);
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg,
+                    var(--chart-bar-start),
+                    var(--chart-bar-end));
+            border-radius: var(--radius-control) var(--radius-control) 0 0;
+            border: 1px solid color-mix(in srgb, var(--color-white) 5%, transparent);
+            min-height: var(--spacing-5);
+            animation: na-bar-grow var(--duration-500) var(--ease-premium) both;
+        }
+
+        @keyframes na-bar-grow {
+            from {
+                height: 0;
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .chart-bar:nth-child(1) {
+            animation-delay: var(--chart-delay-1);
+            height: 45%;
+        }
+
+        .chart-bar:nth-child(2) {
+            animation-delay: var(--chart-delay-2);
+            height: 65%;
+        }
+
+        .chart-bar:nth-child(3) {
+            animation-delay: var(--chart-delay-3);
+            height: 35%;
+        }
+
+        .chart-bar:nth-child(4) {
+            animation-delay: var(--chart-delay-4);
+            height: 80%;
+        }
+
+        .chart-bar:nth-child(5) {
+            animation-delay: var(--chart-delay-5);
+            height: 55%;
+        }
+
+        .chart-bar:nth-child(6) {
+            animation-delay: var(--chart-delay-6);
+            height: 70%;
+        }
+
+        .chart-bar:nth-child(7) {
+            animation-delay: var(--chart-delay-7);
+            height: 40%;
+        }
+
+        .chart-bar:nth-child(8) {
+            animation-delay: var(--chart-delay-8);
+            height: 90%;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-xs);
+            color: var(--color-success);
+        }
+
+        .live-indicator::before {
+            content: "";
+            width: var(--spacing-2);
+            height: var(--spacing-2);
+            border-radius: var(--radius-full);
+            background: var(--color-success);
+            animation: pulse 2s var(--ease-smooth) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Dropdown menu item styling */
+        .na-dropdown-menu a {
+            font-size: var(--font-size-sm);
+            transition: background-color var(--duration-200) var(--ease-premium);
+        }
+    </style>
+</head>
+
+<body class="na-app">
+    <!-- !!! REQUIRED: Toggle checkbox for drawer functionality -->
+    <input type="checkbox" id="na-toggle-drawer" class="sr-only">
+
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Omni Shell Layout -->
+    <div class="na-shell-omni">
+
+        <!-- Header -->
+        <header class="na-shell-head">
+            <div class="na-header">
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3">
+                        <div class="na-mark text-gold">N</div>
+                        <div>
+                            <div class="na-h4">Neo-Analog</div>
+                            <div class="na-metadata-small text-lux-dim">Design System v2.0</div>
+                        </div>
+                    </div>
+                    <nav class="flex gap-2">
+                        <a href="#overview" class="na-nav-item is-active">Overview</a>
+                        <a href="#components" class="na-nav-item">Components</a>
+                        <a href="#patterns" class="na-nav-item">Patterns</a>
+                        <a href="#tokens" class="na-nav-item">Tokens</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="na-search">
+                        <span class="na-search-icon">🔍</span>
+                        <input type="search" class="na-search-input" placeholder="Search components...">
+                    </div>
+                    <label for="na-toggle-drawer" class="na-btn na-btn-ghost na-tooltip" data-label="Toggle Settings">
+                        <span>⚙️</span>
+                        <span class="sr-only">Toggle Settings</span>
+                    </label>
+                    <!-- User Menu Dropdown -->
+                    <details class="na-dropdown">
+                        <summary class="na-btn na-btn-ghost">
+                            <span>👤</span>
+                            <span class="sr-only">User Menu</span>
+                        </summary>
+                        <div class="na-dropdown-menu">
+                            <a href="#" class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Profile</a>
+                            <a href="#" class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Settings</a>
+                            <div class="na-divider my-1"></div>
+                            <a href="#"
+                                class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data text-error">Logout</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </header>
+
+        <!-- Rail (Sidebar) -->
+        <aside class="na-shell-rail">
+            <button class="na-iconbtn na-tooltip" data-label="Dashboard" aria-label="Dashboard">
+                <span>📊</span>
+            </button>
+            <button class="na-iconbtn na-tooltip" data-label="Components" aria-label="Components">
+                <span>🧩</span>
+            </button>
+            <button class="na-iconbtn na-tooltip" data-label="Documentation" aria-label="Documentation">
+                <span>📚</span>
+            </button>
+            <button class="na-iconbtn na-tooltip" data-label="Settings" aria-label="Settings">
+                <span>⚙️</span>
+            </button>
+            <div class="mt-auto">
+                <div class="na-avatar na-tooltip" data-label="User Profile" tabindex="0" role="button"
+                    aria-label="User Profile">
+                    <span>👤</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="na-shell-main" id="main-content">
+            <div class="p-8 space-y-12">
+
+                <!-- Hero Section -->
+                <section class="hero-gradient rounded-panel p-12 border border-stroke">
+                    <div class="flex items-start justify-between gap-8 mb-8">
+                        <div>
+                            <div class="demo-badge mb-4">Pure HTML/CSS • Zero Framework Overhead</div>
+                            <h1 class="na-h1 mb-4">Extraordinary Design System Showcase</h1>
+                            <p class="na-data text-lux-dim mb-6 max-w-2xl">
+                                A stunning demonstration of pure HTML/CSS power. This showcase proves that HTML is the
+                                source of origin,
+                                delivering desktop-app performance without JavaScript framework overhead. Every
+                                interaction, animation, and
+                                component is powered by semantic CSS and design tokens.
+                            </p>
+                            <div class="flex items-center gap-6">
+                                <div class="live-indicator">Live & Interactive</div>
+                                <div class="na-metadata-small text-lux-dim">254 Tokens • 171 Classes • 100% Figma
+                                    Compliant</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <button class="na-btn na-btn-primary">Get Started</button>
+                            <button class="na-btn na-btn-ghost">View Docs</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="feature-grid mt-8">
+                        <div class="na-card stat-card p-6">
+                            <div class="na-kpi">
+                                <div>
+                                    <div class="na-kpi-label">Design Tokens</div>
+                                    <div class="na-kpi-value text-gold">254</div>
+                                </div>
+                                <div class="na-kpi-icon">🎨</div>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">Colors, spacing, typography, motion</div>
+                        </div>
+
+                        <div class="na-card stat-card p-6">
+                            <div class="na-kpi">
+                                <div>
+                                    <div class="na-kpi-label">Semantic Classes</div>
+                                    <div class="na-kpi-value text-gold">171</div>
+                                </div>
+                                <div class="na-kpi-icon">🧩</div>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">Reusable .na-* component classes</div>
+                        </div>
+
+                        <div class="na-card stat-card p-6">
+                            <div class="na-kpi">
+                                <div>
+                                    <div class="na-kpi-label">Performance</div>
+                                    <div class="na-kpi-value text-gold">100ms</div>
+                                </div>
+                                <div class="na-kpi-icon">⚡</div>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">Initial render time</div>
+                        </div>
+
+                        <div class="na-card stat-card p-6">
+                            <div class="na-kpi">
+                                <div>
+                                    <div class="na-kpi-label">Accessibility</div>
+                                    <div class="na-kpi-value text-gold">AAA</div>
+                                </div>
+                                <div class="na-kpi-icon">♿</div>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">WCAG 2.2 AAA compliant</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interactive Components Section -->
+                <section id="components">
+                    <h2 class="na-h2 mb-6">Interactive Components</h2>
+
+                    <div class="feature-grid">
+                        <!-- Cards -->
+                        <div class="na-card na-card-interactive p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Interactive Card</h3>
+                            <p class="na-data text-lux-dim mb-4">
+                                Hover over this card to see the premium lift effect, filament highlight, and smooth
+                                transitions.
+                                All powered by pure CSS tokens.
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <span class="na-status ok">Active</span>
+                                <span class="na-metadata-small text-lux-dim">CSS-only hover</span>
+                            </div>
+                        </div>
+
+                        <!-- Form Controls -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Form Controls</h3>
+                            <div class="space-y-4">
+                                <div class="na-field">
+                                    <label class="na-label">Email Address</label>
+                                    <input type="email" class="na-input" placeholder="user@example.com"
+                                        value="user@example.com">
+                                </div>
+                                <div class="na-field">
+                                    <label class="na-label">Password</label>
+                                    <input type="password" class="na-input" placeholder="Enter password"
+                                        value="••••••••">
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <label class="na-switch flex items-center gap-3">
+                                        <input type="checkbox" class="sr-only" checked>
+                                        <span class="na-switch-thumb"></span>
+                                        <span class="na-data">Enable notifications</span>
+                                    </label>
+                                    <label class="na-switch flex items-center gap-3">
+                                        <input type="checkbox" class="sr-only">
+                                        <span class="na-switch-thumb"></span>
+                                        <span class="na-data">Dark mode</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons Showcase -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Button Variants</h3>
+                            <div class="flex flex-col gap-3">
+                                <button class="na-btn na-btn-primary w-full">Primary Action</button>
+                                <button class="na-btn w-full">Standard Button</button>
+                                <button class="na-btn na-btn-ghost w-full">Ghost Button</button>
+                                <button class="na-btn na-btn-destructive w-full">Destructive Action</button>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">All with click feedback animations</div>
+                        </div>
+
+                        <!-- Status Badges -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Status Indicators</h3>
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="na-status ok">Success</span>
+                                    <span class="na-data">System operational</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="na-status pending">Pending</span>
+                                    <span class="na-data">Processing request</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="na-status bad">Error</span>
+                                    <span class="na-data">Action failed</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tooltip Demo -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">CSS-Only Tooltips</h3>
+                            <p class="na-data text-lux-dim mb-4">
+                                Hover over the buttons below to see Neo-Analog styled tooltips. No JavaScript required.
+                            </p>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="na-btn na-tooltip" data-label="Save your changes">Save</button>
+                                <button class="na-btn na-btn-primary na-tooltip"
+                                    data-label="Submit the form">Submit</button>
+                                <button class="na-btn na-btn-ghost na-tooltip"
+                                    data-label="Cancel and go back">Cancel</button>
+                                <button class="na-iconbtn na-tooltip" data-label="Delete item" aria-label="Delete">
+                                    <span>🗑️</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Demo -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Native Dropdown Menu</h3>
+                            <p class="na-data text-lux-dim mb-4">
+                                Click the button below to open a CSS-only dropdown menu using the native &lt;details&gt;
+                                element.
+                            </p>
+                            <details class="na-dropdown">
+                                <summary class="na-btn">Actions Menu ▼</summary>
+                                <div class="na-dropdown-menu">
+                                    <a href="#" class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Edit
+                                        Item</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Duplicate</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data">Share</a>
+                                    <div class="na-divider my-1"></div>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-control hover:bg-paper-2 na-data text-error">Delete</a>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Visualization -->
+                <section id="patterns">
+                    <h2 class="na-h2 mb-6">Data Visualization</h2>
+
+                    <div class="feature-grid">
+                        <!-- Chart -->
+                        <div class="na-card p-6 interactive-demo">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="na-h4">Revenue Trend</h3>
+                                <span class="na-trend up">+12.5%</span>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                            </div>
+                            <div class="na-metadata-small text-lux-dim mt-4">CSS-only animated chart bars</div>
+                        </div>
+
+                        <!-- KPI Dashboard -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-6">Key Metrics</h3>
+                            <div class="space-y-6">
+                                <div class="na-kpi">
+                                    <div>
+                                        <div class="na-kpi-label">Total Revenue</div>
+                                        <div class="na-kpi-value">$1,247,832</div>
+                                    </div>
+                                    <div class="na-kpi-icon">💰</div>
+                                </div>
+                                <div class="na-kpi">
+                                    <div>
+                                        <div class="na-kpi-label">Active Users</div>
+                                        <div class="na-kpi-value">12,458</div>
+                                    </div>
+                                    <div class="na-kpi-icon">👥</div>
+                                </div>
+                                <div class="na-kpi">
+                                    <div>
+                                        <div class="na-kpi-label">Conversion Rate</div>
+                                        <div class="na-kpi-value">3.24%</div>
+                                    </div>
+                                    <div class="na-kpi-icon">📈</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Table -->
+                <section>
+                    <h2 class="na-h2 mb-6">Data Tables</h2>
+
+                    <div class="na-table-wrap">
+                        <table class="na-table">
+                            <thead>
+                                <tr>
+                                    <th class="na-th">ID</th>
+                                    <th class="na-th">Name</th>
+                                    <th class="na-th">Status</th>
+                                    <th class="na-th">Amount</th>
+                                    <th class="na-th">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="na-tr-interactive">
+                                    <td class="na-td">#001</td>
+                                    <td class="na-td">
+                                        <div class="na-data">John Doe</div>
+                                        <div class="na-metadata-small text-lux-dim">john@example.com</div>
+                                    </td>
+                                    <td class="na-td">
+                                        <span class="na-status ok">Active</span>
+                                    </td>
+                                    <td class="na-td">$1,234.56</td>
+                                    <td class="na-td">2025-01-27</td>
+                                </tr>
+                                <tr class="na-tr-interactive">
+                                    <td class="na-td">#002</td>
+                                    <td class="na-td">
+                                        <div class="na-data">Jane Smith</div>
+                                        <div class="na-metadata-small text-lux-dim">jane@example.com</div>
+                                    </td>
+                                    <td class="na-td">
+                                        <span class="na-status pending">Pending</span>
+                                    </td>
+                                    <td class="na-td">$2,345.67</td>
+                                    <td class="na-td">2025-01-26</td>
+                                </tr>
+                                <tr class="na-tr-interactive">
+                                    <td class="na-td">#003</td>
+                                    <td class="na-td">
+                                        <div class="na-data">Bob Johnson</div>
+                                        <div class="na-metadata-small text-lux-dim">bob@example.com</div>
+                                    </td>
+                                    <td class="na-td">
+                                        <span class="na-status bad">Error</span>
+                                    </td>
+                                    <td class="na-td">$3,456.78</td>
+                                    <td class="na-td">2025-01-25</td>
+                                </tr>
+                                <tr class="na-tr-interactive">
+                                    <td class="na-td">#004</td>
+                                    <td class="na-td">
+                                        <div class="na-data">Alice Williams</div>
+                                        <div class="na-metadata-small text-lux-dim">alice@example.com</div>
+                                    </td>
+                                    <td class="na-td">
+                                        <span class="na-status ok">Active</span>
+                                    </td>
+                                    <td class="na-td">$4,567.89</td>
+                                    <td class="na-td">2025-01-24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="na-metadata-small text-lux-dim mt-4">Hover over rows for interactive feedback</div>
+                </section>
+
+                <!-- Typography Showcase -->
+                <section id="tokens">
+                    <h2 class="na-h2 mb-6">Typography Hierarchy</h2>
+
+                    <div class="na-card p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h1 class="na-h1">Heading 1 - Page Title</h1>
+                                <div class="na-metadata-small text-lux-dim">32px Bold - Top of page, unique H1</div>
+                            </div>
+                            <div>
+                                <h2 class="na-h2">Heading 2 - Section Title</h2>
+                                <div class="na-metadata-small text-lux-dim">24px Semibold - Major page divisions</div>
+                            </div>
+                            <div>
+                                <h3 class="na-h3">Heading 3 - Subsection</h3>
+                                <div class="na-metadata-small text-lux-dim">20px Semibold - Grouping content within
+                                    sections</div>
+                            </div>
+                            <div>
+                                <h4 class="na-h4">Heading 4 - Card Title</h4>
+                                <div class="na-metadata-small text-lux-dim">18px Semibold - Inside card containers</div>
+                            </div>
+                            <div>
+                                <h5 class="na-h5">Heading 5 - Small Title</h5>
+                                <div class="na-metadata-small text-lux-dim">16px Semibold - Minor groupings</div>
+                            </div>
+                            <div>
+                                <h6 class="na-h6">Heading 6 - Micro Title</h6>
+                                <div class="na-metadata-small text-lux-dim">14px Semibold - Tiny headers, tooltips</div>
+                            </div>
+                            <div>
+                                <div class="na-data">Data Value - Monospace/Tabular</div>
+                                <div class="na-metadata-small text-lux-dim">14px - Table cells, primary values, user
+                                    input</div>
+                            </div>
+                            <div>
+                                <div class="na-data-large text-gold">KPI Value - Serif/Display</div>
+                                <div class="na-metadata-small text-lux-dim">Hero numbers, dashboard stats</div>
+                            </div>
+                            <div>
+                                <div class="na-metadata">METADATA - Uppercase, Tracked</div>
+                                <div class="na-metadata-small text-lux-dim">11px - Field labels, column headers</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Advanced Components Section -->
+                <section>
+                    <h2 class="na-h2 mb-6">Advanced Components</h2>
+
+                    <div class="feature-grid">
+                        <!-- Modal Demo -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">CSS-Only Modal</h3>
+                            <p class="na-data text-lux-dim mb-4">
+                                Click the button below to open a CSS-only modal. The modal uses the :target pseudo-class
+                                for state management - no JavaScript required.
+                            </p>
+                            <a href="#demo-modal" class="na-btn na-btn-primary">Open Modal</a>
+                        </div>
+
+                        <!-- Print Styles Demo -->
+                        <div class="na-card p-6 interactive-demo">
+                            <h3 class="na-h4 mb-4">Print-Optimized Styles</h3>
+                            <p class="na-data text-lux-dim mb-4">
+                                This design system includes print styles that automatically convert dark themes to
+                                printer-friendly white backgrounds. Try printing this page (Ctrl+P) to see the
+                                transformation.
+                            </p>
+                            <div class="na-metadata-small text-lux-dim">
+                                Print styles hide UI chrome and optimize for paper output
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="na-shell-foot p-8 border-t border-stroke">
+                    <div class="flex items-center justify-between">
+                        <div class="na-metadata-small text-lux-dim">
+                            <div>NEO-ANALOG DESIGN SYSTEM V2.0</div>
+                            <div>Built with Modular CSS Architecture • Pure HTML/CSS • Zero Framework Overhead</div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <a href="#" class="na-btn na-btn-ghost">Documentation</a>
+                            <a href="#" class="na-btn na-btn-ghost">GitHub</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Drawer (Settings Panel) -->
+        <aside class="na-shell-drawer">
+            <div class="p-8">
+                <h2 class="na-h3 mb-6">Settings Panel</h2>
+                <p class="na-data text-lux-dim mb-6">
+                    This drawer can be toggled open/closed using the checkbox in the header.
+                    The drawer uses CSS :has() selectors for state management.
+                </p>
+
+                <div class="space-y-4">
+                    <div class="na-field">
+                        <label class="na-label">Theme</label>
+                        <select class="na-input">
+                            <option>Dark (Default)</option>
+                            <option>Light</option>
+                            <option>Auto</option>
+                        </select>
+                    </div>
+
+                    <div class="na-field">
+                        <label class="na-label">Density</label>
+                        <select class="na-input">
+                            <option>Comfort</option>
+                            <option>Compact</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="na-label">Animations</label>
+                        <label class="na-switch flex items-center gap-3">
+                            <input type="checkbox" class="sr-only" checked>
+                            <span class="na-switch-thumb"></span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="na-label">Reduced Motion</label>
+                        <label class="na-switch flex items-center gap-3">
+                            <input type="checkbox" class="sr-only">
+                            <span class="na-switch-thumb"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal (Target-based, CSS-only) -->
+    <div id="demo-modal" class="na-modal">
+        <div class="na-modal__backdrop"></div>
+        <div class="na-modal__panel">
+            <div class="p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="na-h3">CSS-Only Modal</h2>
+                    <a href="#" class="na-btn na-btn-ghost">✕</a>
+                </div>
+                <p class="na-data text-lux-dim mb-6">
+                    This modal is powered entirely by CSS using the :target pseudo-class.
+                    No JavaScript is required. Click outside or the close button to dismiss.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="na-btn na-btn-primary">Confirm</a>
+                    <a href="#" class="na-btn">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

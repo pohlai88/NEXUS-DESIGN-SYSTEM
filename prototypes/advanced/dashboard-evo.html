@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Æther // Edge Compute Console</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body class="na-app">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+    <div class="na-bg-grain"></div>
+
+    <!-- Dashboard Shell -->
+    <div class="na-shell">
+        <!-- Sidebar -->
+        <aside class="na-sidebar" aria-label="Main navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">Æ</div>
+                <div class="na-brand-title">ÆTHER NET</div>
+            </div>
+
+            <nav class="na-nav" aria-label="Primary navigation">
+                <div class="na-nav-section" role="heading" aria-level="2">Infrastructure</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>●</span> Dashboard
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span class="na-nav-icon-inactive">○</span> Nodes
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span class="na-nav-icon-inactive">○</span> Topologies
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Intelligence</div>
+                <a href="#" class="na-nav-item">
+                    <span class="na-nav-icon-inactive">○</span> Predictive Edge
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span class="na-nav-icon-inactive">○</span> Anomalies
+                    <span class="na-status warn na-badge-small">2</span>
+                </a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact">
+                    <div class="na-label">System Status</div>
+                    <div class="na-status-indicator">
+                        <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+                        <span class="na-mono na-status-text-success">Operational</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="na-main" id="main-content">
+            <!-- Header -->
+            <header class="na-header">
+                <div class="na-search">
+                    <label for="search-input-aether" class="sr-only">Search node ID or region</label>
+                    <input type="search" id="search-input-aether" class="na-search-input"
+                        placeholder="Search node ID or region..." aria-label="Search node ID or region">
+                    <span class="na-search-icon" aria-hidden="true">🔍</span>
+                </div>
+
+                <div class="na-header-actions">
+                    <button class="na-btn" aria-label="View documentation">Documentation</button>
+                    <div class="na-avatar" aria-label="User profile" role="button" tabindex="0"></div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="na-content">
+                <!-- Page Header -->
+                <div class="na-page-header">
+                    <div>
+                        <h1 class="na-h1">Global Network Pulse</h1>
+                        <div class="na-mono na-page-subtitle">Real-time latency orchestration via AI-Core</div>
+                    </div>
+                    <div class="na-page-actions">
+                        <button class="na-btn" aria-label="Refresh data">Refresh Data</button>
+                        <button class="na-btn-primary" aria-label="Provision new node">+ Provision Node</button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="na-grid na-grid-kpi">
+                    <div class="na-card">
+                        <span class="na-label">Global Latency ( Avg )</span>
+                        <div class="na-kpi-row">
+                            <span class="na-data-large">14<span class="na-data-unit">ms</span></span>
+                            <span class="na-status ok">▼ 12%</span>
+                        </div>
+                        <div class="na-mono na-kpi-meta">vs. 16ms (Classic Routing)</div>
+                    </div>
+
+                    <div class="na-card">
+                        <span class="na-label">AI Inference Hits</span>
+                        <div class="na-kpi-row">
+                            <span class="na-data-large">4.2<span class="na-data-unit">B</span></span>
+                            <span class="na-status ok">▲ 8.4%</span>
+                        </div>
+                        <div class="na-mono na-kpi-meta">Predictive Pre-fetch Active</div>
+                    </div>
+
+                    <div class="na-card">
+                        <span class="na-label">Active Nodes</span>
+                        <div class="na-kpi-row">
+                            <span class="na-data-large">892</span>
+                            <span class="na-status warn">Maintenance: 3</span>
+                        </div>
+                        <div class="na-mono na-kpi-meta">Capacity: 72% Utilized</div>
+                    </div>
+                </div>
+
+                <!-- Chart and Health Grid -->
+                <div class="na-grid na-grid-chart-health">
+                    <!-- Traffic Distribution Chart -->
+                    <div class="na-card">
+                        <div class="na-chart-header">
+                            <div>
+                                <span class="na-label">Traffic Distribution</span>
+                                <h3 class="na-h3">Edge Compute vs. Static Origin</h3>
+                            </div>
+                            <div class="na-mono na-chart-time">
+                                <div>Live Window</div>
+                                <div class="na-chart-time-active">12:00 - 12:45</div>
+                            </div>
+                        </div>
+
+                        <div class="na-chart-container">
+                            <div class="na-bars">
+                                <div class="na-bar" style="height: 30%"></div>
+                                <div class="na-bar" style="height: 45%"></div>
+                                <div class="na-bar" style="height: 35%"></div>
+                                <div class="na-bar" style="height: 50%"></div>
+                                <div class="na-bar gold" style="height: 65%"></div>
+                                <div class="na-bar gold" style="height: 80%"></div>
+                                <div class="na-bar gold" style="height: 75%"></div>
+                                <div class="na-bar gold" style="height: 90%"></div>
+                                <div class="na-bar gold" style="height: 85%"></div>
+                                <div class="na-bar" style="height: 60%"></div>
+                                <div class="na-bar" style="height: 40%"></div>
+                                <div class="na-bar" style="height: 25%"></div>
+                            </div>
+                        </div>
+                        <div class="na-chart-legend">
+                            <span class="na-mono na-chart-legend-item">origin-us-east</span>
+                            <span class="na-mono na-chart-legend-item">edge-global-ai</span>
+                            <span class="na-mono na-chart-legend-item">origin-eu-west</span>
+                        </div>
+                    </div>
+
+                    <!-- Topology Health -->
+                    <div class="na-card na-card-alt">
+                        <span class="na-label">Topology Health</span>
+                        <div class="na-topology-list">
+                            <div class="na-topology-item">
+                                <div class="na-topology-header">
+                                    <span>Asia Pacific (APAC)</span>
+                                    <span class="na-mono">98%</span>
+                                </div>
+                                <div class="na-progress-bar">
+                                    <div class="na-progress-fill" style="width: 98%;" aria-label="APAC: 98%"></div>
+                                </div>
+                            </div>
+                            <div class="na-topology-item">
+                                <div class="na-topology-header">
+                                    <span>North America (NA)</span>
+                                    <span class="na-mono">100%</span>
+                                </div>
+                                <div class="na-progress-bar">
+                                    <div class="na-progress-fill" style="width: 100%;" aria-label="NA: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="na-topology-item">
+                                <div class="na-topology-header">
+                                    <span>Europe (EU)</span>
+                                    <span class="na-mono">92%</span>
+                                </div>
+                                <div class="na-progress-bar">
+                                    <div class="na-progress-fill na-progress-fill-warning" style="width: 92%;"
+                                        aria-label="EU: 92%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- High-Velocity Nodes Table -->
+                <div class="na-table-section">
+                    <div class="na-table-header">
+                        <h3 class="na-h3">High-Velocity Nodes</h3>
+                        <div class="na-table-actions">
+                            <button class="na-btn na-btn-ghost" aria-label="Filter nodes">Filter</button>
+                            <button class="na-btn na-btn-ghost" aria-label="Export to CSV">Export CSV</button>
+                        </div>
+                    </div>
+
+                    <div class="na-table-wrap">
+                        <table class="na-table" role="table" aria-label="High-velocity nodes table">
+                            <thead>
+                                <tr>
+                                    <th class="na-th" scope="col">Node ID</th>
+                                    <th class="na-th" scope="col">Region</th>
+                                    <th class="na-th" scope="col">Type</th>
+                                    <th class="na-th" scope="col">Throughput</th>
+                                    <th class="na-th" scope="col">Latency</th>
+                                    <th class="na-th" scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                    aria-label="HK-091 node details">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">HK-091</span></td>
+                                    <td class="na-td">Hong Kong</td>
+                                    <td class="na-td">AI Edge (GPU)</td>
+                                    <td class="na-td">840 GB/s</td>
+                                    <td class="na-td"><span class="na-data na-data-success">4ms</span></td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                    aria-label="SG-221 node details">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">SG-221</span></td>
+                                    <td class="na-td">Singapore</td>
+                                    <td class="na-td">Standard Cache</td>
+                                    <td class="na-td">1.2 TB/s</td>
+                                    <td class="na-td"><span class="na-data na-data-success">8ms</span></td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                    aria-label="VN-HCM node details">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">VN-HCM</span></td>
+                                    <td class="na-td">Ho Chi Minh</td>
+                                    <td class="na-td">Hybrid</td>
+                                    <td class="na-td">410 GB/s</td>
+                                    <td class="na-td"><span class="na-data na-data-warning">24ms</span></td>
+                                    <td class="na-td"><span class="na-status warn">Rerouting</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive" role="row" tabindex="0"
+                                    aria-label="JP-TYO node details">
+                                    <td class="na-td"><span class="na-data na-data-emphasis">JP-TYO</span></td>
+                                    <td class="na-td">Tokyo</td>
+                                    <td class="na-td">AI Edge (GPU)</td>
+                                    <td class="na-td">2.1 TB/s</td>
+                                    <td class="na-td"><span class="na-data na-data-success">2ms</span></td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Advanced Configuration -->
+                <details class="na-details">
+                    <summary class="na-summary">
+                        <div class="na-summary-layout">
+                            <div class="na-summary-chevron" aria-hidden="true">></div>
+                            <div>
+                                <div class="na-summary-title">Advanced Configuration: Predictive Prefetching</div>
+                                <div class="na-summary-sub">AI Model: Llama-Edge-v4 // Threshold: 80%</div>
+                            </div>
+                        </div>
+                        <span class="na-summary-chip">Configured</span>
+                    </summary>
+                    <div class="na-details-body">
+                        <div class="na-grid na-grid-3">
+                            <div class="na-field">
+                                <label class="na-label">Model Confidence Threshold</label>
+                                <input type="range" class="na-input-range" aria-label="Model confidence threshold">
+                                <div class="na-range-labels">
+                                    <span>Conservative (90%)</span>
+                                    <span>Aggressive (50%)</span>
+                                </div>
+                            </div>
+                            <div class="na-field">
+                                <label class="na-label">Max Cache Budget</label>
+                                <div class="na-input-display">
+                                    $ 4,500.00 / hr
+                                </div>
+                            </div>
+                            <div class="na-field na-field-button">
+                                <button class="na-btn na-btn-full">View Audit Logs</button>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

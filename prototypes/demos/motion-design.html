@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIBOS Motion Design System - Interactive Examples</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--background, #0a0a0a);
+            color: var(--foreground, #fafafa);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: var(--card, #1a1a1a);
+            border-radius: 8px;
+            border-top: 2px solid var(--primary, #eab308);
+        }
+
+        .demo-section h2 {
+            margin-top: 0;
+            color: var(--primary, #eab308);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .demo-item {
+            padding: 1.5rem;
+            background: var(--panel, #252525);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .demo-item:hover {
+            border-color: var(--primary, #eab308);
+        }
+
+        .demo-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            color: var(--metadata, #888);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-box {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: var(--primary, #eab308);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .demo-box-small {
+            width: 60px;
+            height: 60px;
+        }
+
+        .code-block {
+            background: var(--panel, #252525);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        .button-demo {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary, #eab308);
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+
+        .stagger-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .stagger-list li {
+            padding: 1rem;
+            background: var(--panel, #252525);
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary, #eab308);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--panel, #252525);
+            border-top-color: var(--primary, #eab308);
+            border-radius: 50%;
+            margin: 1rem auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="na-h1">AIBOS Motion Design System</h1>
+    <p class="na-metadata">Interactive examples of all motion patterns and utilities</p>
+
+    <!-- Duration Utilities -->
+    <div class="demo-section">
+        <h2 class="na-h2">Duration Utilities</h2>
+        <p class="na-metadata">Hover over items to see different transition speeds</p>
+        <div class="demo-grid">
+            <div class="demo-item">
+                <h3>Instant (0ms)</h3>
+                <div class="demo-box na-motion-instant na-transition-colors">Instant</div>
+            </div>
+            <div class="demo-item">
+                <h3>Fast (100ms)</h3>
+                <div class="demo-box na-motion-fast na-transition-colors">Fast</div>
+            </div>
+            <div class="demo-item">
+                <h3>Base (200ms)</h3>
+                <div class="demo-box na-motion-base na-transition-colors">Base</div>
+            </div>
+            <div class="demo-item">
+                <h3>Slow (300ms)</h3>
+                <div class="demo-box na-motion-slow na-transition-colors">Slow</div>
+            </div>
+            <div class="demo-item">
+                <h3>Slower (500ms)</h3>
+                <div class="demo-box na-motion-slower na-transition-colors">Slower</div>
+            </div>
+            <div class="demo-item">
+                <h3>Slowest (800ms)</h3>
+                <div class="demo-box na-motion-slowest na-transition-colors">Slowest</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-motion-fast na-transition-colors"&gt;Fast transition&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Easing Utilities -->
+    <div class="demo-section">
+        <h2 class="na-h2">Easing Functions</h2>
+        <p class="na-metadata">Click items to see different easing curves</p>
+        <div class="demo-grid">
+            <div class="demo-item" onclick="testEasing(this, 'linear')">
+                <h3>Linear</h3>
+                <div class="demo-box na-motion-linear na-transition-transform">Linear</div>
+            </div>
+            <div class="demo-item" onclick="testEasing(this, 'ease-in')">
+                <h3>Ease In</h3>
+                <div class="demo-box na-motion-ease-in na-transition-transform">Ease In</div>
+            </div>
+            <div class="demo-item" onclick="testEasing(this, 'ease-out')">
+                <h3>Ease Out</h3>
+                <div class="demo-box na-motion-ease-out na-transition-transform">Ease Out</div>
+            </div>
+            <div class="demo-item" onclick="testEasing(this, 'ease-in-out')">
+                <h3>Ease In-Out</h3>
+                <div class="demo-box na-motion-ease-in-out na-transition-transform">Ease In-Out</div>
+            </div>
+            <div class="demo-item" onclick="testEasing(this, 'bounce')">
+                <h3>Bounce</h3>
+                <div class="demo-box na-motion-bounce na-transition-transform">Bounce</div>
+            </div>
+            <div class="demo-item" onclick="testEasing(this, 'smooth')">
+                <h3>Smooth</h3>
+                <div class="demo-box na-motion-smooth na-transition-transform">Smooth</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-motion-bounce na-transition-transform"&gt;Bounce animation&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Fade Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Fade Animations</h2>
+        <p class="na-metadata">Click to toggle fade animations</p>
+        <div class="demo-grid">
+            <div class="demo-item" onclick="toggleAnimation(this)">
+                <h3>Fade In</h3>
+                <div class="demo-box na-animate-fade-in">Fade In</div>
+            </div>
+            <div class="demo-item" onclick="toggleAnimation(this)">
+                <h3>Fade Out</h3>
+                <div class="demo-box na-animate-fade-out">Fade Out</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-animate-fade-in"&gt;Fade in content&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Slide Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Slide Animations</h2>
+        <p class="na-metadata">Click to replay slide animations</p>
+        <div class="demo-grid">
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Slide Up</h3>
+                <div class="demo-box na-animate-slide-up">↑</div>
+            </div>
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Slide Down</h3>
+                <div class="demo-box na-animate-slide-down">↓</div>
+            </div>
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Slide Left</h3>
+                <div class="demo-box na-animate-slide-left">←</div>
+            </div>
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Slide Right</h3>
+                <div class="demo-box na-animate-slide-right">→</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-animate-slide-up"&gt;Slide up content&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Scale Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Scale Animations</h2>
+        <p class="na-metadata">Click to replay scale animations</p>
+        <div class="demo-grid">
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Scale In</h3>
+                <div class="demo-box na-animate-scale-in">Scale In</div>
+            </div>
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Scale Out</h3>
+                <div class="demo-box na-animate-scale-out">Scale Out</div>
+            </div>
+            <div class="demo-item" onclick="replayAnimation(this)">
+                <h3>Scale Bounce</h3>
+                <div class="demo-box na-animate-scale-bounce">Bounce</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-animate-scale-in"&gt;Scale in content&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Rotation Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Rotation Animations</h2>
+        <p class="na-metadata">Continuous rotation animations</p>
+        <div class="demo-grid">
+            <div class="demo-item">
+                <h3>Rotate</h3>
+                <div class="demo-box na-animate-rotate">⟳</div>
+            </div>
+            <div class="demo-item">
+                <h3>Spin</h3>
+                <div class="demo-box na-animate-spin">⚙</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-animate-spin"&gt;Spinning loader&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Utility Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Utility Animations</h2>
+        <p class="na-metadata">Pulse and shimmer effects</p>
+        <div class="demo-grid">
+            <div class="demo-item">
+                <h3>Pulse</h3>
+                <div class="demo-box na-animate-pulse">Pulse</div>
+            </div>
+            <div class="demo-item">
+                <h3>Shimmer</h3>
+                <div class="demo-box na-animate-shimmer">Shimmer</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-animate-pulse"&gt;Pulsing content&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Transition Presets -->
+    <div class="demo-section">
+        <h2 class="na-h2">Transition Presets</h2>
+        <p class="na-metadata">Hover to see transition presets</p>
+        <div class="demo-grid">
+            <div class="demo-item">
+                <h3>Fast</h3>
+                <div class="demo-box na-transition-fast">Fast</div>
+            </div>
+            <div class="demo-item">
+                <h3>Base</h3>
+                <div class="demo-box na-transition-base">Base</div>
+            </div>
+            <div class="demo-item">
+                <h3>Slow</h3>
+                <div class="demo-box na-transition-slow">Slow</div>
+            </div>
+            <div class="demo-item">
+                <h3>Smooth</h3>
+                <div class="demo-box na-transition-smooth">Smooth</div>
+            </div>
+            <div class="demo-item">
+                <h3>Bounce</h3>
+                <div class="demo-box na-transition-bounce">Bounce</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-transition-fast"&gt;Fast transition&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Property-Specific Transitions -->
+    <div class="demo-section">
+        <h2 class="na-h2">Property-Specific Transitions</h2>
+        <p class="na-metadata">Hover to see property-specific transitions</p>
+        <div class="demo-grid">
+            <div class="demo-item">
+                <h3>Colors</h3>
+                <div class="demo-box na-transition-colors">Colors</div>
+            </div>
+            <div class="demo-item">
+                <h3>Opacity</h3>
+                <div class="demo-box na-transition-opacity">Opacity</div>
+            </div>
+            <div class="demo-item">
+                <h3>Transform</h3>
+                <div class="demo-box na-transition-transform">Transform</div>
+            </div>
+            <div class="demo-item">
+                <h3>Shadow</h3>
+                <div class="demo-box na-transition-shadow" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Shadow</div>
+            </div>
+            <div class="demo-item">
+                <h3>Size</h3>
+                <div class="demo-box na-transition-size">Size</div>
+            </div>
+        </div>
+        <div class="code-block">
+            &lt;div class="na-transition-colors"&gt;Color transition&lt;/div&gt;
+        </div>
+    </div>
+
+    <!-- Button Examples -->
+    <div class="demo-section">
+        <h2 class="na-h2">Button with Motion</h2>
+        <p class="na-metadata">Buttons with motion utilities</p>
+        <button class="button-demo na-transition-colors na-motion-fast">Fast Transition</button>
+        <button class="button-demo na-transition-transform na-motion-bounce">Bounce on Hover</button>
+        <button class="button-demo na-transition-shadow na-motion-base">Shadow Transition</button>
+        <div class="code-block">
+            &lt;button class="na-btn na-transition-colors na-motion-fast"&gt;Click me&lt;/button&gt;
+        </div>
+    </div>
+
+    <!-- Staggered Animations -->
+    <div class="demo-section">
+        <h2 class="na-h2">Staggered Animations</h2>
+        <p class="na-metadata">List items with staggered delays</p>
+        <ul class="stagger-list">
+            <li class="na-animate-slide-up" style="animation-delay: 0ms;">Item 1 (0ms delay)</li>
+            <li class="na-animate-slide-up" style="animation-delay: 50ms;">Item 2 (50ms delay)</li>
+            <li class="na-animate-slide-up" style="animation-delay: 100ms;">Item 3 (100ms delay)</li>
+            <li class="na-animate-slide-up" style="animation-delay: 150ms;">Item 4 (150ms delay)</li>
+            <li class="na-animate-slide-up" style="animation-delay: 200ms;">Item 5 (200ms delay)</li>
+        </ul>
+        <div class="code-block">
+            &lt;li class="na-animate-slide-up" style="animation-delay: 50ms;"&gt;Item&lt;/li&gt;
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="demo-section">
+        <h2 class="na-h2">Loading Spinner</h2>
+        <p class="na-metadata">Spinning loader with motion</p>
+        <div class="loading-spinner na-animate-spin"></div>
+        <div class="code-block">
+            &lt;div class="na-animate-spin"&gt;Loading...&lt;/div&gt;
+        </div>
+    </div>
+
+    <script>
+        function testEasing(element, easing) {
+            const box = element.querySelector('.demo-box');
+            box.style.transform = 'translateX(50px)';
+            setTimeout(() => {
+                box.style.transform = 'translateX(0)';
+            }, 100);
+        }
+
+        function toggleAnimation(element) {
+            const box = element.querySelector('.demo-box');
+            box.style.animation = 'none';
+            setTimeout(() => {
+                box.style.animation = '';
+            }, 10);
+        }
+
+        function replayAnimation(element) {
+            const box = element.querySelector('.demo-box');
+            const animation = box.style.animation;
+            box.style.animation = 'none';
+            setTimeout(() => {
+                box.style.animation = animation;
+            }, 10);
+        }
+
+        // Add hover effects
+        document.querySelectorAll('.demo-box').forEach(box => {
+            box.addEventListener('mouseenter', function () {
+                if (this.classList.contains('na-transition-colors')) {
+                    this.style.backgroundColor = '#fbbf24';
+                }
+                if (this.classList.contains('na-transition-transform')) {
+                    this.style.transform = 'scale(1.1)';
+                }
+                if (this.classList.contains('na-transition-shadow')) {
+                    this.style.boxShadow = '0 8px 16px rgba(234, 179, 8, 0.3)';
+                }
+                if (this.classList.contains('na-transition-opacity')) {
+                    this.style.opacity = '0.7';
+                }
+            });
+            box.addEventListener('mouseleave', function () {
+                if (this.classList.contains('na-transition-colors')) {
+                    this.style.backgroundColor = '';
+                }
+                if (this.classList.contains('na-transition-transform')) {
+                    this.style.transform = '';
+                }
+                if (this.classList.contains('na-transition-shadow')) {
+                    this.style.boxShadow = '';
+                }
+                if (this.classList.contains('na-transition-opacity')) {
+                    this.style.opacity = '';
+                }
+            });
+        });
+
+        // Replay staggered animations on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.stagger-list li').forEach((li, index) => {
+                    li.style.animation = 'none';
+                    setTimeout(() => {
+                        li.style.animation = '';
+                    }, 10);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

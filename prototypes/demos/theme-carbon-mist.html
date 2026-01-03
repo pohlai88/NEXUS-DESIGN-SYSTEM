@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Mist Theme - Enterprise Platform Theme</title>
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: var(--font-family-sans, system-ui, sans-serif);
+      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Frosted Noise - 1-2% grain texture */
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+    }
+    
+    .theme-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: color-mix(in oklab, var(--color-paper) 98%, transparent);
+      border-bottom: 1px solid var(--color-stroke);
+      padding: 20px 32px;
+      backdrop-filter: blur(16px) saturate(180%);
+    }
+    
+    .theme-controls {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    
+    .theme-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .theme-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-lux);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.03em;
+    }
+    
+    .theme-subtitle {
+      font-size: 14px;
+      color: var(--color-clay);
+      margin: 0;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+    
+    .theme-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent-subtle, rgba(79, 209, 197, 0.15));
+      color: var(--color-primary);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-left: 12px;
+      border: 1px solid rgba(79, 209, 197, 0.2);
+    }
+    
+    .theme-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .theme-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--color-stroke);
+      border-radius: 8px;
+      background: var(--color-paper-2);
+      color: var(--color-lux);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition-premium, all 0.25s cubic-bezier(0.4, 0, 0.2, 1));
+      text-transform: capitalize;
+    }
+    
+    .theme-btn:hover {
+      background: var(--color-paper-hover);
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-1px);
+    }
+    
+    .theme-btn.active {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-glow-teal-subtle, 0 0 0 1px rgba(79, 209, 197, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+    
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+    
+    .section {
+      margin-bottom: 64px;
+    }
+    
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-lux);
+      margin: 0 0 16px 0;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--color-stroke);
+      letter-spacing: -0.03em;
+    }
+    
+    .section-description {
+      font-size: 16px;
+      color: var(--color-lux-dim);
+      margin: 0 0 40px 0;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    
+    .hero-section {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 20px;
+      padding: 64px;
+      margin-bottom: 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      /* Aurora Accent Gradient - Very Subtle */
+      background-image: var(--gradient-aurora, linear-gradient(135deg, rgba(79, 209, 197, 0.12), rgba(99, 102, 241, 0.08)));
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    
+    .hero-title {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--color-lux);
+      margin: 0 0 20px 0;
+      letter-spacing: -0.04em;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-description {
+      font-size: 20px;
+      color: var(--color-lux-dim);
+      margin: 0 0 40px 0;
+      line-height: 1.7;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-invariants {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .invariant-card {
+      background: var(--color-paper-2);
+      border: 1px solid var(--color-stroke);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: left;
+      transition: var(--transition-premium);
+    }
+    
+    .invariant-card:hover {
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    .invariant-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin: 0 0 12px 0;
+    }
+    
+    .invariant-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 8px 0;
+    }
+    
+    .invariant-desc {
+      font-size: 13px;
+      color: var(--color-clay);
+      margin: 0;
+      line-height: 1.6;
+    }
+    
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    
+    .color-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: var(--transition-premium);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .color-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    
+    .color-card:hover {
+      border-color: var(--color-stroke-strong);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .color-swatch {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid var(--color-stroke);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .color-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-lux);
+      margin: 0 0 8px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .color-value {
+      font-size: 14px;
+      color: var(--color-clay);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0 0 12px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .color-description {
+      font-size: 13px;
+      color: var(--color-clay);
+      line-height: 1.6;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-top: 40px;
+    }
+    
+    .button-group {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 16px;
+      padding: 32px;
+      transition: var(--transition-premium);
+      position: relative;
+    }
+    
+    .button-group::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+      opacity: 0.15;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+    
+    .button-group:hover {
+      border-color: var(--color-stroke-strong);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    .button-group-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-lux);
+      margin: 0 0 24px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .button-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .button-label {
+      font-size: 12px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      min-width: 100px;
+      font-weight: 600;
+    }
+    
+    /* Micro-Glow Button (Interactive) */
+    .btn-glow {
+      box-shadow: var(--shadow-glow-teal-subtle, 0 0 0 1px rgba(79, 209, 197, 0.15), 0 4px 12px rgba(0, 0, 0, 0.4));
+      transition: var(--transition-premium);
+    }
+    
+    .btn-glow:hover {
+      box-shadow: var(--shadow-glow-teal, 0 0 0 1px rgba(79, 209, 197, 0.25), 0 8px 24px rgba(0, 0, 0, 0.6));
+      transform: translateY(-1px);
+    }
+    
+    .btn-glow:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-glow-teal-subtle, 0 0 0 1px rgba(79, 209, 197, 0.15), 0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+    
+    /* Temperature Shift Demo */
+    .temperature-demo {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    
+    .temp-swatch {
+      flex: 1;
+      height: 60px;
+      border-radius: 8px;
+      border: 1px solid var(--color-stroke);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-lux);
+      transition: var(--transition-premium);
+    }
+    
+    .temp-idle {
+      background: var(--accent-idle, #4FD1C5);
+    }
+    
+    .temp-active {
+      background: var(--accent-active, #63E6D8);
+    }
+    
+    .temp-subtle {
+      background: var(--accent-subtle, rgba(79, 209, 197, 0.15));
+      border-color: rgba(79, 209, 197, 0.3);
+    }
+    
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+      margin-top: 40px;
+    }
+    
+    .comparison-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+    }
+    
+    .comparison-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+      opacity: 0.15;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+    
+    .comparison-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-lux);
+      margin: 0 0 20px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .comparison-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .comparison-item {
+      font-size: 14px;
+      color: var(--color-lux-dim);
+      margin: 0 0 12px 0;
+      padding-left: 24px;
+      position: relative;
+      line-height: 1.6;
+    }
+    
+    .comparison-item::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      margin-top: 40px;
+    }
+    
+    .stat-card {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: var(--transition-premium);
+      position: relative;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--noise-texture, none);
+      background-size: 200px 200px;
+      opacity: 0.15;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(79, 209, 197, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .stat-value {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin: 0 0 12px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: var(--color-clay);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-header">
+    <div class="theme-controls">
+      <div class="theme-info">
+        <h1 class="theme-title">
+          Carbon Mist
+          <span class="theme-badge">Platform Theme</span>
+        </h1>
+        <p class="theme-subtitle" id="current-theme-display">
+          Enterprise-grade mid-luminance theme. Not a trend theme - a platform theme designed to age well.
+        </p>
+      </div>
+      <div class="theme-buttons">
+        <button class="theme-btn" onclick="switchTheme('default')" id="btn-default">Default</button>
+        <button class="theme-btn" onclick="switchTheme('light')" id="btn-light">Light</button>
+        <button class="theme-btn" onclick="switchTheme('twilight')" id="btn-twilight">Twilight</button>
+        <button class="theme-btn" onclick="switchTheme('attractive')" id="btn-attractive">Attractive</button>
+        <button class="theme-btn active" onclick="switchTheme('carbon-mist')" id="btn-carbon-mist">Carbon Mist</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Carbon Mist</h1>
+      <p class="hero-description">
+        A platform theme that lives between light and dark. Stable, fascinating, enterprise-grade.
+        Designed to age well over 5+ years. Inspired by GitHub, Linear, Vercel, and Raycast.
+      </p>
+      <div class="hero-invariants">
+        <div class="invariant-card">
+          <div class="invariant-number">1</div>
+          <h3 class="invariant-title">Mid-Luminance</h3>
+          <p class="invariant-desc">Background L ≈ 18–28%. Not white, not black. OLED-safe.</p>
+        </div>
+        <div class="invariant-card">
+          <div class="invariant-number">2</div>
+          <h3 class="invariant-title">Low-Saturation Core</h3>
+          <p class="invariant-desc">Calm, professional, audit-friendly. No neon, no gimmicks.</p>
+        </div>
+        <div class="invariant-card">
+          <div class="invariant-number">3</div>
+          <h3 class="invariant-title">High-Precision Accents</h3>
+          <p class="invariant-desc">Color appears only when meaning exists. Aurora Teal for actions.</p>
+        </div>
+        <div class="invariant-card">
+          <div class="invariant-number">4</div>
+          <h3 class="invariant-title">OLED & WCAG-Safe</h3>
+          <p class="invariant-desc">No pure black (#121417), no pure white (#E6E8EB). WCAG AA compliant.</p>
+        </div>
+        <div class="invariant-card">
+          <div class="invariant-number">5</div>
+          <h3 class="invariant-title">Expensive at 1%</h3>
+          <p class="invariant-desc">Real system, not a skin. Works at any opacity level.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Palette Section -->
+    <section class="section">
+      <h2 class="section-title">Core Palette</h2>
+      <p class="section-description">
+        Mid-luminance base colors with high-precision accents. Every color has meaning and purpose.
+      </p>
+      <div class="color-palette" id="color-palette">
+        <!-- Colors will be injected by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Primary Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Primary Buttons (Aurora Teal)</h2>
+      <p class="section-description">
+        High-precision accent color. Cool when idle, warmer when active. Micro-glow on interaction.
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Standard Primary</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="na-btn na-btn-primary">Primary Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="na-btn na-btn-primary" onmouseover="this.style.opacity='0.95'" onmouseout="this.style.opacity='1'">Temperature Shift</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Disabled</span>
+              <button class="na-btn na-btn-primary" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">With Micro-Glow</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Interactive</span>
+              <button class="na-btn na-btn-primary btn-glow">Micro-Glow Effect</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Hover</span>
+              <button class="na-btn na-btn-primary btn-glow">Enhanced Glow</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Temperature Shift</h3>
+          <div class="button-demo">
+            <div class="temperature-demo">
+              <div class="temp-swatch temp-idle">Idle (Cool)</div>
+              <div class="temp-swatch temp-active">Active (Warm)</div>
+              <div class="temp-swatch temp-subtle">Subtle (15%)</div>
+            </div>
+            <p style="font-size: 12px; color: var(--color-clay); margin-top: 12px; text-align: center;">
+              Cool → Warm transition on interaction
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status Buttons Section -->
+    <section class="section">
+      <h2 class="section-title">Status Buttons (High-Precision)</h2>
+      <p class="section-description">
+        Color appears only when meaning exists. Muted Amber for warnings, Oxide Red for critical (not alarmist).
+      </p>
+      <div class="button-grid">
+        <div class="button-group">
+          <h3 class="button-group-title">Warning (Muted Amber)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-warning text-warning-foreground px-6 py-3 rounded-lg font-semibold">Warning</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-warning text-warning-foreground px-6 py-3 rounded-lg font-semibold">⚠️ Attention</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Critical (Oxide Red)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-error text-error-foreground px-6 py-3 rounded-lg font-semibold">Critical Action</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-error text-error-foreground px-6 py-3 rounded-lg font-semibold">🗑️ Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <h3 class="button-group-title">Success (Soft Green)</h3>
+          <div class="button-demo">
+            <div class="button-row">
+              <span class="button-label">Base</span>
+              <button class="bg-success text-success-foreground px-6 py-3 rounded-lg font-semibold">Confirm</button>
+            </div>
+            <div class="button-row">
+              <span class="button-label">Icon</span>
+              <button class="bg-success text-success-foreground px-6 py-3 rounded-lg font-semibold">✓ Success</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Special Section -->
+    <section class="section">
+      <h2 class="section-title">Why Carbon Mist is Special</h2>
+      <p class="section-description">
+        Platform-grade features that make this theme age well and work across all enterprise scenarios.
+      </p>
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h3 class="comparison-title">Ambient Depth</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Micro-glow on interaction</li>
+            <li class="comparison-item">Frosted noise texture (1-2%)</li>
+            <li class="comparison-item">Opacity-based borders</li>
+            <li class="comparison-item">Material feel, not flat</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h3 class="comparison-title">Temperature Shift</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Cool when idle (#4FD1C5)</li>
+            <li class="comparison-item">Warmer when active (#63E6D8)</li>
+            <li class="comparison-item">Subtle backgrounds (15% opacity)</li>
+            <li class="comparison-item">Living, breathing interface</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h3 class="comparison-title">Enterprise-Grade</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Audit-friendly colors</li>
+            <li class="comparison-item">Governance-compliant</li>
+            <li class="comparison-item">Professional appearance</li>
+            <li class="comparison-item">Serious but visionary</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h3 class="comparison-title">Longevity</h3>
+          <ul class="comparison-list">
+            <li class="comparison-item">Survives light/dark wars</li>
+            <li class="comparison-item">Works on OLED displays</li>
+            <li class="comparison-item">Cheap monitor friendly</li>
+            <li class="comparison-item">5+ year lifespan</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+      <h2 class="section-title">Theme Specifications</h2>
+      <p class="section-description">
+        Technical specifications and compliance metrics.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">18-28%</div>
+          <p class="stat-label">Luminance Range</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">4.8:1</div>
+          <p class="stat-label">Contrast Ratio</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">AA</div>
+          <p class="stat-label">WCAG Rating</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">5+</div>
+          <p class="stat-label">Year Lifespan</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">OLED</div>
+          <p class="stat-label">Optimized</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Platform</div>
+          <p class="stat-label">Theme Type</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    // Carbon Mist theme definition
+    const carbonMistTheme = {
+      void: '#121417',
+      paper: '#171A1F',
+      paper2: '#1D2127',
+      paperHover: '#252932',
+      white: '#ffffff',
+      lux: '#E6E8EB',
+      luxDim: '#B3B8C2',
+      clay: '#7C8491',
+      gold: '#4FD1C5',
+      primary: '#4FD1C5',
+      primaryForeground: '#121417',
+      accent: '#4FD1C5',
+      accentForeground: '#121417',
+      secondary: '#2D3748',
+      secondaryForeground: '#E6E8EB',
+      success: '#48BB78',
+      successForeground: '#121417',
+      warning: '#F2C94C',
+      warningForeground: '#121417',
+      error: '#E5533D',
+      errorForeground: '#E6E8EB',
+      info: '#4299E1',
+      infoForeground: '#E6E8EB',
+      stroke: 'rgba(124, 132, 145, 0.2)',
+      strokeStrong: 'rgba(124, 132, 145, 0.35)',
+      strokeSoft: 'rgba(124, 132, 145, 0.1)',
+      background: '#121417',
+      foreground: '#E6E8EB',
+      muted: '#1D2127',
+      mutedForeground: '#7C8491',
+      card: '#171A1F',
+      cardForeground: '#E6E8EB',
+      popover: '#171A1F',
+      popoverForeground: '#E6E8EB',
+      border: 'rgba(124, 132, 145, 0.2)',
+      input: '#1D2127',
+      destructive: '#E5533D',
+      destructiveForeground: '#E6E8EB',
+      ring: '#4FD1C5',
+    };
+
+    // Other themes (simplified for demo)
+    const themes = {
+      'default': {
+        void: '#09090b', paper: '#121214', lux: '#f4f4f5', primary: '#eab308',
+        stroke: '#27272a', background: '#09090b', foreground: '#f4f4f5',
+        card: '#121214', cardForeground: '#f4f4f5', border: '#27272a',
+        muted: '#18181b', mutedForeground: '#71717a', input: '#27272a',
+        destructive: '#f43f5e', destructiveForeground: '#f4f4f5', ring: '#eab308',
+        success: '#10b981', warning: '#f59e0b', error: '#f43f5e', info: '#3b82f6',
+        paper2: '#18181b', paperHover: '#27272a', white: '#ffffff',
+        luxDim: '#a1a1aa', clay: '#71717a', gold: '#eab308',
+        primaryForeground: '#09090b', accent: '#18181b', accentForeground: '#f4f4f5',
+        secondary: '#18181b', secondaryForeground: '#f4f4f5',
+        successForeground: '#f4f4f5', warningForeground: '#09090b', errorForeground: '#f4f4f5', infoForeground: '#f4f4f5',
+        strokeStrong: '#3f3f46', strokeSoft: '#1f1f22',
+      },
+      'light': {
+        void: '#ffffff', paper: '#f8f9fa', lux: '#212529', primary: '#d97706',
+        stroke: '#dee2e6', background: '#ffffff', foreground: '#212529',
+        card: '#f8f9fa', cardForeground: '#212529', border: '#dee2e6',
+        muted: '#e9ecef', mutedForeground: '#6c757d', input: '#dee2e6',
+        destructive: '#dc2626', destructiveForeground: '#ffffff', ring: '#d97706',
+        success: '#059669', warning: '#d97706', error: '#dc2626', info: '#0284c7',
+        paper2: '#e9ecef', paperHover: '#dee2e6', white: '#ffffff',
+        luxDim: '#495057', clay: '#6c757d', gold: '#d97706',
+        primaryForeground: '#ffffff', accent: '#e9ecef', accentForeground: '#212529',
+        secondary: '#e9ecef', secondaryForeground: '#212529',
+        successForeground: '#ffffff', warningForeground: '#212529', errorForeground: '#ffffff', infoForeground: '#ffffff',
+        strokeStrong: '#ced4da', strokeSoft: '#f1f3f5',
+      },
+      'twilight': {
+        void: '#1c1e26', paper: '#232530', lux: '#d8dee9', primary: '#5e81ac',
+        stroke: '#3b4252', background: '#1c1e26', foreground: '#d8dee9',
+        card: '#232530', cardForeground: '#d8dee9', border: '#3b4252',
+        muted: '#2e3440', mutedForeground: '#818896', input: '#3b4252',
+        destructive: '#bf616a', destructiveForeground: '#eceff4', ring: '#5e81ac',
+        success: '#a3be8c', warning: '#d08770', error: '#bf616a', info: '#88c0d0',
+        paper2: '#2e3440', paperHover: '#3b4252', white: '#ffffff',
+        luxDim: '#a5abb6', clay: '#818896', gold: '#5e81ac',
+        primaryForeground: '#eceff4', accent: '#b48ead', accentForeground: '#eceff4',
+        secondary: '#4c566a', secondaryForeground: '#eceff4',
+        successForeground: '#2e3440', warningForeground: '#2e3440', errorForeground: '#eceff4', infoForeground: '#2e3440',
+        strokeStrong: '#4c566a', strokeSoft: '#2e3440',
+      },
+      'attractive': {
+        void: '#0f172a', paper: '#1e293b', lux: '#f1f5f9', primary: '#3b82f6',
+        stroke: '#334155', background: '#0f172a', foreground: '#f1f5f9',
+        card: '#1e293b', cardForeground: '#f1f5f9', border: '#334155',
+        muted: '#334155', mutedForeground: '#94a3b8', input: '#334155',
+        destructive: '#ef4444', destructiveForeground: '#ffffff', ring: '#3b82f6',
+        success: '#10b981', warning: '#f59e0b', error: '#ef4444', info: '#06b6d4',
+        paper2: '#334155', paperHover: '#475569', white: '#ffffff',
+        luxDim: '#cbd5e1', clay: '#94a3b8', gold: '#3b82f6',
+        primaryForeground: '#ffffff', accent: '#f97316', accentForeground: '#ffffff',
+        secondary: '#475569', secondaryForeground: '#f1f5f9',
+        successForeground: '#f1f5f9', warningForeground: '#0f172a', errorForeground: '#ffffff', infoForeground: '#0f172a',
+        strokeStrong: '#475569', strokeSoft: '#1e293b',
+      },
+    };
+
+    const tokenMap = {
+      void: '--color-void', paper: '--color-paper', paper2: '--color-paper-2', paperHover: '--color-paper-hover',
+      white: '--color-white', lux: '--color-lux', luxDim: '--color-lux-dim', clay: '--color-clay',
+      gold: '--color-gold', stroke: '--color-stroke', strokeStrong: '--color-stroke-strong', strokeSoft: '--color-stroke-soft',
+      success: '--color-success', warning: '--color-warning', error: '--color-error', info: '--color-info',
+      background: '--color-background', foreground: '--color-foreground', muted: '--color-muted', mutedForeground: '--color-muted-foreground',
+      card: '--color-card', cardForeground: '--color-card-foreground', popover: '--color-popover', popoverForeground: '--color-popover-foreground',
+      border: '--color-border', input: '--color-input', primary: '--color-primary', primaryForeground: '--color-primary-foreground',
+      secondary: '--color-secondary', secondaryForeground: '--color-secondary-foreground',
+      accent: '--color-accent', accentForeground: '--color-accent-foreground',
+      destructive: '--color-destructive', destructiveForeground: '--color-destructive-foreground',
+      ring: '--color-ring',
+    };
+
+    const coreColors = [
+      { name: 'Aurora Teal', value: '#4FD1C5', token: 'primary', description: 'Primary accent - Cool, stable, alive. Temperature shifts on interaction.' },
+      { name: 'Muted Amber', value: '#F2C94C', token: 'warning', description: 'Warning - Warm but not aggressive. Not alarmist.' },
+      { name: 'Oxide Red', value: '#E5533D', token: 'error', description: 'Critical - Serious but not panic-inducing. Not error red.' },
+      { name: 'Soft Green', value: '#48BB78', token: 'success', description: 'Success - Natural, growth, reassuring.' },
+      { name: 'Neutral Charcoal', value: '#2D3748', token: 'secondary', description: 'Secondary - Stable, versatile, professional.' },
+    ];
+
+    function renderColorPalette() {
+      const palette = document.getElementById('color-palette');
+      palette.innerHTML = coreColors.map(color => `
+        <div class="color-card">
+          <div class="color-swatch" style="background: ${color.value};"></div>
+          <h3 class="color-name">${color.name}</h3>
+          <p class="color-value">${color.value}</p>
+          <p class="color-description">${color.description}</p>
+        </div>
+      `).join('');
+    }
+
+    function applyTheme(themeName) {
+      const root = document.documentElement;
+      const theme = themeName === 'carbon-mist' ? carbonMistTheme : themes[themeName] || carbonMistTheme;
+      
+      let description;
+      switch(themeName) {
+        case 'default': description = 'Default (Dark) - Traditional dark theme'; break;
+        case 'light': description = 'Light - Bright, high contrast'; break;
+        case 'twilight': description = 'Twilight - Balanced mid-tone'; break;
+        case 'attractive': description = 'Attractive - Premium 5-color theme'; break;
+        case 'carbon-mist': description = 'Carbon Mist - Enterprise platform theme. Not a trend theme - a platform theme.'; break;
+        default: description = 'Carbon Mist';
+      }
+
+      root.setAttribute('data-theme', themeName);
+      Object.entries(theme).forEach(([key, value]) => {
+        const cssVar = tokenMap[key];
+        if (cssVar) {
+          root.style.setProperty(cssVar, value);
+        }
+      });
+
+      // Apply CSS variables for Carbon Mist
+      if (themeName === 'carbon-mist') {
+        root.style.setProperty('--shadow-glow-teal', '0 0 0 1px rgba(79, 209, 197, 0.25), 0 8px 24px rgba(0, 0, 0, 0.6)');
+        root.style.setProperty('--shadow-glow-teal-subtle', '0 0 0 1px rgba(79, 209, 197, 0.15), 0 4px 12px rgba(0, 0, 0, 0.4)');
+        root.style.setProperty('--gradient-aurora', 'linear-gradient(135deg, rgba(79, 209, 197, 0.12), rgba(99, 102, 241, 0.08))');
+        root.style.setProperty('--accent-idle', '#4FD1C5');
+        root.style.setProperty('--accent-active', '#63E6D8');
+        root.style.setProperty('--accent-subtle', 'rgba(79, 209, 197, 0.15)');
+        root.style.setProperty('--noise-texture', 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.02\'/%3E%3C/svg%3E")');
+        root.style.setProperty('--transition-premium', 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)');
+      } else {
+        // Remove Carbon Mist specific variables
+        root.style.removeProperty('--shadow-glow-teal');
+        root.style.removeProperty('--shadow-glow-teal-subtle');
+        root.style.removeProperty('--gradient-aurora');
+        root.style.removeProperty('--accent-idle');
+        root.style.removeProperty('--accent-active');
+        root.style.removeProperty('--accent-subtle');
+        root.style.removeProperty('--noise-texture');
+        root.style.removeProperty('--transition-premium');
+      }
+
+      document.getElementById('current-theme-display').textContent = description;
+      
+      ['default', 'light', 'twilight', 'attractive', 'carbon-mist'].forEach(name => {
+        const btnId = `btn-${name}`;
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          btn.classList.toggle('active', name === themeName);
+        }
+      });
+    }
+
+    window.switchTheme = applyTheme;
+    renderColorPalette();
+    
+    const savedTheme = localStorage.getItem('theme') || 'carbon-mist';
+    applyTheme(savedTheme);
+
+    const originalSwitchTheme = window.switchTheme;
+    window.switchTheme = function(themeName) {
+      originalSwitchTheme(themeName);
+      localStorage.setItem('theme', themeName);
+    };
+  </script>
+</body>
+</html>
+

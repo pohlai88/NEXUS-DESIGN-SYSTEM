@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Analog Dashboard - Modern Design Refined</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body class="na-app">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+    <div class="na-bg-grain"></div>
+
+    <!-- Dashboard Shell -->
+    <div class="na-shell">
+        <!-- Sidebar -->
+        <aside class="na-sidebar" aria-label="Main navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div class="na-brand-title">Neo-Analog</div>
+            </div>
+
+            <nav class="na-nav" aria-label="Primary navigation">
+                <div class="na-nav-section" role="heading" aria-level="2">Main</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Reports</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Data</div>
+                <a href="#" class="na-nav-item">
+                    <span>Data Tables</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Lineage</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Metadata</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Settings</div>
+                <a href="#" class="na-nav-item">
+                    <span>Preferences</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Users</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="na-main" id="main-content">
+            <!-- Header -->
+            <header class="na-header">
+                <div class="na-search">
+                    <label for="search-input" class="sr-only">Search dashboard</label>
+                    <input type="search" id="search-input" class="na-search-input" placeholder="Search..."
+                        aria-label="Search dashboard">
+                    <span class="na-search-icon" aria-hidden="true">🔍</span>
+                </div>
+                <div class="na-header-actions">
+                    <button class="na-iconbtn" aria-label="Notifications" title="Notifications">
+                        <span aria-hidden="true">🔔</span>
+                        <span class="na-dot" aria-label="3 unread notifications"></span>
+                    </button>
+                    <button class="na-iconbtn" aria-label="Settings" title="Settings">
+                        <span aria-hidden="true">⚙️</span>
+                    </button>
+                    <button class="na-avatar" aria-label="User profile" title="User profile">
+                        <span class="sr-only">User profile</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="na-content">
+                <!-- Page Title -->
+                <div class="na-page-header">
+                    <h1 class="na-h1">Dashboard Overview</h1>
+                    <p class="na-metadata na-page-meta">Last updated 2 minutes ago • Live data</p>
+                </div>
+
+                <!-- KPI Cards Grid -->
+                <div class="na-grid na-grid-kpi">
+                    <!-- KPI Card 1 -->
+                    <a href="#" class="na-card na-card-interactive" aria-label="Total Revenue: $1,234,567, up 12.5%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">💰</div>
+                            <div class="na-kpi-content">
+                                <div class="na-kpi-label">Total Revenue</div>
+                                <div class="na-kpi-value na-data-large">$1,234,567</div>
+                                <div class="na-trend up">
+                                    <span aria-hidden="true">↗</span>
+                                    <span>+12.5%</span>
+                                    <span class="na-metadata-small">vs last month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- KPI Card 2 -->
+                    <a href="#" class="na-card na-card-interactive" aria-label="Active Users: 45,892, up 8.2%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📊</div>
+                            <div class="na-kpi-content">
+                                <div class="na-kpi-label">Active Users</div>
+                                <div class="na-kpi-value na-data-large">45,892</div>
+                                <div class="na-trend up">
+                                    <span aria-hidden="true">↗</span>
+                                    <span>+8.2%</span>
+                                    <span class="na-metadata-small">vs last week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- KPI Card 3 -->
+                    <a href="#" class="na-card na-card-interactive" aria-label="Growth Rate: 24.8%, down 2.1%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📈</div>
+                            <div class="na-kpi-content">
+                                <div class="na-kpi-label">Growth Rate</div>
+                                <div class="na-kpi-value na-data-large">24.8%</div>
+                                <div class="na-trend down">
+                                    <span aria-hidden="true">↘</span>
+                                    <span>-2.1%</span>
+                                    <span class="na-metadata-small">vs last quarter</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- KPI Card 4 -->
+                    <a href="#" class="na-card na-card-interactive" aria-label="Completion Rate: 94.2%, up 1.8%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">✅</div>
+                            <div class="na-kpi-content">
+                                <div class="na-kpi-label">Completion Rate</div>
+                                <div class="na-kpi-value na-data-large">94.2%</div>
+                                <div class="na-trend up">
+                                    <span aria-hidden="true">↗</span>
+                                    <span>+1.8%</span>
+                                    <span class="na-metadata-small">vs last period</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Charts and Data Grid -->
+                <div class="na-grid na-grid-chart">
+                    <!-- Main Chart Panel -->
+                    <div class="na-panel">
+                        <div class="na-panel-head">
+                            <div>
+                                <h3 class="na-h3">Revenue Trend</h3>
+                                <p class="na-metadata na-panel-meta">Last 12 months performance</p>
+                            </div>
+                            <div class="na-panel-actions">
+                                <button class="na-btn" aria-label="Export revenue data">Export</button>
+                                <button class="na-btn-primary" aria-label="View detailed revenue analysis">View
+                                    Details</button>
+                            </div>
+                        </div>
+
+                        <!-- Chart Placeholder -->
+                        <div class="na-chart" role="img" aria-label="Revenue trend chart showing 12 months of data">
+                            <div class="na-bars">
+                                <div class="na-bar" style="height: 45%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 68%;" aria-hidden="true"></div>
+                                <div class="na-bar" style="height: 52%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 75%;" aria-hidden="true"></div>
+                                <div class="na-bar" style="height: 38%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 82%;" aria-hidden="true"></div>
+                                <div class="na-bar" style="height: 55%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 70%;" aria-hidden="true"></div>
+                                <div class="na-bar" style="height: 48%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 65%;" aria-hidden="true"></div>
+                                <div class="na-bar" style="height: 58%;" aria-hidden="true"></div>
+                                <div class="na-bar gold" style="height: 78%;" aria-hidden="true"></div>
+                            </div>
+                        </div>
+
+                        <div class="na-chart-stats">
+                            <div class="na-stat-item">
+                                <div class="na-metadata">Total Revenue</div>
+                                <div class="na-data na-stat-value">$12,450,890</div>
+                            </div>
+                            <div class="na-stat-item">
+                                <div class="na-metadata">Average Monthly</div>
+                                <div class="na-data na-stat-value">$1,037,574</div>
+                            </div>
+                            <div class="na-stat-item">
+                                <div class="na-metadata">Peak Month</div>
+                                <div class="na-data na-stat-value">December 2024</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Panel -->
+                    <div class="na-panel">
+                        <div class="na-panel-head">
+                            <div>
+                                <h3 class="na-h3">Recent Activity</h3>
+                                <p class="na-metadata na-panel-meta">Latest updates</p>
+                            </div>
+                        </div>
+
+                        <div class="na-activity-list">
+                            <a href="#" class="na-activity-item"
+                                aria-label="New user registration: John Doe joined, 2 minutes ago">
+                                <div class="na-metadata">New user registration</div>
+                                <div class="na-data na-activity-data">John Doe joined</div>
+                                <div class="na-metadata-small na-activity-time">2 minutes ago</div>
+                            </a>
+
+                            <a href="#" class="na-activity-item"
+                                aria-label="Payment processed: $2,450.00 received, 15 minutes ago">
+                                <div class="na-metadata">Payment processed</div>
+                                <div class="na-data na-activity-data">$2,450.00 received</div>
+                                <div class="na-metadata-small na-activity-time">15 minutes ago</div>
+                            </a>
+
+                            <a href="#" class="na-activity-item"
+                                aria-label="Report generated: Q4 2024 Summary, 1 hour ago">
+                                <div class="na-metadata">Report generated</div>
+                                <div class="na-data na-activity-data">Q4 2024 Summary</div>
+                                <div class="na-metadata-small na-activity-time">1 hour ago</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Grid -->
+                <div class="na-grid na-grid-actions">
+                    <div class="na-card">
+                        <h4 class="na-h4">Quick Actions</h4>
+                        <div class="na-actions-list">
+                            <button class="na-btn-primary na-btn-full">Create Report</button>
+                            <button class="na-btn na-btn-full">Export Data</button>
+                            <button class="na-btn na-btn-full">Schedule Task</button>
+                        </div>
+                    </div>
+
+                    <div class="na-card">
+                        <h4 class="na-h4">System Status</h4>
+                        <div class="na-status-list">
+                            <div class="na-status-row">
+                                <span class="na-metadata">API Health</span>
+                                <span class="na-status ok" aria-label="API Health: Operational">Operational</span>
+                            </div>
+                            <div class="na-status-row">
+                                <span class="na-metadata">Database</span>
+                                <span class="na-status ok" aria-label="Database: Healthy">Healthy</span>
+                            </div>
+                            <div class="na-status-row">
+                                <span class="na-metadata">Cache</span>
+                                <span class="na-status pending" aria-label="Cache: Syncing">Syncing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="na-card">
+                        <h4 class="na-h4">Performance</h4>
+                        <div class="na-performance">
+                            <div class="na-metadata">Response Time</div>
+                            <div class="na-data-large na-performance-value">142ms</div>
+                            <div class="na-metadata-small na-performance-meta">Average over 24h</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

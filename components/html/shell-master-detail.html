@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master-Detail Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Master-Detail Layout (Split View) */
+        .master-detail-shell {
+            display: grid;
+            grid-template-columns: 320px 1px 1fr;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        /* Responsive: Stack on mobile */
+        @media (width <=768px) {
+            .master-detail-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .master-detail-shell .master-pane {
+                display: none;
+            }
+
+            .master-detail-shell .divider {
+                display: none;
+            }
+        }
+
+        .master-pane {
+            overflow-y: auto;
+            background: var(--color-paper);
+            border-right: 1px solid var(--color-stroke);
+        }
+
+        .divider {
+            background: var(--color-stroke);
+            cursor: col-resize;
+        }
+
+        .detail-pane {
+            overflow-y: auto;
+            background: var(--color-void);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Master-Detail Shell: Split View -->
+    <div class="master-detail-shell">
+        <!-- Master List (Left) -->
+        <aside class="master-pane" aria-label="Master list">
+            <div class="p-4 border-b border-stroke">
+                <h2 class="na-h4 m-0">Items</h2>
+            </div>
+            <nav aria-label="Item list">
+                <a href="#item-1" class="na-nav-item is-active" aria-current="page">
+                    <span>Item 1</span>
+                </a>
+                <a href="#item-2" class="na-nav-item">
+                    <span>Item 2</span>
+                </a>
+                <a href="#item-3" class="na-nav-item">
+                    <span>Item 3</span>
+                </a>
+                <a href="#item-4" class="na-nav-item">
+                    <span>Item 4</span>
+                </a>
+                <a href="#item-5" class="na-nav-item">
+                    <span>Item 5</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Divider (Resizable) -->
+        <div class="divider" aria-hidden="true"></div>
+
+        <!-- Detail View (Right) -->
+        <main id="main-content" class="detail-pane" role="main">
+            <div class="p-8">
+                <h1 class="na-h1 mb-6">Item Detail</h1>
+                <p class="na-body mb-6 text-lux-dim">
+                    This layout is perfect for email clients, chat applications,
+                    and list-detail interfaces where you need to show both a list
+                    and its selected item simultaneously.
+                </p>
+
+                <!-- Example Detail Content -->
+                <div class="na-card">
+                    <h3 class="na-h4 mb-4">Details</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="na-label mb-1">Field 1</div>
+                            <div class="na-body">Value 1</div>
+                        </div>
+                        <div>
+                            <div class="na-label mb-1">Field 2</div>
+                            <div class="na-body">Value 2</div>
+                        </div>
+                        <div>
+                            <div class="na-label mb-1">Field 3</div>
+                            <div class="na-body">Value 3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Standard Sidebar Shell Layout -->
+    <div class="na-shell">
+        <!-- Sidebar Navigation -->
+        <aside class="na-sidebar" aria-label="Main navigation">
+            <!-- Brand -->
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <div class="na-h4 m-0">Neo-Analog</div>
+                    <div class="na-metadata-small">ERP System</div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav aria-label="Primary navigation">
+                <div class="na-nav-section" role="heading" aria-level="2">Core Operations</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Invoices</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Orders</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Customers</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Financial</div>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Payable</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Receivable</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>General Ledger</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Settings</div>
+                <a href="#" class="na-nav-item">
+                    <span>User Management</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>System Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex flex-col flex-1 min-w-0">
+            <!-- Header -->
+            <header class="na-header">
+                <div class="na-search" role="search">
+                    <label for="global-search" class="sr-only">Search ERP data</label>
+                    <input type="search" id="global-search" class="na-search-input"
+                        placeholder="Search orders, invoices, customers..." aria-label="Search ERP data">
+                    <span class="na-search-icon" aria-hidden="true">⌕</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="na-iconbtn" aria-label="Notifications">
+                        <span aria-hidden="true">🔔</span>
+                    </button>
+                    <div class="na-avatar" aria-label="User profile"></div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main id="main-content" class="na-shell-main" role="main">
+                <div class="p-8">
+                    <!-- Your page content goes here -->
+                    <h1 class="na-h1 mb-6">Dashboard</h1>
+                    <p class="na-body text-lux-dim">This is the main content area. Replace this with your page content.
+                    </p>
+                </div>
+            </main>
+
+            <!-- Optional Footer -->
+            <footer class="na-shell-foot">
+                <div class="px-8 py-4 flex items-center justify-between">
+                    <div class="na-metadata-small">© 2025 Neo-Analog Design System</div>
+                    <div class="na-metadata-small">Build 2025.01.27</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+
+</html>

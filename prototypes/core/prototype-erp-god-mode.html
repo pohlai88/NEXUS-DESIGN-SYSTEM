@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Analog ERP — GOD MODE Dashboard (CRUD • Kanban • Gantt • Real-Time)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =========================================================
+           GOD MODE ERP DASHBOARD
+           Combining: Real-Time + Frozen Panes + Terminal Density + CRUD + Kanban + Gantt
+           ========================================================= */
+
+        /* --- Enhanced Background Texture --- */
+        .na-bg-grain {
+            background:
+                radial-gradient(1400px 1000px at 12% 15%, rgba(255, 255, 255, var(--opacity-8)), transparent 55%),
+                radial-gradient(1300px 900px at 88% 18%, rgba(255, 255, 255, var(--opacity-5)), transparent 60%),
+                radial-gradient(1200px 850px at 50% 120%, rgba(0, 0, 0, 0.52), transparent 55%),
+                linear-gradient(180deg,
+                    color-mix(in oklab, var(--color-void) 94%, var(--color-clay) 6%),
+                    var(--color-void) 65%,
+                    color-mix(in oklab, var(--color-void) 88%, black 12%));
+        }
+
+        .na-bg-grain::after {
+            background-image:
+                repeating-linear-gradient(38deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 0.5px, transparent 0.5px, transparent 8px),
+                repeating-linear-gradient(128deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 0.5px, transparent 0.5px, transparent 12px),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: auto, auto, 200px 200px;
+            background-repeat: repeat, repeat, repeat;
+            opacity: 0.12;
+            filter: contrast(120%) brightness(92%);
+            mix-blend-mode: soft-light;
+        }
+
+        /* --- Real-Time Ticker (God Mode Header) --- */
+        .na-ticker {
+            display: flex;
+            gap: 24px;
+            color: var(--color-clay);
+            font-size: 11px;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+        }
+
+        .na-ticker-item {
+            display: flex;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .val-up { color: var(--color-success); }
+        .val-down { color: var(--color-error); }
+
+        /* --- Frozen Pane Grid (Super Grid) --- */
+        .na-super-grid-container {
+            overflow: auto;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            background: var(--color-paper);
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-stroke-strong) var(--color-paper);
+        }
+
+        .na-super-grid {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: max-content;
+            min-width: 100%;
+        }
+
+        .na-super-grid th, .na-super-grid td {
+            padding: 0 16px;
+            height: 40px;
+            border-bottom: 1px solid var(--color-stroke-soft);
+            border-right: 1px solid var(--color-stroke-soft);
+            font-size: 13px;
+            white-space: nowrap;
+            background: var(--color-paper);
+        }
+
+        .na-super-grid thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--color-paper-2);
+            border-bottom: 1px solid var(--color-stroke);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-clay);
+            font-weight: 600;
+        }
+
+        .na-super-grid td:first-child,
+        .na-super-grid th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: var(--color-paper);
+            border-right: 2px solid var(--color-stroke);
+            width: 180px;
+            max-width: 180px;
+        }
+
+        .na-super-grid thead th:first-child {
+            z-index: 20;
+            background: var(--color-paper-2);
+        }
+
+        .na-super-grid tr:hover td {
+            background-color: var(--color-paper-hover);
+        }
+
+        /* --- Inline Editing (CRUD) --- */
+        .na-td[contenteditable="true"] {
+            outline: 2px solid var(--color-gold);
+            outline-offset: -2px;
+            background: var(--color-paper-2);
+            border-radius: 2px;
+            cursor: text;
+        }
+
+        .na-td[contenteditable="true"]:focus {
+            background: var(--color-void);
+            color: var(--color-lux);
+        }
+
+        /* --- Kanban Board --- */
+        .na-kanban {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .na-kanban-column {
+            background: var(--color-paper);
+            border: 1px solid var(--color-stroke);
+            border-radius: 4px;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 300px);
+        }
+
+        .na-kanban-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-stroke);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--color-paper-2);
+        }
+
+        .na-kanban-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .na-kanban-card {
+            background: var(--color-paper-2);
+            border: 1px solid var(--color-stroke);
+            border-radius: 4px;
+            padding: 12px;
+            cursor: move;
+            transition: all 0.2s var(--ease-premium);
+        }
+
+        .na-kanban-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .na-kanban-card.dragging {
+            opacity: 0.5;
+        }
+
+        /* --- Gantt Chart --- */
+        .na-gantt {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            border: 1px solid var(--color-stroke);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .na-gantt-sidebar {
+            background: var(--color-paper-2);
+            border-right: 1px solid var(--color-stroke);
+        }
+
+        .na-gantt-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            border-bottom: 1px solid var(--color-stroke);
+            min-height: 40px;
+        }
+
+        .na-gantt-label {
+            padding: 8px 12px;
+            border-right: 1px solid var(--color-stroke);
+            background: var(--color-paper-2);
+            display: flex;
+            align-items: center;
+        }
+
+        .na-gantt-timeline {
+            position: relative;
+            background: var(--color-paper);
+            padding: 8px 0;
+        }
+
+        .na-gantt-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 1px;
+            background: var(--color-stroke);
+            height: 100%;
+            position: relative;
+        }
+
+        .na-gantt-bar {
+            position: absolute;
+            height: 24px;
+            background: var(--color-gold);
+            border-radius: 2px;
+            opacity: 0.8;
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            color: var(--color-void);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-premium);
+        }
+
+        .na-gantt-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+            z-index: 5;
+        }
+
+        .na-gantt-bar.blue { background: #3b82f6; }
+        .na-gantt-bar.green { background: var(--color-success); }
+        .na-gantt-bar.red { background: var(--color-error); }
+
+        /* --- Real-Time Data Flash --- */
+        .na-data-updating {
+            animation: dataFlash 0.6s ease-in-out;
+        }
+
+        @keyframes dataFlash {
+            0%, 100% { background: transparent; }
+            50% { background: color-mix(in oklab, var(--color-paper) 85%, var(--color-gold) 15%); }
+        }
+
+        /* --- Command Palette --- */
+        .na-command-palette {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 700px;
+            max-width: 90vw;
+            background: var(--color-paper);
+            border: 1px solid var(--color-stroke-strong);
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s var(--ease-premium);
+            z-index: 1000;
+        }
+
+        .na-command-palette:target {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .na-command-palette-input {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--color-stroke);
+            color: var(--color-lux);
+            font-size: 16px;
+            font-family: var(--font-mono);
+        }
+
+        .na-command-palette-input:focus {
+            outline: none;
+        }
+
+        .na-command-palette-results {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .na-command-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s var(--ease-premium);
+        }
+
+        .na-command-item:hover {
+            background: var(--color-paper-2);
+        }
+
+        /* --- View Tabs (Grid/Kanban/Gantt) --- */
+        .na-view-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-stroke);
+            margin-bottom: 16px;
+            gap: 4px;
+        }
+
+        .na-view-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--color-lux-dim);
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s var(--ease-premium);
+            position: relative;
+        }
+
+        .na-view-tab:hover {
+            color: var(--color-lux);
+            background: var(--color-paper-2);
+        }
+
+        .na-view-tab.is-active {
+            color: var(--color-lux);
+            border-bottom-color: var(--color-gold);
+        }
+
+        .na-view-content {
+            display: none;
+        }
+
+        .na-view-content.is-active {
+            display: block;
+        }
+
+        /* --- Status Pulse (Real-Time Indicator) --- */
+        .na-status-pulse {
+            position: relative;
+        }
+
+        .na-status-pulse::before {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.3); opacity: 0; }
+        }
+
+        /* --- Search Focus Mode --- */
+        body:has(.na-search-input:focus) .na-content:not(:has(.na-search-input)),
+        body:has(.na-search-input:focus) .na-sidebar {
+            filter: blur(3px) brightness(0.35);
+            pointer-events: none;
+        }
+
+        .na-search:focus-within {
+            transform: scale(1.03);
+            z-index: 50;
+        }
+
+        .na-search-input:focus {
+            background: var(--color-void);
+            border-color: var(--color-gold);
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.2), 0 16px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- CRUD Action Buttons --- */
+        .na-crud-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .na-btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-control);
+        }
+
+        /* --- Reduced Motion Support --- */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="na-app na-density-comfort">
+    <a href="#main" class="na-skip-link">Skip to main content</a>
+    <div class="na-bg-grain" aria-hidden="true"></div>
+
+    <!-- Command Palette -->
+    <div id="command-palette" class="na-command-palette" role="dialog" aria-label="Command palette">
+        <a href="#" class="na-modal__backdrop" aria-label="Close"></a>
+        <input type="text" class="na-command-palette-input" placeholder="Type a command or search..." autofocus>
+        <div class="na-command-palette-results">
+            <div class="na-command-item">
+                <span>➕</span>
+                <div>
+                    <div class="na-data">Create New Record</div>
+                    <div class="na-metadata-small">Create invoice, order, or transaction</div>
+                </div>
+            </div>
+            <div class="na-command-item">
+                <span>📊</span>
+                <div>
+                    <div class="na-data">Switch to Grid View</div>
+                    <div class="na-metadata-small">View data in table format</div>
+                </div>
+            </div>
+            <div class="na-command-item">
+                <span>📋</span>
+                <div>
+                    <div class="na-data">Switch to Kanban View</div>
+                    <div class="na-metadata-small">View workflow in board format</div>
+                </div>
+            </div>
+            <div class="na-command-item">
+                <span>📈</span>
+                <div>
+                    <div class="na-data">Switch to Gantt View</div>
+                    <div class="na-metadata-small">View timeline and schedules</div>
+                </div>
+            </div>
+            <div class="na-command-item">
+                <span>💾</span>
+                <div>
+                    <div class="na-data">Save All Changes</div>
+                    <div class="na-metadata-small">Commit all pending edits</div>
+                </div>
+            </div>
+            <div class="na-command-item">
+                <span>🔄</span>
+                <div>
+                    <div class="na-data">Refresh Data</div>
+                    <div class="na-metadata-small">Reload from server</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="na-shell">
+        <!-- Sidebar -->
+        <aside class="na-sidebar" aria-label="Main navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <div class="na-brand-title">Neo-Analog ERP</div>
+                    <div class="na-metadata-small">GOD MODE • v6.0</div>
+                </div>
+            </div>
+
+            <nav class="na-nav" aria-label="Primary navigation">
+                <div class="na-nav-section" role="heading" aria-level="2">Core Operations</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                    <span class="na-nav-meta">Live</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Orders</span>
+                    <span class="na-nav-meta">1,247</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Invoices</span>
+                    <span class="na-status warn na-badge-small">36</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Inventory</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Financial</div>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Payable</span>
+                    <span class="na-status bad na-badge-small">8</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Receivable</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>General Ledger</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Projects</div>
+                <a href="#" class="na-nav-item">
+                    <span>Projects</span>
+                    <span class="na-nav-meta">24</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Tasks</span>
+                    <span class="na-status pending na-badge-small">142</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Resources</span>
+                </a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact">
+                    <div class="na-label">System Status</div>
+                    <div class="na-status-indicator">
+                        <div class="na-status-dot na-status-dot-success na-status-pulse" aria-hidden="true"></div>
+                        <span class="na-mono na-status-text-success">Real-Time Active</span>
+                    </div>
+                </div>
+                <div class="na-divider na-my-3"></div>
+                <div class="na-muted na-text-sm" style="line-height:1.35;">
+                    Press <kbd style="padding:2px 6px;background:var(--color-paper-2);border:1px solid var(--color-stroke);border-radius:2px;font-size:10px;">⌘K</kbd> for commands
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="na-main" id="main">
+            <!-- Header with Real-Time Ticker -->
+            <header class="na-header">
+                <div class="na-search" role="search">
+                    <label for="search-input" class="sr-only">Search ERP data</label>
+                    <input type="search" id="search-input" class="na-search-input"
+                        placeholder="Search orders, invoices, customers... (⌘K for commands)"
+                        aria-label="Search ERP data">
+                    <span class="na-search-icon" aria-hidden="true">⌕</span>
+                </div>
+                <div class="na-header-actions">
+                    <div class="na-ticker">
+                        <div class="na-ticker-item">
+                            <span>Orders</span>
+                            <span class="val-up">+12</span>
+                        </div>
+                        <div class="na-ticker-item">
+                            <span>Revenue</span>
+                            <span class="val-up">RM 2.4M</span>
+                        </div>
+                        <div class="na-ticker-item">
+                            <span>Pending</span>
+                            <span class="val-down">36</span>
+                        </div>
+                        <div class="na-ticker-item">
+                            <span>Sync</span>
+                            <span style="color:var(--color-lux);">24ms</span>
+                        </div>
+                    </div>
+                    <button class="na-btn" aria-label="Filter data">Filter</button>
+                    <button class="na-btn" aria-label="Export data">Export</button>
+                    <a href="#command-palette" class="na-btn-primary" aria-label="Open command palette">⌘K</a>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="na-content">
+                <!-- Page Header -->
+                <div class="na-page-header">
+                    <div>
+                        <div class="na-metadata">ERP Dashboard • GOD MODE • Real-Time CRUD Enabled</div>
+                        <h1 class="na-h1">Order Management & Workflow</h1>
+                        <p class="na-metadata na-page-meta">Complete CRUD operations • Kanban workflow • Gantt scheduling • Real-time updates</p>
+                    </div>
+                    <div class="na-page-actions">
+                        <button class="na-btn" aria-label="Refresh data" onclick="refreshData()">Refresh</button>
+                        <button class="na-btn-primary" aria-label="Create new order" onclick="createNew()">+ New Order</button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="na-grid na-grid-kpi">
+                    <a href="#" class="na-card na-card-interactive" aria-label="Open Orders: 1,247 active">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">📦</div>
+                            <div>
+                                <div class="na-kpi-label">Open Orders</div>
+                                <div class="na-kpi-value na-tabular">1,247</div>
+                                <div class="na-metadata-small na-kpi-meta">+12 today • 36 pending approval</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="na-card na-card-interactive" aria-label="Revenue: RM 2.48M">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">💰</div>
+                            <div>
+                                <div class="na-kpi-label">Revenue (MTD)</div>
+                                <div class="na-kpi-value na-tabular">RM 2.48M</div>
+                                <div class="na-metadata-small na-kpi-meta">+12.4% vs last month</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="na-card na-card-interactive" aria-label="Pending Approvals: 36 items">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">⚠</div>
+                            <div>
+                                <div class="na-kpi-label">Pending Approvals</div>
+                                <div class="na-kpi-value na-tabular">36</div>
+                                <div class="na-metadata-small na-kpi-meta">3-way mismatch + missing docs</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="na-card na-card-interactive" aria-label="On-Time Delivery: 94.2%">
+                        <div class="na-kpi">
+                            <div class="na-kpi-icon" aria-hidden="true">✓</div>
+                            <div>
+                                <div class="na-kpi-label">On-Time Delivery</div>
+                                <div class="na-kpi-value na-tabular">94.2%</div>
+                                <div class="na-metadata-small na-kpi-meta">Last 30 days average</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- View Tabs (Grid/Kanban/Gantt) -->
+                <div class="na-card na-mt-6">
+                    <div class="na-view-tabs">
+                        <button class="na-view-tab is-active" data-view="grid" onclick="switchView('grid')">
+                            📊 Grid View
+                        </button>
+                        <button class="na-view-tab" data-view="kanban" onclick="switchView('kanban')">
+                            📋 Kanban Board
+                        </button>
+                        <button class="na-view-tab" data-view="gantt" onclick="switchView('gantt')">
+                            📈 Gantt Chart
+                        </button>
+                    </div>
+
+                    <!-- Grid View (Frozen Pane Table with CRUD) -->
+                    <div class="na-view-content is-active" id="view-grid">
+                        <div class="na-panel-head">
+                            <div>
+                                <h2 class="na-h3 na-panel-title">Orders Table (Frozen Panes + Inline CRUD)</h2>
+                                <div class="na-metadata na-panel-meta">Click cells to edit • Sticky header & first column • Real-time updates</div>
+                            </div>
+                            <div class="na-panel-actions">
+                                <button class="na-btn" aria-label="Save all changes" onclick="saveAll()">💾 Save All</button>
+                                <button class="na-btn" aria-label="Add new row" onclick="addRow()">➕ Add Row</button>
+                            </div>
+                        </div>
+
+                        <div class="na-divider na-my-3_5"></div>
+
+                        <div class="na-super-grid-container" style="max-height: 600px;">
+                            <table class="na-super-grid" role="table" aria-label="Orders table with CRUD">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                        <th>Priority</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-tbody">
+                                    <tr>
+                                        <td class="na-mono" style="color:var(--color-lux);">ORD-2025-001</td>
+                                        <td contenteditable="true">Acme Corp</td>
+                                        <td contenteditable="true">Widget A</td>
+                                        <td contenteditable="true" style="text-align:right;">100</td>
+                                        <td contenteditable="true" style="text-align:right;">RM 45.00</td>
+                                        <td class="na-tabular" style="text-align:right;">RM 4,500.00</td>
+                                        <td><span class="na-status ok">Confirmed</span></td>
+                                        <td contenteditable="true">2026-02-15</td>
+                                        <td><span class="na-status warn">High</span></td>
+                                        <td style="text-align:right;">
+                                            <div class="na-crud-actions">
+                                                <button class="na-btn-icon" aria-label="Edit">✏️</button>
+                                                <button class="na-btn-icon" aria-label="Delete" onclick="deleteRow(this)">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="na-mono" style="color:var(--color-lux);">ORD-2025-002</td>
+                                        <td contenteditable="true">Tech Solutions</td>
+                                        <td contenteditable="true">Widget B</td>
+                                        <td contenteditable="true" style="text-align:right;">250</td>
+                                        <td contenteditable="true" style="text-align:right;">RM 32.50</td>
+                                        <td class="na-tabular" style="text-align:right;">RM 8,125.00</td>
+                                        <td><span class="na-status pending">Pending</span></td>
+                                        <td contenteditable="true">2026-02-20</td>
+                                        <td><span class="na-status ok">Medium</span></td>
+                                        <td style="text-align:right;">
+                                            <div class="na-crud-actions">
+                                                <button class="na-btn-icon" aria-label="Edit">✏️</button>
+                                                <button class="na-btn-icon" aria-label="Delete" onclick="deleteRow(this)">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="na-mono" style="color:var(--color-lux);">ORD-2025-003</td>
+                                        <td contenteditable="true">Global Industries</td>
+                                        <td contenteditable="true">Widget C</td>
+                                        <td contenteditable="true" style="text-align:right;">500</td>
+                                        <td contenteditable="true" style="text-align:right;">RM 28.00</td>
+                                        <td class="na-tabular" style="text-align:right;">RM 14,000.00</td>
+                                        <td><span class="na-status ok">Shipped</span></td>
+                                        <td contenteditable="true">2026-02-10</td>
+                                        <td><span class="na-status bad">Urgent</span></td>
+                                        <td style="text-align:right;">
+                                            <div class="na-crud-actions">
+                                                <button class="na-btn-icon" aria-label="Edit">✏️</button>
+                                                <button class="na-btn-icon" aria-label="Delete" onclick="deleteRow(this)">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Kanban View -->
+                    <div class="na-view-content" id="view-kanban">
+                        <div class="na-panel-head">
+                            <div>
+                                <h2 class="na-h3 na-panel-title">Order Workflow (Kanban Board)</h2>
+                                <div class="na-metadata na-panel-meta">Drag cards between columns • Real-time updates</div>
+                            </div>
+                        </div>
+
+                        <div class="na-divider na-my-3_5"></div>
+
+                        <div class="na-kanban">
+                            <div class="na-kanban-column">
+                                <div class="na-kanban-header">
+                                    <div>
+                                        <div class="na-data">New Orders</div>
+                                        <div class="na-metadata-small">12 items</div>
+                                    </div>
+                                    <button class="na-btn-icon" aria-label="Add card">➕</button>
+                                </div>
+                                <div class="na-kanban-body">
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-001</div>
+                                        <div class="na-metadata-small">Acme Corp • RM 4,500</div>
+                                        <div class="na-status ok" style="margin-top:8px;">High Priority</div>
+                                    </div>
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-004</div>
+                                        <div class="na-metadata-small">Tech Solutions • RM 12,300</div>
+                                        <div class="na-status pending" style="margin-top:8px;">Medium Priority</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="na-kanban-column">
+                                <div class="na-kanban-header">
+                                    <div>
+                                        <div class="na-data">In Progress</div>
+                                        <div class="na-metadata-small">8 items</div>
+                                    </div>
+                                    <button class="na-btn-icon" aria-label="Add card">➕</button>
+                                </div>
+                                <div class="na-kanban-body">
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-002</div>
+                                        <div class="na-metadata-small">Global Industries • RM 8,125</div>
+                                        <div class="na-status warn" style="margin-top:8px;">Pending Approval</div>
+                                    </div>
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-005</div>
+                                        <div class="na-metadata-small">Acme Corp • RM 6,200</div>
+                                        <div class="na-status ok" style="margin-top:8px;">Processing</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="na-kanban-column">
+                                <div class="na-kanban-header">
+                                    <div>
+                                        <div class="na-data">Ready to Ship</div>
+                                        <div class="na-metadata-small">5 items</div>
+                                    </div>
+                                    <button class="na-btn-icon" aria-label="Add card">➕</button>
+                                </div>
+                                <div class="na-kanban-body">
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-003</div>
+                                        <div class="na-metadata-small">Tech Solutions • RM 14,000</div>
+                                        <div class="na-status ok" style="margin-top:8px;">Urgent</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="na-kanban-column">
+                                <div class="na-kanban-header">
+                                    <div>
+                                        <div class="na-data">Shipped</div>
+                                        <div class="na-metadata-small">24 items</div>
+                                    </div>
+                                    <button class="na-btn-icon" aria-label="Add card">➕</button>
+                                </div>
+                                <div class="na-kanban-body">
+                                    <div class="na-kanban-card" draggable="true">
+                                        <div class="na-data">ORD-2025-006</div>
+                                        <div class="na-metadata-small">Global Industries • RM 9,800</div>
+                                        <div class="na-status ok" style="margin-top:8px;">Delivered</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gantt View -->
+                    <div class="na-view-content" id="view-gantt">
+                        <div class="na-panel-head">
+                            <div>
+                                <h2 class="na-h3 na-panel-title">Order Timeline (Gantt Chart)</h2>
+                                <div class="na-metadata na-panel-meta">Visual schedule • Drag to reschedule</div>
+                            </div>
+                        </div>
+
+                        <div class="na-divider na-my-3_5"></div>
+
+                        <div class="na-gantt">
+                            <div class="na-gantt-sidebar">
+                                <div class="na-gantt-label" style="font-weight:600; background:var(--color-paper-2);">Order</div>
+                            </div>
+                            <div class="na-gantt-timeline" style="background:var(--color-paper-2);">
+                                <div style="display:grid; grid-template-columns: repeat(24, 1fr); padding:8px 0; font-size:10px; color:var(--color-clay);">
+                                    <div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div>
+                                    <div>W7</div><div>W8</div><div>W9</div><div>W10</div><div>W11</div><div>W12</div>
+                                    <div>W13</div><div>W14</div><div>W15</div><div>W16</div><div>W17</div><div>W18</div>
+                                    <div>W19</div><div>W20</div><div>W21</div><div>W22</div><div>W23</div><div>W24</div>
+                                </div>
+                            </div>
+
+                            <div class="na-gantt-row">
+                                <div class="na-gantt-label">
+                                    <div class="na-data">ORD-2025-001</div>
+                                    <div class="na-metadata-small">Acme Corp</div>
+                                </div>
+                                <div class="na-gantt-timeline">
+                                    <div class="na-gantt-bar" style="left: 4.16%; width: 8.33%;">Processing</div>
+                                </div>
+                            </div>
+
+                            <div class="na-gantt-row">
+                                <div class="na-gantt-label">
+                                    <div class="na-data">ORD-2025-002</div>
+                                    <div class="na-metadata-small">Tech Solutions</div>
+                                </div>
+                                <div class="na-gantt-timeline">
+                                    <div class="na-gantt-bar blue" style="left: 12.5%; width: 12.5%;">In Progress</div>
+                                </div>
+                            </div>
+
+                            <div class="na-gantt-row">
+                                <div class="na-gantt-label">
+                                    <div class="na-data">ORD-2025-003</div>
+                                    <div class="na-metadata-small">Global Industries</div>
+                                </div>
+                                <div class="na-gantt-timeline">
+                                    <div class="na-gantt-bar green" style="left: 20.83%; width: 16.66%;">Shipped</div>
+                                </div>
+                            </div>
+
+                            <div class="na-gantt-row">
+                                <div class="na-gantt-label">
+                                    <div class="na-data">ORD-2025-004</div>
+                                    <div class="na-metadata-small">Acme Corp</div>
+                                </div>
+                                <div class="na-gantt-timeline">
+                                    <div class="na-gantt-bar" style="left: 29.16%; width: 10.41%;">Pending</div>
+                                </div>
+                            </div>
+
+                            <div class="na-gantt-row">
+                                <div class="na-gantt-label">
+                                    <div class="na-data">ORD-2025-005</div>
+                                    <div class="na-metadata-small">Tech Solutions</div>
+                                </div>
+                                <div class="na-gantt-timeline">
+                                    <div class="na-gantt-bar red" style="left: 37.5%; width: 8.33%;">Urgent</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-Time Activity Feed -->
+                <div class="na-card na-mt-6">
+                    <div class="na-panel-head">
+                        <div>
+                            <h2 class="na-h3 na-panel-title">Real-Time Activity Stream</h2>
+                            <div class="na-metadata na-panel-meta">Live updates • System events • User actions</div>
+                        </div>
+                    </div>
+
+                    <div class="na-divider na-my-3_5"></div>
+
+                    <div class="na-activity-list">
+                        <a href="#" class="na-activity-item na-data-updating" aria-label="Order created">
+                            <div class="na-row-between">
+                                <div class="na-data">Order created: ORD-2025-007</div>
+                                <span class="na-status ok">New</span>
+                            </div>
+                            <div class="na-activity-data na-subtle">Acme Corp • RM 5,400 • Auto-confirmed</div>
+                            <div class="na-activity-time na-metadata-small">Just now • by System</div>
+                        </a>
+
+                        <a href="#" class="na-activity-item" aria-label="Status updated">
+                            <div class="na-row-between">
+                                <div class="na-data">Status updated: ORD-2025-002</div>
+                                <span class="na-status warn">Pending → In Progress</span>
+                            </div>
+                            <div class="na-activity-data na-subtle">Tech Solutions • Approval granted</div>
+                            <div class="na-activity-time na-metadata-small">2 minutes ago • by Sarah (Manager)</div>
+                        </a>
+
+                        <a href="#" class="na-activity-item" aria-label="Order shipped">
+                            <div class="na-row-between">
+                                <div class="na-data">Order shipped: ORD-2025-003</div>
+                                <span class="na-status ok">Shipped</span>
+                            </div>
+                            <div class="na-activity-data na-subtle">Global Industries • Tracking: TRK-8821</div>
+                            <div class="na-activity-time na-metadata-small">18 minutes ago • by System</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // View Switching
+        function switchView(view) {
+            document.querySelectorAll('.na-view-tab').forEach(tab => {
+                tab.classList.remove('is-active');
+            });
+            document.querySelectorAll('.na-view-content').forEach(content => {
+                content.classList.remove('is-active');
+            });
+            document.querySelector(`[data-view="${view}"]`).classList.add('is-active');
+            document.getElementById(`view-${view}`).classList.add('is-active');
+        }
+
+        // CRUD Operations
+        function createNew() {
+            const tbody = document.getElementById('orders-tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="na-mono" style="color:var(--color-lux);">ORD-2025-NEW</td>
+                <td contenteditable="true">New Customer</td>
+                <td contenteditable="true">New Product</td>
+                <td contenteditable="true" style="text-align:right;">1</td>
+                <td contenteditable="true" style="text-align:right;">RM 0.00</td>
+                <td class="na-tabular" style="text-align:right;">RM 0.00</td>
+                <td><span class="na-status pending">Draft</span></td>
+                <td contenteditable="true">2026-02-28</td>
+                <td><span class="na-status ok">Low</span></td>
+                <td style="text-align:right;">
+                    <div class="na-crud-actions">
+                        <button class="na-btn-icon" aria-label="Edit">✏️</button>
+                        <button class="na-btn-icon" aria-label="Delete" onclick="deleteRow(this)">🗑️</button>
+                    </div>
+                </td>
+            `;
+            tbody.insertBefore(newRow, tbody.firstChild);
+            newRow.classList.add('na-data-updating');
+            setTimeout(() => newRow.classList.remove('na-data-updating'), 600);
+        }
+
+        function addRow() {
+            createNew();
+        }
+
+        function deleteRow(btn) {
+            if (confirm('Delete this order?')) {
+                btn.closest('tr').remove();
+            }
+        }
+
+        function saveAll() {
+            const editableCells = document.querySelectorAll('[contenteditable="true"]');
+            editableCells.forEach(cell => {
+                cell.classList.add('na-data-updating');
+            });
+            setTimeout(() => {
+                editableCells.forEach(cell => {
+                    cell.classList.remove('na-data-updating');
+                });
+                alert('All changes saved!');
+            }, 600);
+        }
+
+        function refreshData() {
+            document.querySelectorAll('.na-card').forEach(card => {
+                card.classList.add('na-data-updating');
+            });
+            setTimeout(() => {
+                document.querySelectorAll('.na-card').forEach(card => {
+                    card.classList.remove('na-data-updating');
+                });
+            }, 600);
+        }
+
+        // Command Palette
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                window.location.hash = 'command-palette';
+            }
+            if (e.key === 'Escape') {
+                window.location.hash = '';
+            }
+        });
+
+        // Kanban Drag & Drop
+        document.querySelectorAll('.na-kanban-card').forEach(card => {
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', '');
+                card.classList.add('dragging');
+            });
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+        });
+
+        document.querySelectorAll('.na-kanban-body').forEach(body => {
+            body.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            body.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                if (dragging) {
+                    body.appendChild(dragging);
+                    dragging.classList.remove('dragging');
+                }
+            });
+        });
+
+        // Real-Time Updates Simulation
+        setInterval(() => {
+            const tickerItems = document.querySelectorAll('.na-ticker-item');
+            tickerItems.forEach(item => {
+                if (Math.random() > 0.7) {
+                    item.classList.add('na-data-updating');
+                    setTimeout(() => item.classList.remove('na-data-updating'), 600);
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+
+</html>
+

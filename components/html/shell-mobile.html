@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Mobile Shell: PWA-style layout */
+        .mobile-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
+            background: var(--color-void);
+        }
+
+        /* Safe area support for mobile devices */
+        @supports (padding: max(0px)) {
+            .mobile-shell {
+                padding-top: max(env(safe-area-inset-top), 0px);
+                padding-bottom: max(env(safe-area-inset-bottom), 0px);
+            }
+        }
+
+        /* Bottom Tab Bar */
+        .mobile-tab-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: var(--spacing-2) var(--spacing-4);
+            background: var(--color-paper);
+            border-top: 1px solid var(--color-stroke);
+            min-height: 64px; /* Touch target size */
+        }
+
+        .mobile-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-1);
+            padding: var(--spacing-2);
+            color: var(--color-clay);
+            text-decoration: none;
+            font-size: var(--font-size-xs);
+            transition: color var(--duration-200);
+            min-width: 64px; /* Touch target */
+        }
+
+        .mobile-tab:active {
+            color: var(--color-lux);
+        }
+
+        .mobile-tab.is-active {
+            color: var(--color-gold);
+        }
+
+        .mobile-tab-icon {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Mobile Shell: PWA-style layout -->
+    <div class="mobile-shell">
+        <!-- Top Header (Sticky) -->
+        <header class="na-shell-head border-b border-stroke bg-paper/80 backdrop-blur-sm sticky top-0 z-40 flex-shrink-0">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center gap-3">
+                    <button class="na-iconbtn" aria-label="Back">
+                        <span aria-hidden="true">←</span>
+                    </button>
+                    <h1 class="na-h4 m-0">Mobile App</h1>
+                </div>
+                <button class="na-iconbtn" aria-label="Menu">
+                    <span aria-hidden="true">☰</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content (Scrollable) -->
+        <main id="main-content" class="na-shell-main bg-void flex-1 overflow-y-auto" role="main">
+            <div class="p-4 space-y-4">
+                <!-- Your mobile content goes here -->
+                <div class="na-card">
+                    <h2 class="na-h4 mb-2">Welcome</h2>
+                    <p class="na-body-sm text-lux-dim">
+                        This is a mobile-optimized layout perfect for PWAs and mobile-first interfaces.
+                    </p>
+                </div>
+
+                <div class="na-card">
+                    <h2 class="na-h4 mb-2">Features</h2>
+                    <ul class="na-body-sm text-lux-dim space-y-2">
+                        <li>• Sticky top header</li>
+                        <li>• Scrollable content area</li>
+                        <li>• Bottom tab navigation</li>
+                        <li>• Touch-friendly controls</li>
+                        <li>• Safe area support</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Tab Bar (Sticky) -->
+        <nav class="mobile-tab-bar" aria-label="Main navigation">
+            <a href="#" class="mobile-tab is-active" aria-current="page">
+                <span class="mobile-tab-icon" aria-hidden="true">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="#" class="mobile-tab">
+                <span class="mobile-tab-icon" aria-hidden="true">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="mobile-tab">
+                <span class="mobile-tab-icon" aria-hidden="true">⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="mobile-tab">
+                <span class="mobile-tab-icon" aria-hidden="true">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+</body>
+</html>
+

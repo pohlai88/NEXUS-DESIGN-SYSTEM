@@ -1,0 +1,519 @@
+﻿/* 50-components.css */
+@layer components {
+
+  /* ========================================================================
+     1. APP SHELL & LAYOUT SYSTEMS
+     ======================================================================== */
+
+  /* Root Application Wrapper */
+  .na-app {
+    @apply min-h-dvh relative bg-void text-lux;
+    /* DENSITY CONTROL: Default = Comfort (40px) */
+    /* Override this on body for Compact Mode (e.g., .na-density-compact) */
+    --height-control: 2.5rem; 
+  }
+
+  /* DOCUMENT MODE CONTAINER 
+     Usage: Inside <body class="na-mode-doc">
+  */
+  .na-content {
+    @apply relative w-full mx-auto;
+    
+    /* Enterprise Constraint: Prevent content layout drift on ultrawide screens */
+    max-width: var(--container-2xl); 
+    padding: var(--spacing-6) var(--spacing-8);
+    
+    /* Layout Stability */
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
+
+  /* Accessibility Skip Link (WCAG AA) */
+  .na-skip-link {
+    @apply absolute -top-full left-4 px-4 py-2 rounded-control font-semibold bg-gold text-void;
+    z-index: var(--z-toast);
+    transition: top var(--duration-200) var(--ease-premium);
+  }
+  .na-skip-link:focus {
+    @apply top-4;
+    outline: var(--outline-width) solid var(--color-white);
+  }
+
+  /* --- STANDARD SIDEBAR SHELL (2-Col) --- */
+  .na-shell {
+    display: grid;
+    min-height: 100dvh;
+    grid-template-columns: var(--w-sidebar) 1fr;
+  }
+  @media (width <= 1024px) {
+    .na-shell { grid-template-columns: 1fr; }
+  }
+
+  /* --- OMNI SHELL (Advanced Grid Layout) --- 
+     Usage: Inside <body class="na-mode-app">
+  */
+  .na-shell-omni {
+    position: relative;
+    z-index: var(--z-base);
+    display: grid;
+    /* Grid Definition: Rail | Head | Main | Drawer | Foot */
+    grid-template:
+      "rail head head" var(--spacing-14)
+      "rail main drawer" 1fr
+      "rail foot foot" var(--spacing-8)
+      / var(--spacing-16) 1fr 0; /* Drawer starts at 0 width */
+    
+    width: 100%;
+    min-height: 100dvh;
+    transition: grid-template-columns var(--duration-300) var(--ease-premium);
+  }
+
+  /* Regions */
+  .na-shell-head { 
+    grid-area: head; 
+    @apply border-b border-stroke bg-void/95 backdrop-blur z-[var(--z-sticky)]; 
+  }
+  .na-shell-rail { 
+    grid-area: rail; 
+    @apply border-r border-stroke bg-paper flex flex-col items-center py-3 gap-2 z-[var(--z-sticky)]; 
+  }
+  .na-shell-foot { 
+    grid-area: foot; 
+    @apply border-t border-stroke bg-paper z-[var(--z-sticky)]; 
+  }
+
+  /* Main Scroll Area (Scoped Scrolling) */
+  .na-shell-main { 
+    grid-area: main; 
+    @apply bg-void grid grid-rows-[auto_1fr]; /* Header height auto, content fills rest */
+    
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    min-height: 0; /* CSS Grid fix for scrolling */
+    
+    /* Scoped Scrollbar Styling (Matches Utility) */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-hover) var(--scrollbar-track);
+  }
+  
+  /* Webkit Scrollbars for Main Area */
+  .na-shell-main::-webkit-scrollbar { width: 10px; height: 10px; }
+  .na-shell-main::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 99px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .na-shell-main::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+  .na-shell-main::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+
+  /* --- DRAWER SYSTEM (CSS Logic) --- 
+     Hardware Req: <input type="checkbox" id="na-toggle-drawer">
+  */
+  .na-shell-drawer {
+    grid-area: drawer;
+    @apply bg-paper flex flex-col overflow-x-hidden overflow-y-auto;
+    border-left: 0 solid transparent;
+    transition: border-color var(--duration-300) var(--ease-premium);
+  }
+
+  /* Drawer Expansion Logic */
+  body:has(#na-toggle-drawer:checked) .na-shell-omni {
+    /* Expands 3rd column to 25rem (400px) */
+    grid-template-columns: var(--spacing-16) 1fr 25rem; 
+  }
+  body:has(#na-toggle-drawer:checked) .na-shell-drawer {
+    @apply border-l border-stroke;
+  }
+  
+  /* Content Visibility Logic (Accessibility) */
+  .na-shell-drawer > * {
+    opacity: 0; pointer-events: none; visibility: hidden;
+    transition: opacity var(--duration-200) var(--ease-premium);
+  }
+  /* Accessibility: Use aria-hidden logic or checkbox check */
+  .na-shell-drawer:not([aria-hidden="true"]) > *,
+  body:has(#na-toggle-drawer:checked) .na-shell-drawer > * {
+    opacity: 1; pointer-events: auto; visibility: visible;
+    transition-delay: var(--duration-150);
+  }
+
+  /* ========================================================================
+     2. NAVIGATION & HEADER
+     ======================================================================== */
+
+  /* Full Sidebar (For Standard Layouts) */
+  .na-sidebar {
+    @apply bg-void border-r border-stroke px-6 py-8 flex flex-col;
+  }
+  .na-brand { @apply flex items-center gap-3 mb-8; }
+  .na-mark {
+    @apply h-8 w-8 rounded-lg flex items-center justify-center text-void text-xs font-bold shadow-md;
+    background: linear-gradient(to bottom right, var(--color-gold), var(--color-gold-deep));
+  }
+
+  /* Navigation Items */
+  .na-nav-section {
+    @apply mt-8 mb-3 font-bold uppercase tracking-[0.15em] text-clay;
+    font-size: var(--metadata-size);
+  }
+  .na-nav-item {
+    @apply flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 
+           font-medium text-lux-dim border border-transparent 
+           cursor-pointer relative select-none;
+    font-size: var(--font-size-sm);
+    transition: background-color var(--duration-200), color var(--duration-200);
+  }
+  .na-nav-item:hover { @apply bg-paper text-lux; }
+  .na-nav-item.is-active {
+    @apply bg-paper-2 text-lux border-stroke shadow-card;
+  }
+  /* Active Indicator */
+  .na-nav-item.is-active::before {
+    content: ""; position: absolute; left: 0; top: 15%; bottom: 15%; 
+    width: var(--w-indicator);
+    background: var(--color-gold);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  /* Header (Standalone) */
+  .na-header {
+    @apply h-20 px-8 flex items-center justify-between;
+  }
+
+  /* Search Bar (Scalable Height) */
+  .na-search { @apply relative w-full; max-width: var(--w-search-bar); }
+  .na-search-input {
+    @apply w-full bg-paper border border-stroke rounded-control pl-10 pr-4 text-lux 
+           focus:border-gold focus:outline-none transition-colors;
+    
+    /* Enterprise Upgrade: Use density variable instead of fixed h-10 */
+    height: var(--height-control); 
+    font-size: var(--font-size-sm);
+  }
+  .na-search-icon { @apply absolute left-3.5 top-1/2 -translate-y-1/2 text-clay text-sm pointer-events-none; }
+
+  /* ========================================================================
+     3. CARDS & PANELS (Beast Mode)
+     ======================================================================== */
+
+  /* Standard Card */
+  .na-card {
+    @apply relative overflow-hidden rounded-card border border-stroke bg-paper p-6;
+    box-shadow: var(--shadow-card);
+    transition: transform var(--duration-300) var(--ease-premium), 
+                box-shadow var(--duration-300) var(--ease-premium), 
+                border-color var(--duration-300) var(--ease-premium);
+  }
+
+  /* Filament Highlight */
+  .na-card::before {
+    content: ""; position: absolute; left: 14%; right: 14%; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--na-filament), transparent);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+
+  /* Interactive State */
+  .na-card-interactive { 
+    @apply cursor-pointer; 
+    animation: na-card-entrance var(--duration-300) var(--ease-premium) both;
+  }
+  .na-card-interactive:hover {
+    transform: translateY(var(--motion-lift));
+    border-color: var(--color-stroke-strong);
+    background: var(--color-paper-hover);
+    box-shadow: var(--shadow-lift);
+  }
+  .na-card-interactive:hover::before { opacity: 1; }
+  .na-card-interactive:active { transform: scale(var(--scale-press-card)); }
+
+  /* Panel (Muted Container) */
+  .na-panel {
+    @apply rounded-panel border border-stroke bg-paper p-5;
+  }
+
+  /* ========================================================================
+     4. DATA VISUALIZATION
+     ======================================================================== */
+
+  /* KPI Blocks */
+  .na-kpi { @apply flex items-start justify-between gap-4; }
+  .na-kpi-value {
+    @apply mt-1 tracking-tight tabular-nums;
+    font-size: var(--kpi-value-size);
+    font-weight: var(--kpi-value-weight);
+    line-height: var(--kpi-value-line);
+    color: var(--kpi-value-color);
+  }
+  .na-kpi-label {
+    @apply uppercase tracking-widest leading-none text-muted-foreground;
+    font-size: var(--metadata-size);
+  }
+  /* Specific KPI Icon container */
+  .na-kpi-icon {
+    @apply h-11 w-11 rounded-xl border border-stroke-soft bg-paper flex items-center justify-center text-muted-foreground;
+    box-shadow: inset 0 1px 0 var(--surface-tint-2);
+  }
+
+  /* Trend Indicator */
+  .na-trend {
+    @apply font-semibold inline-flex items-center gap-1 rounded-control px-2 py-1 border border-stroke-soft leading-none;
+    font-size: var(--metadata-size);
+    background: var(--surface-tint-1);
+  }
+  .na-trend.up { color: color-mix(in srgb, var(--color-success) 75%, white 10%); }
+  .na-trend.down { color: color-mix(in srgb, var(--color-error) 75%, white 10%); }
+
+  /* GPU-Accelerated Chart Bars */
+  .na-chart { @apply relative rounded-card border border-stroke-soft bg-paper-2 p-4 overflow-hidden; }
+  /* Signature Chart Background */
+  .na-chart::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.35;
+    background: radial-gradient(circle at 12% 20%, var(--na-filament-soft), transparent 55%),
+                repeating-linear-gradient(90deg, transparent 0, transparent 18px, var(--surface-tint-1) 19px);
+  }
+
+  .na-bars { @apply relative z-10 grid grid-cols-12 items-end gap-2 h-32; }
+  
+  .na-bar {
+    @apply rounded-sm border-t border-white/10;
+    background: linear-gradient(180deg, var(--chart-bar-start), var(--chart-bar-end));
+    
+    /* Performance: Use ScaleY for 60fps animation */
+    transform-origin: bottom; 
+    animation: na-scale-y-up var(--duration-500) var(--ease-premium) both;
+  }
+  /* Staggered Delays (1-12) */
+  .na-bar:nth-child(1) { animation-delay: var(--chart-delay-1); }
+  .na-bar:nth-child(2) { animation-delay: var(--chart-delay-2); }
+  .na-bar:nth-child(3) { animation-delay: var(--chart-delay-3); }
+  .na-bar:nth-child(4) { animation-delay: var(--chart-delay-4); }
+  .na-bar:nth-child(5) { animation-delay: var(--chart-delay-5); }
+  .na-bar:nth-child(6) { animation-delay: var(--chart-delay-6); }
+  .na-bar:nth-child(7) { animation-delay: var(--chart-delay-7); }
+  .na-bar:nth-child(8) { animation-delay: var(--chart-delay-8); }
+  .na-bar:nth-child(9) { animation-delay: var(--chart-delay-9); }
+  .na-bar:nth-child(10) { animation-delay: var(--chart-delay-10); }
+  .na-bar:nth-child(11) { animation-delay: var(--chart-delay-11); }
+  .na-bar:nth-child(12) { animation-delay: var(--chart-delay-12); }
+
+  /* ========================================================================
+     5. TABLES & LISTS
+     ======================================================================== */
+
+  .na-table-wrap { @apply rounded-panel border border-stroke bg-paper overflow-hidden; }
+  .na-table { @apply w-full border-collapse; }
+  
+  .na-th {
+    @apply sticky top-0 z-[var(--z-base)] text-left px-4 py-3 font-medium uppercase tracking-widest;
+    @apply border-b border-stroke bg-paper-2/90 backdrop-blur text-clay;
+    font-size: var(--metadata-size);
+  }
+  .na-td {
+    @apply px-4 py-3 text-lux/80 border-b border-stroke-soft tabular-nums;
+    font-size: var(--font-size-sm);
+  }
+  .na-tr-interactive { 
+    transition: background-color var(--duration-200); 
+    cursor: pointer;
+  }
+  .na-tr-interactive:hover td { @apply bg-white/5 text-lux; }
+
+  /* ========================================================================
+     6. INTERACTIVE ELEMENTS
+     ======================================================================== */
+
+  /* Buttons (Density Aware) */
+  .na-btn {
+    @apply px-4 rounded-control font-semibold border border-stroke bg-paper 
+           hover:bg-paper-2 hover:border-stroke-strong flex items-center gap-2 
+           select-none whitespace-nowrap;
+    
+    /* Enterprise Upgrade: Scalable Height */
+    height: var(--height-control); 
+    font-size: var(--font-size-sm);
+    transition: all var(--duration-200) var(--ease-premium);
+  }
+  .na-btn:active { transform: scale(var(--scale-press-btn)); }
+
+  /* Variants */
+  .na-btn-primary {
+    @apply bg-primary text-primary-foreground border-transparent shadow-md;
+  }
+  .na-btn-primary:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 85%, white 15%);
+    box-shadow: var(--shadow-gilded);
+  }
+  .na-btn-ghost { @apply border-transparent bg-transparent shadow-none text-lux-dim; }
+  .na-btn-ghost:hover { @apply bg-paper-hover text-lux border-transparent; }
+  .na-btn-destructive { @apply border-error/30 text-error bg-error/5; }
+  
+  /* Icon Button (Density Aware) */
+  .na-iconbtn {
+    @apply relative rounded-control border border-stroke bg-paper inline-flex items-center justify-center;
+    /* Square Aspect Ratio based on density */
+    height: var(--height-control);
+    width: var(--height-control);
+    color: var(--color-clay);
+    transition: all var(--duration-200);
+  }
+  .na-iconbtn:hover {
+    @apply border-stroke-strong bg-paper-hover text-lux shadow-sm;
+    transform: translateY(-1px);
+  }
+  /* Notification Dot */
+  .na-dot {
+    @apply absolute -top-1 -right-1 h-3 w-3 rounded-full bg-error;
+    box-shadow: 0 0 0 3px var(--dot-shadow);
+    animation: soft-pulse 2.4s var(--ease-smooth) infinite;
+  }
+
+  /* Inputs (Density Aware) */
+  .na-input {
+    @apply w-full rounded-control bg-paper border border-stroke px-4 outline-none text-lux;
+    
+    /* Enterprise Upgrade: Scalable Height */
+    height: var(--height-control);
+    font-size: var(--font-size-sm);
+    transition: border-color var(--duration-200) var(--ease-premium), 
+                box-shadow var(--duration-200) var(--ease-premium), 
+                background-color var(--duration-200) var(--ease-premium);
+  }
+  .na-input:focus {
+    border-color: var(--color-gold);
+    box-shadow: var(--shadow-gilded);
+    background: var(--color-paper-hover);
+  }
+
+  /* Status Badge */
+  .na-status {
+    @apply inline-flex items-center gap-2 rounded-full px-2.5 py-0.5 font-semibold border border-stroke-soft bg-white/5;
+    font-size: var(--metadata-size);
+  }
+  .na-status::before { content: ""; width: 6px; height: 6px; border-radius: 99px; background: currentColor; }
+  .na-status.ok { color: var(--color-success); }
+  .na-status.pending { color: var(--color-warning); }
+  .na-status.bad { color: var(--color-error); }
+
+  /* Avatar */
+  .na-avatar {
+    @apply w-8 h-8 bg-paper-hover rounded-full border border-stroke cursor-pointer;
+    transition: all var(--duration-200);
+  }
+  .na-avatar:hover { @apply border-stroke-strong bg-paper; }
+
+  /* Switch (CSS Logic - Flex Variant) */
+  .na-switch {
+    @apply relative inline-flex items-center h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent;
+    background-color: var(--color-paper-2);
+    transition: background-color var(--duration-200) var(--ease-in-out);
+  }
+  /* Flex support for label text */
+  .na-switch.flex { width: auto; min-width: 2.75rem; }
+  
+  .na-switch-thumb {
+    @apply pointer-events-none block h-5 w-5 rounded-full bg-lux shadow-sm ring-0;
+    transition: transform var(--duration-200) var(--ease-in-out);
+  }
+  /* Checked State */
+  .na-switch:has(input:checked), .na-switch[aria-checked="true"] { 
+    background-color: var(--color-gold); 
+  }
+  .na-switch:has(input:checked) .na-switch-thumb, .na-switch[aria-checked="true"] .na-switch-thumb { 
+    transform: translateX(20px); background-color: var(--color-white); 
+  }
+
+  /* Native Dropdown (using <details>) */
+  .na-dropdown { position: relative; display: inline-block; }
+  .na-dropdown > summary { list-style: none; cursor: pointer; }
+  .na-dropdown > summary::-webkit-details-marker { display: none; }
+
+  .na-dropdown-menu {
+    position: absolute; right: 0; top: calc(100% + 0.5rem); width: 12rem; z-index: var(--z-overlay);
+    background: var(--color-paper); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); box-shadow: var(--shadow-lg); padding: 0.5rem;
+    opacity: 0; transform: translateY(-5px); pointer-events: none;
+    transition: all var(--duration-200) var(--ease-premium);
+  }
+  .na-dropdown[open] .na-dropdown-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* ========================================================================
+     7. FEEDBACK & OVERLAYS
+     ======================================================================== */
+
+  /* Modal (Target-based) */
+  .na-modal {
+    position: fixed; inset: 0; z-index: var(--z-modal);
+    display: grid; place-items: center; padding: 1rem;
+    opacity: 0; pointer-events: none; transition: opacity var(--duration-200) var(--ease-premium);
+  }
+  .na-modal:target { opacity: 1; pointer-events: auto; }
+  
+  .na-modal__backdrop {
+    position: absolute; inset: 0; 
+    background: var(--color-overlay-backdrop); 
+    backdrop-filter: blur(var(--motion-blur));
+  }
+  .na-modal__panel {
+    @apply relative w-full max-w-2xl rounded-panel border border-stroke bg-paper shadow-2xl overflow-hidden;
+    transform: translateY(var(--motion-slide)) scale(var(--scale-press-modal));
+    transition: transform var(--duration-300) var(--ease-premium);
+  }
+  .na-modal:target .na-modal__panel { transform: translateY(0) scale(1); }
+
+  /* CSS-Only Tooltip */
+  .na-tooltip { position: relative; }
+  .na-tooltip::after {
+    content: attr(data-label);
+    position: absolute; left: 100%; top: 50%; transform: translateY(-50%) translateX(8px);
+    z-index: var(--z-toast);
+    background: var(--color-paper-2); border: 1px solid var(--color-stroke-strong);
+    color: var(--color-lux); font-size: var(--font-size-xs); font-weight: 500;
+    padding: 4px 8px; border-radius: var(--radius-sm); white-space: nowrap;
+    pointer-events: none; opacity: 0;
+    transition: opacity var(--duration-150) var(--ease-premium);
+  }
+  .na-tooltip:hover::after { opacity: 1; }
+
+  /* Toasts */
+  .na-toasts {
+    position: fixed; right: 1rem; bottom: 1rem; z-index: var(--z-toast);
+    display: flex; flex-direction: column; gap: 0.75rem;
+    pointer-events: none;
+    width: min(var(--w-toast-max), 92vw);
+  }
+  .na-toast {
+    @apply relative overflow-hidden rounded-card border border-stroke bg-paper p-4 shadow-xl pointer-events-auto;
+    animation: na-slide-up-in 0.4s var(--ease-premium);
+    min-width: 300px;
+  }
+  /* Enterprise Style: Left accent border */
+  .na-toast::before {
+    content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+    background: var(--color-gold);
+  }
+
+  /* ========================================================================
+     8. STATES (Loading, Empty)
+     ======================================================================== */
+
+  /* Loading State (Shimmer) */
+  .na-skeleton {
+    @apply rounded-xl border border-stroke-soft bg-paper-2/70 overflow-hidden relative;
+  }
+  .na-skeleton::before {
+    content: ""; display: block; position: absolute; inset: 0;
+    background: linear-gradient(90deg, var(--shimmer-stop-weak), var(--shimmer-stop-strong), var(--shimmer-stop-weak));
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+
+  /* Empty State */
+  .na-empty {
+    @apply rounded-card border border-stroke bg-paper-2 p-8 flex flex-col items-center text-center;
+  }
+  .na-empty-illustration {
+    @apply h-12 w-12 rounded-xl border border-stroke-soft bg-paper mb-4 relative overflow-hidden flex items-center justify-center text-clay;
+  }
+}

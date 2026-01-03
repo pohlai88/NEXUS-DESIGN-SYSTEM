@@ -1,0 +1,2768 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Neo‑Analog • Next‑Gen ERP Dashboard (IDE Lightness v2)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =========================================================
+           PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Strategic optimization: Only prototype-specific styles
+           All reusable styles moved to style.css
+           ========================================================= */
+
+        :root {
+            /* Core palette */
+            --color-void: #0b0b0e;
+            --color-paper: #141419;
+            --color-paper-2: #1b1b22;
+            --color-paper-hover: #2a2a33;
+
+            --color-lux: #f4f4f5;
+            --color-lux-dim: #a1a1aa;
+            --color-clay: #71717a;
+
+            --color-stroke: #2f2f39;
+            --color-stroke-strong: #4a4a57;
+            --color-stroke-soft: #24242c;
+
+            --color-gold: #eab308;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #f43f5e;
+            --color-info: #3b82f6;
+
+            --radius-panel: 16px;
+            --radius-card: 12px;
+            --radius-control: 10px;
+
+            --shadow-card: 0 1px 2px -1px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+            --shadow-lift: 0 18px 46px -26px rgba(0, 0, 0, 0.9);
+            --shadow-soft: 0 1px 2px -1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+
+            --ease-premium: cubic-bezier(0.2, 0, 0, 1);
+            --ease: var(--ease-premium);
+            --dur-150: 150ms;
+            --dur-250: 250ms;
+            --dur-400: 400ms;
+
+            /* Density */
+            --h-row: 42px;
+            --h-head: 56px;
+            --w-rail: 64px;
+            --w-insp: 380px;
+            --w-drawer: 380px;
+
+            /* Background knobs (IDE Lightness) */
+            --bg-grain-opacity: 0.075;
+            --bg-fiber-opacity: 0.035;
+            --bg-vignette: 0.48;
+
+            /* Aliases for compatibility */
+            --text: var(--color-lux);
+            --muted: var(--color-lux-dim);
+            --stroke-soft: var(--color-stroke-soft);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: var(--color-void);
+            color: var(--color-lux);
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            /* app feel */
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit
+        }
+
+        :focus-visible {
+            outline: 2px solid color-mix(in oklab, var(--color-gold) 75%, white 10%);
+            outline-offset: 2px
+        }
+
+        ::selection {
+            background: color-mix(in oklab, var(--color-gold) 70%, white 10%);
+            color: var(--color-void)
+        }
+
+        /* ---------- Background: studio light + vignette + coarse grain + fiber ---------- */
+        .na-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(1200px 900px at 14% 18%, rgba(255, 255, 255, 0.07), transparent 60%),
+                radial-gradient(1100px 800px at 86% 20%, rgba(255, 255, 255, 0.05), transparent 62%),
+                radial-gradient(1000px 800px at 50% 115%, rgba(0, 0, 0, var(--bg-vignette)), transparent 58%),
+                linear-gradient(180deg,
+                    color-mix(in oklab, var(--color-void) 92%, var(--color-clay) 8%),
+                    var(--color-void) 60%,
+                    color-mix(in oklab, var(--color-void) 86%, black 14%));
+        }
+
+        .na-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(38deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 0.6px, transparent 0.6px, transparent 9px),
+                repeating-linear-gradient(128deg, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 0.6px, transparent 0.6px, transparent 13px),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: auto, auto, 220px 220px;
+            background-repeat: repeat, repeat, repeat;
+            opacity: calc(var(--bg-grain-opacity) + var(--bg-fiber-opacity));
+            filter: contrast(118%) brightness(92%);
+            mix-blend-mode: soft-light;
+        }
+
+        /* ---------- Shell layout ---------- */
+        .shell {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ---------- Header ---------- */
+        .head {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.72);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 260px;
+        }
+
+        .mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: color-mix(in oklab, var(--color-gold) 92%, white 8%);
+            color: var(--color-void);
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.18), 0 10px 24px -14px rgba(234, 179, 8, 0.45);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: -0.01em
+        }
+
+        .meta {
+            color: var(--color-clay);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em
+        }
+
+        .search {
+            flex: 1;
+            max-width: 720px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.65);
+        }
+
+        .search input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--color-lux);
+        }
+
+        .kbd {
+            font-size: 11px;
+            color: var(--color-clay);
+            border: 1px solid var(--color-stroke);
+            background: var(--color-paper);
+            border-radius: 8px;
+            padding: 4px 8px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .btn {
+            height: 34px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.75);
+            color: var(--color-lux);
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform var(--dur-150) var(--ease-premium), background var(--dur-150) var(--ease-premium), border-color var(--dur-150) var(--ease-premium);
+        }
+
+        .btn:hover {
+            background: var(--color-paper-2);
+            border-color: var(--color-stroke-strong);
+            transform: translateY(-1px)
+        }
+
+        .btn-primary {
+            background: color-mix(in oklab, var(--color-paper) 88%, var(--color-gold) 12%);
+            border-color: color-mix(in oklab, var(--color-gold) 35%, var(--color-stroke));
+            box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.10), 0 12px 30px -18px rgba(234, 179, 8, 0.45);
+        }
+
+        .btn-primary:hover {
+            background: color-mix(in oklab, var(--color-paper) 82%, var(--color-gold) 18%);
+        }
+
+        /* ---------- Rail ---------- */
+        .rail {
+            width: var(--w-rail);
+            min-width: 240px;
+            max-width: 420px;
+            border-right: 1px solid var(--color-stroke);
+            background: rgba(20, 20, 25, 0.76);
+            backdrop-filter: blur(14px);
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+        }
+
+        .rail-top {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--color-stroke)
+        }
+
+        .rail-top .meta {
+            margin-bottom: 10px
+        }
+
+        .rail input {
+            width: 100%;
+            height: 34px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.5);
+            color: var(--color-lux);
+            padding: 0 12px;
+        }
+
+        .nav {
+            padding: 10px;
+            overflow: auto;
+        }
+
+        /* Consolidated scrollbar styles */
+        .nav::-webkit-scrollbar,
+        .main::-webkit-scrollbar,
+        .insp-body::-webkit-scrollbar {
+            width: 10px;
+            height: 10px
+        }
+
+        .nav::-webkit-scrollbar-thumb,
+        .main::-webkit-scrollbar-thumb,
+        .insp-body::-webkit-scrollbar-thumb {
+            background: rgba(228, 228, 231, 0.16);
+            border-radius: 999px;
+            border: 2px solid transparent;
+            background-clip: padding-box
+        }
+
+        .nav::-webkit-scrollbar-track,
+        .main::-webkit-scrollbar-track,
+        .insp-body::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            color: var(--color-lux-dim);
+            transition: background var(--dur-150) var(--ease-premium), border-color var(--dur-150) var(--ease-premium), color var(--dur-150) var(--ease-premium);
+        }
+
+        .nav a:hover {
+            background: rgba(39, 39, 42, 0.55);
+            border-color: rgba(63, 63, 70, 0.45);
+            color: var(--color-lux)
+        }
+
+        .nav a.active {
+            background: color-mix(in oklab, var(--color-paper) 92%, var(--color-gold) 8%);
+            border-color: color-mix(in oklab, var(--color-gold) 22%, var(--color-stroke));
+            color: var(--color-lux);
+        }
+
+        .pill {
+            height: 20px;
+            min-width: 20px;
+            padding: 0 8px;
+            border-radius: 999px;
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.55);
+            color: var(--color-clay);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .pill.live {
+            border-color: rgba(16, 185, 129, 0.35);
+            color: color-mix(in oklab, var(--color-success) 85%, var(--color-lux) 15%)
+        }
+
+        .pill.warn {
+            border-color: rgba(245, 158, 11, 0.35);
+            color: color-mix(in oklab, var(--color-warning) 85%, var(--color-lux) 15%)
+        }
+
+        /* ---------- Main ---------- */
+        .main {
+            flex: 1;
+            min-width: 520px;
+            min-height: 0;
+            overflow: auto;
+            padding: 16px;
+            background: rgba(11, 11, 14, 0.18);
+        }
+
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.4fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: -0.01em;
+        }
+
+        .section-title .meta {
+            font-size: 10px
+        }
+
+        /* Cards */
+        .card {
+            border-radius: var(--radius-card);
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.72);
+            box-shadow: var(--shadow-card);
+        }
+
+        .card .hd {
+            padding: 12px 12px 10px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .card .bd {
+            padding: 12px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .kpi {
+            border-radius: 14px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(24, 24, 27, 0.55);
+            padding: 10px 10px 12px;
+        }
+
+        .kpi .v {
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kpi .s {
+            color: var(--color-lux-dim);
+            font-size: 12px
+        }
+
+        .kpi .m {
+            margin-top: 6px;
+            color: var(--color-clay);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em
+        }
+
+        .ticker {
+            display: flex;
+            gap: 18px;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 18px;
+            animation: ticker 18s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(0)
+            }
+
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
+        .t-item {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            color: var(--color-lux-dim);
+            font-size: 11px
+        }
+
+        .t-item b {
+            color: var(--color-lux);
+            font-weight: 700
+        }
+
+        .up {
+            color: color-mix(in oklab, var(--color-success) 80%, var(--color-lux) 20%)
+        }
+
+        .down {
+            color: color-mix(in oklab, var(--color-error) 80%, var(--color-lux) 20%)
+        }
+
+        /* View Tabs - Radio Button State Machine (no JS, scalable) */
+        .view-tabs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .view-radio {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+        }
+
+        .view-tab {
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.55);
+            color: var(--color-lux-dim);
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--dur-150) var(--ease-premium);
+        }
+
+        .view-tab:hover {
+            background: var(--color-paper-2);
+            color: var(--color-lux);
+            border-color: var(--color-stroke-strong);
+        }
+
+        /* Active tab state via radio */
+        .view-radio:checked+.view-tab {
+            background: color-mix(in oklab, var(--color-paper) 92%, var(--color-gold) 8%);
+            border-color: color-mix(in oklab, var(--color-gold) 25%, var(--color-stroke));
+            color: var(--color-lux);
+            box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.10);
+        }
+
+        /* View content visibility - radio state machine */
+        .view-content {
+            display: none;
+        }
+
+        /* Show view content based on radio state - using :has() for scalability */
+        body:has(#view-grid:checked) .view-content-grid,
+        body:has(#view-kanban:checked) .view-content-kanban,
+        body:has(#view-gantt:checked) .view-content-gantt {
+            display: block;
+        }
+
+        /* Kanban */
+        .kanban {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .klane {
+            border-radius: 14px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(24, 24, 27, 0.45);
+            overflow: hidden;
+        }
+
+        .klane .lh {
+            padding: 10px 10px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--color-lux-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .kcards {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .kcard {
+            border-radius: 12px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.68);
+            padding: 10px 10px 10px;
+            transition: transform var(--dur-150) var(--ease-premium), border-color var(--dur-150) var(--ease-premium), background var(--dur-150) var(--ease-premium);
+        }
+
+        .kcard:hover {
+            transform: translateY(-1px);
+            border-color: rgba(63, 63, 70, 0.65);
+            background: rgba(24, 24, 27, 0.78)
+        }
+
+        .kcard .t {
+            font-size: 13px;
+            margin: 0 0 6px
+        }
+
+        .kcard .sub {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            color: var(--color-clay);
+            font-size: 11px
+        }
+
+        .badge {
+            height: 18px;
+            padding: 0 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(39, 39, 42, 0.9);
+            background: rgba(18, 18, 20, 0.65);
+            color: var(--color-lux-dim);
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .badge.g {
+            border-color: rgba(16, 185, 129, 0.35);
+            color: color-mix(in oklab, var(--color-success) 85%, var(--color-lux) 15%)
+        }
+
+        .badge.y {
+            border-color: rgba(245, 158, 11, 0.35);
+            color: color-mix(in oklab, var(--color-warning) 85%, var(--color-lux) 15%)
+        }
+
+        .badge.r {
+            border-color: rgba(244, 63, 94, 0.35);
+            color: color-mix(in oklab, var(--color-error) 85%, var(--color-lux) 15%)
+        }
+
+        /* Gantt */
+        .gantt {
+            display: grid;
+            gap: 8px;
+        }
+
+        .g-head {
+            display: grid;
+            grid-template-columns: 180px repeat(12, 1fr);
+            gap: 2px;
+            color: var(--color-clay);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .g-head div {
+            padding: 6px 8px
+        }
+
+        .g-row {
+            display: grid;
+            grid-template-columns: 180px repeat(12, 1fr);
+            gap: 2px;
+            align-items: center;
+        }
+
+        .g-task {
+            padding: 8px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.65);
+            color: var(--color-lux-dim);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .g-track {
+            grid-column: 2 / -1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2px;
+            padding: 2px;
+            border-radius: 10px;
+            background: rgba(39, 39, 42, 0.45);
+            border: 1px solid rgba(39, 39, 42, 0.75);
+        }
+
+        .g-bar {
+            height: 10px;
+            border-radius: 6px;
+            grid-column: var(--start) / span var(--span);
+            background: color-mix(in oklab, var(--color-gold) 65%, var(--color-info));
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+        }
+
+        .g-bar.ok {
+            background: color-mix(in oklab, var(--color-success) 70%, var(--color-info))
+        }
+
+        .g-bar.risk {
+            background: color-mix(in oklab, var(--color-warning) 74%, var(--color-gold))
+        }
+
+        .g-bar.crit {
+            background: color-mix(in oklab, var(--color-error) 70%, var(--color-gold))
+        }
+
+        /* Data Grid - Super Grid with Frozen Panes */
+        .table-wrap {
+            border-radius: var(--radius-card);
+            border: 1px solid var(--color-stroke);
+            overflow: hidden;
+            background: rgba(18, 18, 20, 0.72);
+        }
+
+        /* Super Grid Container (Frozen Panes) */
+        .super-grid-container {
+            overflow: auto;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            background: rgba(18, 18, 20, 0.72);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(74, 74, 87, 0.55) transparent;
+        }
+
+        .super-grid-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .super-grid-container::-webkit-scrollbar-thumb {
+            background: rgba(228, 228, 231, 0.16);
+            border-radius: 999px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .super-grid-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .super-grid {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: max-content;
+            min-width: 100%;
+        }
+
+        .super-grid th,
+        .super-grid td {
+            padding: 0 10px;
+            height: var(--h-row);
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            border-right: 1px solid rgba(39, 39, 42, 0.45);
+            font-size: 13px;
+            white-space: nowrap;
+            background: rgba(20, 20, 25, 0.86);
+        }
+
+        .super-grid thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(27, 27, 34, 0.98);
+            border-bottom: 1px solid rgba(74, 74, 87, 0.55);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-clay);
+            font-weight: 600;
+        }
+
+        /* Frozen first column (sticky left) */
+        .super-grid td:first-child,
+        .super-grid th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: rgba(20, 20, 25, 0.86);
+            border-right: 2px solid rgba(74, 74, 87, 0.55);
+            box-shadow: 1px 0 0 rgba(74, 74, 87, 0.28);
+        }
+
+        .super-grid thead th:first-child {
+            z-index: 20;
+            background: rgba(27, 27, 34, 0.98);
+            box-shadow: 1px 0 0 rgba(74, 74, 87, 0.38);
+        }
+
+        .super-grid tbody tr:hover td {
+            background: rgba(42, 42, 51, 0.40);
+        }
+
+        .super-grid tbody tr:has(input.rowck:checked) td {
+            background: rgba(42, 42, 51, 0.46);
+        }
+
+        .super-grid tbody tr:has(input.rowck:checked) td:first-child {
+            background: rgba(42, 42, 51, 0.56);
+        }
+
+        .table-tools {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .tool-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .tool-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .select {
+            height: 32px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.45);
+            color: var(--color-lux);
+            padding: 0 10px;
+        }
+
+        /* Legacy table (fallback) - prefer super-grid */
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: rgba(24, 24, 27, 0.92);
+            backdrop-filter: blur(10px);
+            text-align: left;
+            color: var(--color-clay);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            height: 42px;
+            padding: 0 12px;
+            border-bottom: 1px solid rgba(63, 63, 70, 0.55);
+        }
+
+        .table tbody td {
+            height: var(--h-row);
+            padding: 0 12px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            color: var(--color-lux);
+            white-space: nowrap;
+        }
+
+        .table tbody tr:hover td {
+            background: rgba(39, 39, 42, 0.38);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", "Courier New", monospace;
+            font-variant-numeric: tabular-nums
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .iconbtn {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.6);
+            color: var(--color-lux-dim);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all var(--dur-150) var(--ease-premium);
+        }
+
+        .iconbtn:hover {
+            background: rgba(24, 24, 27, 0.85);
+            border-color: rgba(63, 63, 70, 0.8);
+            color: var(--color-lux)
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%
+        }
+
+        .dot.g {
+            background: var(--color-success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.35)
+        }
+
+        .dot.y {
+            background: var(--color-warning);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.35)
+        }
+
+        .dot.r {
+            background: var(--color-error);
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.35)
+        }
+
+        /* Inspector (CRUD) */
+        .insp {
+            width: var(--w-insp);
+            min-width: 320px;
+            max-width: 520px;
+            border-left: 1px solid var(--color-stroke);
+            background: rgba(20, 20, 25, 0.76);
+            backdrop-filter: blur(14px);
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+        }
+
+        .insp-head {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--color-stroke);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .hgroup h3 {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: -0.01em
+        }
+
+        .hgroup .meta {
+            margin-top: 4px
+        }
+
+        .insp-body {
+            padding: 14px;
+            overflow: auto
+        }
+
+
+        .field {
+            margin-bottom: 12px
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--color-clay);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em
+        }
+
+        .input,
+        textarea {
+            width: 100%;
+            height: 36px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.45);
+            color: var(--color-lux);
+            padding: 0 12px;
+        }
+
+        textarea {
+            height: auto;
+            padding: 10px 12px;
+            min-height: 92px;
+            resize: vertical
+        }
+
+        .help {
+            color: var(--color-clay);
+            font-size: 11px;
+            margin-top: 6px
+        }
+
+        .hr {
+            height: 1px;
+            background: rgba(39, 39, 42, 0.65);
+            margin: 14px 0
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .footer {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-top: 1px solid var(--color-stroke);
+            color: var(--color-clay);
+            font-size: 11px;
+            background: rgba(9, 9, 11, 0.72);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+        }
+
+        .led {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .led i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--color-success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.35)
+        }
+
+        .small {
+            font-size: 11px;
+            color: var(--color-clay)
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .danger {
+            border-color: rgba(244, 63, 94, 0.28)
+        }
+
+        .danger:hover {
+            border-color: rgba(244, 63, 94, 0.45)
+        }
+
+        /* Inspector drawer content styles */
+        .ins-card {
+            border-radius: var(--radius-card);
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.45);
+            padding: 14px;
+        }
+
+        .ins-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-lux);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .ins-meta {
+            font-size: 11px;
+            color: var(--color-clay);
+            margin-bottom: 12px;
+        }
+
+        .ins-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .ins-k {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(9, 9, 11, 0.35);
+            color: var(--color-lux-dim);
+            font-size: 11px;
+        }
+
+        .chip.warn {
+            border-color: rgba(245, 158, 11, 0.35);
+            color: color-mix(in oklab, var(--color-warning) 85%, var(--color-lux) 15%);
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(74, 74, 87, 0.55);
+        }
+
+        .evidence {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .evi {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(9, 9, 11, 0.35);
+            color: var(--color-lux);
+            font-size: 12px;
+            transition: background var(--dur-150) var(--ease-premium), border-color var(--dur-150) var(--ease-premium);
+        }
+
+        .evi:hover {
+            background: rgba(20, 20, 25, 0.65);
+            border-color: rgba(74, 74, 87, 0.75);
+        }
+
+        .audit {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .audit-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(9, 9, 11, 0.25);
+            font-size: 12px;
+        }
+
+        .audit-row .mono {
+            flex: 1;
+        }
+
+        .dot.live {
+            background: var(--color-success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+        }
+
+        .dot.warn {
+            background: var(--color-warning);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+
+        /* =========================================================
+   IDE LIGHTNESS MODE (clarity-first)
+   - Brighter surfaces, clearer panel boundaries
+   - Lower grain intensity
+   (Variables merged into :root above)
+   ========================================================= */
+
+
+
+
+        /* Make click targets more obvious */
+        .btn,
+        .tab,
+        .iconbtn,
+        .select,
+        .input,
+        textarea {
+            border-color: color-mix(in oklab, var(--color-stroke) 78%, white 22%);
+        }
+
+        .btn:hover,
+        .tab:hover,
+        .iconbtn:hover {
+            border-color: var(--color-stroke-strong);
+        }
+
+        /* Data grid: clearer column header + row hover */
+        .table thead th {
+            background: rgba(27, 27, 34, 0.96);
+            border-bottom: 1px solid rgba(74, 74, 87, 0.55);
+        }
+
+        .table tbody tr:hover td {
+            background: rgba(42, 42, 51, 0.40);
+        }
+
+        /* Selected row state (clarity: “this is the record”) */
+        .table tbody tr.is-selected td {
+            background: color-mix(in oklab, rgba(27, 27, 34, 0.96) 86%, rgba(234, 179, 8, 0.18) 14%);
+        }
+
+        .table tbody tr.is-selected td:first-child {
+            box-shadow: inset 3px 0 0 rgba(234, 179, 8, 0.55);
+        }
+
+
+        .insp-body {
+            padding-bottom: 96px;
+        }
+
+        .insp-footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 3;
+            padding: 12px 14px;
+            border-top: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.90);
+            backdrop-filter: blur(14px);
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .insp-footer .left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .insp-footer .left .meta {
+            font-size: 10px;
+        }
+
+        .insp-footer .right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Make the “primary path” obvious */
+        .btn-primary {
+            border-color: color-mix(in oklab, var(--color-gold) 35%, var(--color-stroke-strong));
+        }
+
+
+
+        /* =========================================================
+   Batch Upgrade Pack v2 (IDE Lightness)
+   1) Resizable split panes (Rail + Inspector) — CSS-only
+   2) Command palette overlay (⌘K) — :target modal
+   3) Quick Create drawer — :target right drawer
+   4) Toasts — checkbox hack (no JS)
+   ========================================================= */
+
+
+        .body {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            /* allow children to scroll */
+        }
+
+
+
+
+
+
+        /* Subtle resize handle affordance */
+        .rail::after,
+        .insp::after {
+            content: "";
+            position: sticky;
+            top: 0;
+            float: right;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03));
+            pointer-events: none;
+        }
+
+        /* ------- Command Palette (CSS-only modal via :target) ------- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 50;
+        }
+
+        .overlay:target {
+            display: block
+        }
+
+        .overlay .backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+        }
+
+        .palette {
+            position: relative;
+            width: min(860px, calc(100vw - 32px));
+            margin: 84px auto 0;
+            border-radius: 18px;
+            border: 1px solid rgba(74, 74, 87, 0.65);
+            background: rgba(20, 20, 25, 0.92);
+            box-shadow: 0 28px 90px -50px rgba(0, 0, 0, 0.95);
+            overflow: hidden;
+        }
+
+        .palette-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(74, 74, 87, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .palette-input {
+            width: 100%;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(74, 74, 87, 0.6);
+            background: rgba(9, 9, 11, 0.55);
+            color: var(--color-lux);
+            padding: 0 12px;
+        }
+
+        .palette-body {
+            padding: 10px 10px 12px
+        }
+
+        .p-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            color: var(--color-lux);
+        }
+
+        .p-item:hover {
+            background: rgba(42, 42, 51, 0.45);
+            border-color: rgba(74, 74, 87, 0.35);
+        }
+
+        .p-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px
+        }
+
+        .p-title {
+            font-size: 13px
+        }
+
+        .p-sub {
+            font-size: 11px;
+            color: var(--color-clay)
+        }
+
+        .p-key {
+            font-size: 11px;
+            color: var(--color-clay);
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            border-radius: 10px;
+            padding: 4px 8px;
+            background: rgba(9, 9, 11, 0.35)
+        }
+
+        .p-close {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        /* ------- Quick Create Drawer (right) via :target ------- */
+        .drawer-create {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 60;
+        }
+
+        .drawer-create:target {
+            display: block
+        }
+
+        .drawer-create .backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.52);
+            backdrop-filter: blur(10px);
+        }
+
+        .drawer-create .panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: min(520px, calc(100vw - 52px));
+            background: rgba(20, 20, 25, 0.94);
+            border-left: 1px solid rgba(74, 74, 87, 0.65);
+            box-shadow: -28px 0 90px -60px rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer-create .panel .hd {
+            padding: 14px;
+            border-bottom: 1px solid rgba(74, 74, 87, 0.55);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .drawer-create .panel .bd {
+            padding: 14px;
+            overflow: auto;
+            min-height: 0;
+        }
+
+        .drawer-create .panel .ft {
+            padding: 12px 14px;
+            border-top: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ------- Toasts (checkbox hack) - scalable with :has() ------- */
+        .toast-toggle {
+            position: absolute;
+            left: -9999px;
+            top: auto
+        }
+
+        .toasts {
+            position: fixed;
+            right: 14px;
+            bottom: 46px;
+            z-index: 70;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            width: min(420px, calc(100vw - 28px));
+            border-radius: 14px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.92);
+            box-shadow: 0 24px 70px -52px rgba(0, 0, 0, 0.95);
+            padding: 10px 12px;
+            display: none;
+        }
+
+        .toast .trow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px
+        }
+
+        .toast b {
+            font-size: 12px
+        }
+
+        .toast p {
+            margin: 4px 0 0;
+            font-size: 11px;
+            color: var(--color-clay)
+        }
+
+        .toast .x {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(9, 9, 11, 0.35);
+            color: var(--color-lux-dim);
+            display: grid;
+            place-items: center;
+            cursor: pointer
+        }
+
+        .toast .x:hover {
+            background: rgba(42, 42, 51, 0.45);
+            color: var(--color-lux)
+        }
+
+        /* Show toasts - using :has() for scalability */
+        body:has(#toast1:checked) .toasts .t1,
+        body:has(#toast2:checked) .toasts .t2 {
+            display: block
+        }
+
+        /* Minor: make the header search act as palette entry */
+        .search a.kbdlink {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* =========================================================
+   Batch Upgrade Pack v3 (A + B)
+   A) Data Grid Power
+      - Sticky first column (selection)
+      - Row selection checkbox + bulk action bar (CSS)
+      - Stronger hover/selected states and density
+   B) Workflow Clarity
+      - Workflow state machine strip (requested→uploaded→accepted/rejected/cancelled)
+      - Active focus map (Nav + Grid + Inspector)
+   ========================================================= */
+
+        /* ----- Focus Map (IDE clarity) ----- */
+        .focus-map {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.78);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+        }
+
+        .focus-map .meta {
+            font-size: 10px
+        }
+
+        .crumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: var(--color-lux-dim);
+            font-size: 12px;
+        }
+
+        .crumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(74, 74, 87, 0.45);
+            background: rgba(9, 9, 11, 0.30);
+            color: var(--color-lux-dim);
+        }
+
+        .crumb strong {
+            color: var(--color-lux);
+            font-weight: 700
+        }
+
+        .sep {
+            color: var(--color-clay)
+        }
+
+        /* ----- Workflow strip ----- */
+        .workflow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(9, 9, 11, 0.28);
+            color: var(--color-lux-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .step i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(113, 113, 122, 0.9);
+            box-shadow: 0 0 0 2px rgba(9, 9, 11, 0.35);
+        }
+
+        .step.active {
+            border-color: color-mix(in oklab, var(--color-gold) 30%, rgba(74, 74, 87, 0.55));
+            color: var(--color-lux);
+            background: color-mix(in oklab, rgba(20, 20, 25, 0.78) 86%, rgba(234, 179, 8, 0.16) 14%);
+        }
+
+        .step.active i {
+            background: rgba(234, 179, 8, 0.85);
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.25)
+        }
+
+        .step.ok i {
+            background: rgba(16, 185, 129, 0.85);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.20)
+        }
+
+        .step.warn i {
+            background: rgba(245, 158, 11, 0.85);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.22)
+        }
+
+        .step.bad i {
+            background: rgba(244, 63, 94, 0.85);
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.20)
+        }
+
+        /* Sticky first column moved to super-grid styles above */
+
+        /* Checkbox column visuals */
+        .ck {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            border: 1px solid rgba(74, 74, 87, 0.60);
+            background: rgba(9, 9, 11, 0.35);
+            display: inline-block;
+            position: relative;
+        }
+
+        input.rowck {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+        }
+
+        input.rowck:checked+.ck {
+            border-color: rgba(234, 179, 8, 0.55);
+            background: color-mix(in oklab, rgba(9, 9, 11, 0.35) 70%, rgba(234, 179, 8, 0.18) 30%);
+            box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.12);
+        }
+
+        input.rowck:checked+.ck::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 4px;
+            background: rgba(234, 179, 8, 0.9);
+        }
+
+        /* Bulk bar (CSS only): appears if any row checkbox is checked - using :has() for scale */
+        .bulkbar {
+            display: none;
+            position: sticky;
+            bottom: 0;
+            z-index: 5;
+            padding: 10px 12px;
+            border-top: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(20, 20, 25, 0.94);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .bulkbar .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .bulkbar .count {
+            font-size: 12px;
+            color: var(--color-lux);
+        }
+
+        .bulkbar .right {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Show bulkbar when any row checkbox is checked - scalable with :has() */
+        .table-wrap:has(input.rowck:checked) .bulkbar {
+            display: flex;
+        }
+
+        /* Highlight checked rows - scalable with :has() */
+        tr:has(input.rowck:checked) td {
+            background: rgba(42, 42, 51, 0.46);
+        }
+
+        tr:has(input.rowck:checked) td:first-child {
+            background: rgba(42, 42, 51, 0.56);
+        }
+
+        /* Density handled in super-grid styles */
+
+        /* Inspector workflow box */
+        .insp-workflow {
+            margin-top: 10px;
+            padding: 10px 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(74, 74, 87, 0.55);
+            background: rgba(9, 9, 11, 0.22);
+        }
+
+
+
+        /* =========================
+   V4 Layout: Mini Rail + Right Drawer
+   - Center bento gets full width
+   - Right inspector becomes a drawer
+   (Variables merged into :root above)
+   ========================= */
+
+
+        .body {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            gap: 0;
+        }
+
+        /* Standard sidebar layout - matches other prototypes */
+        .na-sidebar {
+            width: 280px;
+            min-width: 280px;
+            border-right: 1px solid var(--color-stroke);
+        }
+
+        /* Standard Sidebar - Luxury pattern (matching other prototypes) */
+        /* Sidebar styles are in input.css, no custom overrides needed */
+
+        /* Right drawer (no JS) - Inspector drawer */
+        .drawer-toggle {
+            position: fixed;
+            inline-size: 1px;
+            block-size: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.42);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 220ms var(--ease);
+            z-index: 40;
+        }
+
+        .drawer-inspector {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            height: calc(100vh - 28px);
+            width: min(var(--w-drawer), calc(100vw - 92px));
+            border-radius: 16px;
+            background: rgba(12, 12, 14, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(18px);
+            transform: translateX(calc(100% + 20px));
+            transition: transform 260ms var(--ease);
+            z-index: 50;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .drawer-title {
+            font-size: 13px;
+            font-weight: 650;
+            letter-spacing: .01em;
+            margin-top: 2px;
+        }
+
+        .drawer-body {
+            padding: 14px;
+            overflow: auto;
+        }
+
+        /* Toggle open - Inspector drawer */
+        #drawer:checked~.shell .drawer-inspector {
+            transform: translateX(0);
+        }
+
+        #drawer:checked~.shell .drawer-backdrop {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Click backdrop to close */
+        #drawer:checked~.shell .drawer-backdrop {
+            cursor: pointer;
+        }
+
+        #drawer:checked~.shell .drawer-backdrop::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+        }
+
+        /* Backdrop as label (close) */
+        .drawer-backdrop {
+            /* allow <div> to act as close by overlaying a label */
+        }
+
+        /* Make the "Inspector" control look like a button */
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="na-app na-density-comfort">
+    <a href="#main" class="na-skip-link">Skip to main content</a>
+    <div class="na-bg-grain" aria-hidden="true"></div>
+
+    <!-- Toast toggles (no JS) -->
+    <input class="toast-toggle" type="checkbox" id="toast1" />
+    <input class="toast-toggle" type="checkbox" id="toast2" />
+
+    <!-- View State Machine (Radio Button) - Controls main view switching -->
+    <input class="view-radio" type="radio" name="view" id="view-grid" checked />
+    <input class="view-radio" type="radio" name="view" id="view-kanban" />
+    <input class="view-radio" type="radio" name="view" id="view-gantt" />
+
+    <!-- Filter radios (for Kanban and Gantt sub-filters) -->
+    <input class="view-radio" type="radio" name="kanban-filter" id="filter-all" checked />
+    <input class="view-radio" type="radio" name="kanban-filter" id="filter-ap" />
+    <input class="view-radio" type="radio" name="kanban-filter" id="filter-ar" />
+    <input class="view-radio" type="radio" name="kanban-filter" id="filter-ops" />
+
+    <input class="view-radio" type="radio" name="gantt-scope" id="gantt-day" checked />
+    <input class="view-radio" type="radio" name="gantt-scope" id="gantt-week" />
+    <input class="view-radio" type="radio" name="gantt-scope" id="gantt-month" />
+
+    <!-- Right Drawer toggle (no JS) -->
+    <input class="drawer-toggle" type="checkbox" id="drawer" />
+
+    <div class="na-shell">
+        <!-- Standard Sidebar - Luxury pattern -->
+        <aside class="na-sidebar" aria-label="Primary navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <div class="na-brand-title">Next‑Gen ERP</div>
+                    <div class="na-metadata-small">IDE Lightness • v2.0</div>
+                </div>
+            </div>
+
+            <nav class="na-nav" aria-label="Primary navigation">
+                <div class="na-nav-section" role="heading" aria-level="2">Core Operations</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                    <span class="na-nav-meta">Live</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Approval Queue</span>
+                    <span class="na-status warn na-badge-small">12</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>3‑Way Match</span>
+                    <span class="na-status warn na-badge-small">8</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Invoices</span>
+                    <span class="na-nav-meta">1,247</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Financial</div>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Payable</span>
+                    <span class="na-status bad na-badge-small">8</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Accounts Receivable</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>General Ledger</span>
+                </a>
+
+                <div class="na-nav-section" role="heading" aria-level="2">Tools</div>
+                <a href="#cmd" class="na-nav-item">
+                    <span>Command Palette</span>
+                    <span class="na-nav-meta">⌘K</span>
+                </a>
+                <a href="#settings" class="na-nav-item">
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact">
+                    <div class="na-label">System Status</div>
+                    <div class="na-status-indicator">
+                        <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+                        <span class="na-mono na-status-text-success">Realtime Active</span>
+                    </div>
+                </div>
+                <div class="na-divider na-my-3"></div>
+                <div class="na-muted na-text-sm" style="line-height:1.35;">
+                    Press <kbd
+                        style="padding:2px 6px;background:var(--color-paper-2);border:1px solid var(--color-stroke);border-radius:2px;font-size:10px;">⌘K</kbd>
+                    for commands
+                </div>
+            </div>
+        </aside>
+
+        <main class="na-main" id="main">
+            <header class="na-header">
+                <div class="na-search" role="search">
+                    <label class="sr-only" for="q">Search</label>
+                    <input id="q" class="na-search-input" type="search"
+                        placeholder="Search vendors, invoices, GRN, PO, approvals, journal…" />
+                    <span class="na-search-icon" aria-hidden="true">⌘K</span>
+                </div>
+                <div class="na-header-actions">
+                    <button class="na-btn" aria-label="Filter data">Filters</button>
+                    <label class="na-btn" for="drawer" role="button"
+                        aria-label="Open inspector drawer">Inspector</label>
+                    <button class="na-btn" type="button"><label for="toast2"
+                            style="cursor:pointer">Notify</label></button>
+                    <a class="na-btn-primary" href="#create" role="button" aria-label="Quick create">＋ New</a>
+                </div>
+            </header>
+
+            <div class="na-content">
+                <!-- Live KPI + Ticker -->
+                <section class="card" aria-label="Realtime overview">
+                    <div class="hd">
+                        <div>
+                            <div class="meta">Realtime stream</div>
+                            <div class="small">WebSocket → approvals • matching • payments • sync • anomalies</div>
+                        </div>
+                        <div class="view-tabs" role="tablist" aria-label="Dashboard modes">
+                            <label class="view-tab" for="view-grid" role="tab">
+                                Dashboard
+                            </label>
+                            <label class="view-tab" for="view-kanban" role="tab">
+                                Kanban
+                            </label>
+                            <label class="view-tab" for="view-gantt" role="tab">
+                                Gantt
+                            </label>
+                        </div>
+                    </div>
+                    <div class="bd">
+                        <div class="kpis" role="list">
+                            <div class="kpi" role="listitem">
+                                <div class="m">Approvals</div>
+                                <div class="v">12</div>
+                                <div class="s">pending today</div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="m">3‑Way Match</div>
+                                <div class="v">8</div>
+                                <div class="s">needs evidence</div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="m">Payments</div>
+                                <div class="v mono">RM 184,220</div>
+                                <div class="s">scheduled</div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="m">Risk</div>
+                                <div class="v">3</div>
+                                <div class="s">alerts</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(39,39,42,0.65)">
+                            <div class="ticker" aria-label="Live ticker">
+                                <div class="ticker-track" aria-hidden="true">
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>INV‑24091</b><span>approved</span><span
+                                            class="up">+1</span></div>
+                                    <div class="t-item"><span class="dot y"
+                                            aria-hidden="true"></span><b>GRN‑11920</b><span>variance</span><span
+                                            class="down">‑0.8%</span></div>
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>PAY‑8841</b><span>released</span><span
+                                            class="up">RM 12,900</span></div>
+                                    <div class="t-item"><span class="dot r"
+                                            aria-hidden="true"></span><b>SOA‑AUG</b><span>mismatch</span><span
+                                            class="down">3 lines</span></div>
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>VND‑332</b><span>KYB ok</span><span
+                                            class="up">pass</span></div>
+                                    <div class="t-item"><span class="dot y"
+                                            aria-hidden="true"></span><b>PO‑55320</b><span>late</span><span
+                                            class="down">2d</span></div>
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>INV‑24091</b><span>approved</span><span
+                                            class="up">+1</span></div>
+                                    <div class="t-item"><span class="dot y"
+                                            aria-hidden="true"></span><b>GRN‑11920</b><span>variance</span><span
+                                            class="down">‑0.8%</span></div>
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>PAY‑8841</b><span>released</span><span
+                                            class="up">RM 12,900</span></div>
+                                    <div class="t-item"><span class="dot r"
+                                            aria-hidden="true"></span><b>SOA‑AUG</b><span>mismatch</span><span
+                                            class="down">3 lines</span></div>
+                                    <div class="t-item"><span class="dot g"
+                                            aria-hidden="true"></span><b>VND‑332</b><span>KYB ok</span><span
+                                            class="up">pass</span></div>
+                                    <div class="t-item"><span class="dot y"
+                                            aria-hidden="true"></span><b>PO‑55320</b><span>late</span><span
+                                            class="down">2d</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div style="height:12px"></div>
+                <section class="focus-map" aria-label="Focus map">
+                    <div>
+                        <div class="meta">Focus</div>
+                        <div class="small">Clear “where am I” — IDE style</div>
+                    </div>
+                    <div class="crumbs" aria-label="Breadcrumbs">
+                        <span class="crumb"><strong>Ops</strong> Dashboard</span><span class="sep">›</span>
+                        <span class="crumb"><strong>Invoices</strong> Exceptions</span><span class="sep">›</span>
+                        <span class="crumb"><strong>INV‑24102</strong> uploaded</span>
+                    </div>
+                    <div style="margin-left:auto" class="workflow" aria-label="Workflow">
+                        <span class="step ok"><i aria-hidden="true"></i>requested</span>
+                        <span class="step active warn"><i aria-hidden="true"></i>uploaded</span>
+                        <span class="step"><i aria-hidden="true"></i>accepted</span>
+                        <span class="step bad"><i aria-hidden="true"></i>rejected</span>
+                        <span class="step"><i aria-hidden="true"></i>cancelled</span>
+                    </div>
+                </section>
+
+                <div style="height:16px"></div>
+
+                <!-- View Content: Grid -->
+                <div class="view-content view-content-grid">
+                    <div class="grid">
+                        <div style="display:grid; gap:16px">
+                            <!-- Kanban -->
+                            <section class="card" aria-label="Kanban board">
+                                <div class="hd">
+                                    <div>
+                                        <div class="meta">Kanban</div>
+                                        <div class="small">Daily execution — approvals & exceptions</div>
+                                    </div>
+                                    <div class="view-tabs" aria-label="Board filters">
+                                        <label class="view-tab" for="filter-all" role="tab">
+                                            All
+                                        </label>
+                                        <label class="view-tab" for="filter-ap" role="tab">
+                                            AP
+                                        </label>
+                                        <label class="view-tab" for="filter-ar" role="tab">
+                                            AR
+                                        </label>
+                                        <label class="view-tab" for="filter-ops" role="tab">
+                                            Ops
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="bd">
+                                    <div class="kanban">
+                                        <div class="klane">
+                                            <div class="lh"><span>Inbox</span><span class="pill">6</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">New Vendor: De Heus</p>
+                                                    <div class="sub"><span class="badge y">KYB</span><span
+                                                            class="mono">VND‑441</span></div>
+                                                </div>
+                                                <div class="kcard">
+                                                    <p class="t">Invoice Upload: INV‑24102</p>
+                                                    <div class="sub"><span class="badge">Docs</span><span
+                                                            class="mono">RM
+                                                            28,900</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="klane">
+                                            <div class="lh"><span>Review</span><span class="pill warn">3</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">3‑Way Match Variance</p>
+                                                    <div class="sub"><span class="badge y">GRN</span><span
+                                                            class="mono">‑0.8%</span></div>
+                                                </div>
+                                                <div class="kcard">
+                                                    <p class="t">SOA: Line mismatch</p>
+                                                    <div class="sub"><span class="badge r">Risk</span><span
+                                                            class="mono">3
+                                                            lines</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="klane">
+                                            <div class="lh"><span>Approve</span><span class="pill">2</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">Payment Batch Release</p>
+                                                    <div class="sub"><span class="badge g">OK</span><span
+                                                            class="mono">PAY‑8841</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="klane">
+                                            <div class="lh"><span>Done</span><span class="pill live">LIVE</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">INV‑24091 Approved</p>
+                                                    <div class="sub"><span class="badge g">Pass</span><span
+                                                            class="mono">RM
+                                                            12,900</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top:10px; display:flex; justify-content:flex-end">
+                                        <button class="btn" type="button"><label for="toast1"
+                                                style="cursor:pointer">Create
+                                                Case</label></button>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Gantt -->
+                            <section class="card" aria-label="Gantt timeline">
+                                <div class="hd">
+                                    <div>
+                                        <div class="meta">Gantt</div>
+                                        <div class="small">Today’s operational timeline</div>
+                                    </div>
+                                    <div class="view-tabs" aria-label="Timeline scope">
+                                        <label class="view-tab" for="gantt-day" role="tab">
+                                            Day
+                                        </label>
+                                        <label class="view-tab" for="gantt-week" role="tab">
+                                            Week
+                                        </label>
+                                        <label class="view-tab" for="gantt-month" role="tab">
+                                            Month
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="bd">
+                                    <div class="gantt">
+                                        <div class="g-head" aria-hidden="true">
+                                            <div></div>
+                                            <div>1</div>
+                                            <div>2</div>
+                                            <div>3</div>
+                                            <div>4</div>
+                                            <div>5</div>
+                                            <div>6</div>
+                                            <div>7</div>
+                                            <div>8</div>
+                                            <div>9</div>
+                                            <div>10</div>
+                                            <div>11</div>
+                                            <div>12</div>
+                                        </div>
+
+                                        <div class="g-row">
+                                            <div class="g-task">AP approvals (batch)</div>
+                                            <div class="g-track">
+                                                <div class="g-bar ok" style="--start:2; --span:5"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="g-row">
+                                            <div class="g-task">3‑Way match exceptions</div>
+                                            <div class="g-track">
+                                                <div class="g-bar risk" style="--start:4; --span:4"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="g-row">
+                                            <div class="g-task">Payment run</div>
+                                            <div class="g-track">
+                                                <div class="g-bar" style="--start:7; --span:3"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="g-row">
+                                            <div class="g-task">SOA reconciliation</div>
+                                            <div class="g-track">
+                                                <div class="g-bar crit" style="--start:6; --span:5"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- CRUD Grid -->
+                        <div style="display:grid; gap:16px">
+                            <section class="table-wrap" aria-label="CRUD data grid">
+                                <div class="table-tools">
+                                    <div class="tool-left">
+                                        <span class="meta">Data grid</span>
+                                        <select class="select" aria-label="Entity">
+                                            <option>Invoices</option>
+                                            <option>Purchase Orders</option>
+                                            <option>Goods Receive Notes</option>
+                                            <option>Vendors</option>
+                                            <option>Payments</option>
+                                        </select>
+                                        <select class="select" aria-label="View">
+                                            <option>Today</option>
+                                            <option>This week</option>
+                                            <option>Open items</option>
+                                            <option selected>Exceptions</option>
+                                        </select>
+                                    </div>
+                                    <div class="tool-right">
+                                        <button class="btn" type="button">Bulk</button>
+                                        <button class="btn" type="button">Columns</button>
+                                        <a class="btn btn-primary" href="#create" role="button">Create</a>
+                                    </div>
+                                </div>
+
+                                <div class="super-grid-container" style="max-height: 420px;">
+                                    <table class="super-grid" role="table" aria-label="Invoices">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:44px">Select</th>
+                                                <th>State</th>
+                                                <th>Invoice</th>
+                                                <th>Vendor</th>
+                                                <th class="mono">Amount</th>
+                                                <th>Match</th>
+                                                <th>Due</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="r1 is-selected">
+                                                <td style="width:44px"><label
+                                                        style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input
+                                                            class="rowck" type="checkbox" /><span class="ck"
+                                                            aria-hidden="true"></span></label></td>
+                                                <td><span class="dot g" aria-label="ok"></span></td>
+                                                <td class="mono">INV‑24091</td>
+                                                <td>Greenfeed</td>
+                                                <td class="mono">RM 12,900</td>
+                                                <td><span class="badge g">PASS</span></td>
+                                                <td class="mono">2025‑12‑29</td>
+                                                <td>
+                                                    <div class="row-actions">
+                                                        <a class="iconbtn" href="#create" title="Edit">✎</a>
+                                                        <a class="iconbtn" href="#cmd" title="Command">⌘</a>
+                                                        <a class="iconbtn danger" href="#delete"
+                                                            title="Soft delete">⌫</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="r2">
+                                                <td style="width:44px"><label
+                                                        style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input
+                                                            class="rowck" type="checkbox" /><span class="ck"
+                                                            aria-hidden="true"></span></label></td>
+                                                <td><span class="dot y" aria-label="warn"></span></td>
+                                                <td class="mono">INV‑24102</td>
+                                                <td>ANT</td>
+                                                <td class="mono">RM 28,900</td>
+                                                <td><span class="badge y">EVIDENCE</span></td>
+                                                <td class="mono">2026‑01‑03</td>
+                                                <td>
+                                                    <div class="row-actions">
+                                                        <a class="iconbtn" href="#create" title="Edit">✎</a>
+                                                        <a class="iconbtn" href="#cmd" title="Command">⌘</a>
+                                                        <a class="iconbtn danger" href="#delete"
+                                                            title="Soft delete">⌫</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="r3">
+                                                <td style="width:44px"><label
+                                                        style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input
+                                                            class="rowck" type="checkbox" /><span class="ck"
+                                                            aria-hidden="true"></span></label></td>
+                                                <td><span class="dot r" aria-label="error"></span></td>
+                                                <td class="mono">INV‑24107</td>
+                                                <td>De Heus</td>
+                                                <td class="mono">RM 41,120</td>
+                                                <td><span class="badge r">MISMATCH</span></td>
+                                                <td class="mono">2025‑12‑28</td>
+                                                <td>
+                                                    <div class="row-actions">
+                                                        <a class="iconbtn" href="#create" title="Edit">✎</a>
+                                                        <a class="iconbtn" href="#cmd" title="Command">⌘</a>
+                                                        <a class="iconbtn danger" href="#delete"
+                                                            title="Soft delete">⌫</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="r4">
+                                                <td style="width:44px"><label
+                                                        style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input
+                                                            class="rowck" type="checkbox" /><span class="ck"
+                                                            aria-hidden="true"></span></label></td>
+                                                <td><span class="dot g" aria-label="ok"></span></td>
+                                                <td class="mono">INV‑24111</td>
+                                                <td>Japfa</td>
+                                                <td class="mono">RM 9,480</td>
+                                                <td><span class="badge">PENDING</span></td>
+                                                <td class="mono">2026‑01‑05</td>
+                                                <td>
+                                                    <div class="row-actions">
+                                                        <a class="iconbtn" href="#create" title="Edit">✎</a>
+                                                        <a class="iconbtn" href="#cmd" title="Command">⌘</a>
+                                                        <a class="iconbtn danger" href="#delete"
+                                                            title="Soft delete">⌫</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="table-tools"
+                                    style="border-top:1px solid rgba(39,39,42,0.65); border-bottom:none">
+                                    <div class="small">Showing <b style="color:var(--color-lux)">1–4</b> of <b
+                                            style="color:var(--color-lux)">128</b> • Sort: Due date • View: Exceptions
+                                    </div>
+                                    <div class="tool-right">
+                                        <button class="btn" type="button" aria-label="Previous page">Prev</button>
+                                        <button class="btn" type="button" aria-label="Next page">Next</button>
+                                    </div>
+                                </div>
+
+                                <div class="bulkbar" aria-label="Bulk actions">
+                                    <div class="left">
+                                        <span class="count">Selected: <b style="color:var(--color-lux)">2</b></span>
+                                        <span class="small">Bulk actions (ERP daily ops)</span>
+                                    </div>
+                                    <div class="right">
+                                        <button class="btn" type="button">Assign</button>
+                                        <button class="btn" type="button">Request Docs</button>
+                                        <button class="btn" type="button">Mark Reviewed</button>
+                                        <button class="btn danger" type="button">Soft Delete</button>
+                                    </div>
+                                </div>
+
+                            </section>
+
+                            <section class="card" aria-label="Activity stream">
+                                <div class="hd">
+                                    <div>
+                                        <div class="meta">Audit stream</div>
+                                        <div class="small">Every decision emits events — traceable & explainable</div>
+                                    </div>
+                                    <a class="btn" href="#cmd" role="button">Open Palette</a>
+                                </div>
+                                <div class="bd">
+                                    <div class="small"><span class="dot g" aria-hidden="true"></span> INV‑24091 approved
+                                        by
+                                        Andy • 10:42</div>
+                                    <div class="small" style="margin-top:8px"><span class="dot y"
+                                            aria-hidden="true"></span>
+                                        INV‑24102 needs evidence • 10:18</div>
+                                    <div class="small" style="margin-top:8px"><span class="dot r"
+                                            aria-hidden="true"></span>
+                                        INV‑24107 mismatch flagged • 09:55</div>
+                                    <div class="small" style="margin-top:8px"><span class="dot g"
+                                            aria-hidden="true"></span>
+                                        PAY‑8841 released • 09:21</div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Content: Kanban -->
+                <div class="view-content view-content-kanban">
+                    <div class="grid">
+                        <div style="display:grid; gap:16px; grid-template-columns: 1fr;">
+                            <section class="card" aria-label="Kanban board">
+                                <div class="hd">
+                                    <div>
+                                        <div class="meta">Kanban Board</div>
+                                        <div class="small">Full-width workflow view</div>
+                                    </div>
+                                </div>
+                                <div class="bd">
+                                    <div class="kanban">
+                                        <div class="klane">
+                                            <div class="lh"><span>Inbox</span><span class="pill">6</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">New Vendor: De Heus</p>
+                                                    <div class="sub"><span class="badge y">KYB</span><span
+                                                            class="mono">VND‑441</span></div>
+                                                </div>
+                                                <div class="kcard">
+                                                    <p class="t">Invoice Upload: INV‑24102</p>
+                                                    <div class="sub"><span class="badge">Docs</span><span
+                                                            class="mono">RM 28,900</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="klane">
+                                            <div class="lh"><span>Review</span><span class="pill warn">3</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">3‑Way Match Variance</p>
+                                                    <div class="sub"><span class="badge y">GRN</span><span
+                                                            class="mono">‑0.8%</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="klane">
+                                            <div class="lh"><span>Approve</span><span class="pill">2</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">Payment Batch Release</p>
+                                                    <div class="sub"><span class="badge g">OK</span><span
+                                                            class="mono">PAY‑8841</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="klane">
+                                            <div class="lh"><span>Done</span><span class="pill live">LIVE</span></div>
+                                            <div class="kcards">
+                                                <div class="kcard">
+                                                    <p class="t">INV‑24091 Approved</p>
+                                                    <div class="sub"><span class="badge g">Pass</span><span
+                                                            class="mono">RM 12,900</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Content: Gantt -->
+                <div class="view-content view-content-gantt">
+                    <div class="grid">
+                        <div style="display:grid; gap:16px; grid-template-columns: 1fr;">
+                            <section class="card" aria-label="Gantt timeline">
+                                <div class="hd">
+                                    <div>
+                                        <div class="meta">Gantt Chart</div>
+                                        <div class="small">Full-width timeline view</div>
+                                    </div>
+                                </div>
+                                <div class="bd">
+                                    <div class="gantt">
+                                        <div class="g-head" aria-hidden="true">
+                                            <div></div>
+                                            <div>1</div>
+                                            <div>2</div>
+                                            <div>3</div>
+                                            <div>4</div>
+                                            <div>5</div>
+                                            <div>6</div>
+                                            <div>7</div>
+                                            <div>8</div>
+                                            <div>9</div>
+                                            <div>10</div>
+                                            <div>11</div>
+                                            <div>12</div>
+                                        </div>
+                                        <div class="g-row">
+                                            <div class="g-task">AP approvals (batch)</div>
+                                            <div class="g-track">
+                                                <div class="g-bar ok" style="--start:2; --span:5"></div>
+                                            </div>
+                                        </div>
+                                        <div class="g-row">
+                                            <div class="g-task">3‑Way match exceptions</div>
+                                            <div class="g-track">
+                                                <div class="g-bar risk" style="--start:4; --span:4"></div>
+                                            </div>
+                                        </div>
+                                        <div class="g-row">
+                                            <div class="g-task">Payment run</div>
+                                            <div class="g-track">
+                                                <div class="g-bar" style="--start:7; --span:3"></div>
+                                            </div>
+                                        </div>
+                                        <div class="g-row">
+                                            <div class="g-task">SOA reconciliation</div>
+                                            <div class="g-track">
+                                                <div class="g-bar crit" style="--start:6; --span:5"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Drawer (Inspector) -->
+        <label class="drawer-backdrop" for="drawer" aria-label="Close inspector"></label>
+        <aside class="drawer drawer-inspector" aria-label="Inspector drawer">
+            <header class="drawer-head">
+                <div>
+                    <div class="meta">Inspector</div>
+                    <div class="drawer-title">Record / Actions</div>
+                </div>
+                <label class="iconbtn" for="drawer" aria-label="Close inspector" title="Close">×</label>
+            </header>
+
+            <div class="drawer-body">
+                <!-- (kept from prior inspector content) -->
+                <div class="ins-card">
+                    <div class="ins-title">Selected row</div>
+                    <div class="ins-meta">ORD‑2025‑013 • Invoice pending • 3‑way match required</div>
+                    <div class="ins-grid">
+                        <div class="ins-k">
+                            <div class="meta">Vendor</div>
+                            <div class="mono">VND‑1024</div>
+                        </div>
+                        <div class="ins-k">
+                            <div class="meta">Amount</div>
+                            <div class="mono">RM 18,430.00</div>
+                        </div>
+                        <div class="ins-k">
+                            <div class="meta">Due</div>
+                            <div class="mono">2026‑01‑04</div>
+                        </div>
+                        <div class="ins-k">
+                            <div class="meta">Risk</div>
+                            <div class="chip warn">Variance 2.1%</div>
+                        </div>
+                    </div>
+
+                    <div class="divider" style="margin:14px 0;"></div>
+
+                    <div class="row-actions">
+                        <button class="btn btn-primary" type="button">Approve</button>
+                        <button class="btn" type="button">Reject</button>
+                        <button class="btn" type="button">Withdraw</button>
+                        <button class="btn" type="button">Cancel</button>
+                    </div>
+
+                    <div class="divider" style="margin:14px 0;"></div>
+
+                    <div class="ins-title">Evidence</div>
+                    <div class="meta" style="margin-top:6px;">Drag & drop or pick from storage</div>
+                    <div class="evidence">
+                        <a class="evi" href="#"><span class="dot live" aria-hidden="true"></span>PO.pdf</a>
+                        <a class="evi" href="#"><span class="dot live" aria-hidden="true"></span>GRN.pdf</a>
+                        <a class="evi" href="#"><span class="dot warn" aria-hidden="true"></span>Invoice.pdf</a>
+                        <a class="evi" href="#"><span class="dot" aria-hidden="true"></span>POD.jpg</a>
+                    </div>
+
+                    <div class="divider" style="margin:14px 0;"></div>
+
+                    <div class="ins-title">Audit trail</div>
+                    <div class="audit">
+                        <div class="audit-row"><span class="meta">12:41</span><span
+                                class="mono">match.pass=2</span><span class="chip">auto</span></div>
+                        <div class="audit-row"><span class="meta">12:45</span><span
+                                class="mono">status=review</span><span class="chip warn">manual</span></div>
+                        <div class="audit-row"><span class="meta">12:49</span><span class="mono">note
+                                added</span><span class="chip">user</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    </div>
+
+    <!-- Command Palette Overlay -->
+    <section id="cmd" class="overlay" aria-label="Command palette">
+        <a class="backdrop" href="#" aria-label="Close"></a>
+        <div class="palette" role="dialog" aria-modal="true" aria-label="Command palette dialog">
+            <div class="palette-head">
+                <div class="meta">Command palette</div>
+                <div class="p-close">
+                    <span class="p-key">Esc</span>
+                    <a class="btn" href="#" role="button">Close</a>
+                </div>
+            </div>
+            <div class="palette-body">
+                <input class="palette-input"
+                    placeholder="Type a command… (e.g. create invoice, open approvals, run 3‑way match)" />
+                <div style="height:10px"></div>
+
+                <a class="p-item" href="#create">
+                    <div class="p-left">
+                        <div class="p-title">Create → Invoice</div>
+                        <div class="p-sub">Open Quick Create drawer</div>
+                    </div>
+                    <div class="p-key">C I</div>
+                </a>
+
+                <a class="p-item" href="#">
+                    <div class="p-left">
+                        <div class="p-title">Run → 3‑Way Match</div>
+                        <div class="p-sub">Execute matching pipeline for open invoices</div>
+                    </div>
+                    <div class="p-key">R 3</div>
+                </a>
+
+                <a class="p-item" href="#">
+                    <div class="p-left">
+                        <div class="p-title">Open → Approval Queue</div>
+                        <div class="p-sub">Navigate to approvals workspace</div>
+                    </div>
+                    <div class="p-key">G A</div>
+                </a>
+
+                <a class="p-item" href="#">
+                    <div class="p-left">
+                        <div class="p-title">Export → Current View</div>
+                        <div class="p-sub">CSV export with filters</div>
+                    </div>
+                    <div class="p-key">E V</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Create Drawer -->
+    <section id="create" class="drawer-create" aria-label="Quick create">
+        <a class="backdrop" href="#" aria-label="Close"></a>
+        <div class="panel" role="dialog" aria-modal="true" aria-label="Quick create drawer">
+            <div class="hd">
+                <div>
+                    <div class="meta">Quick create</div>
+                    <div class="small">Create record (draft) → save → route to workflow</div>
+                </div>
+                <a class="btn" href="#" role="button" aria-label="Close">Close</a>
+            </div>
+            <div class="bd">
+                <div class="split">
+                    <div class="field">
+                        <label>Vendor</label>
+                        <input class="input" value="Greenfeed" />
+                    </div>
+                    <div class="field">
+                        <label>Invoice No</label>
+                        <input class="input mono" value="INV‑24122" />
+                    </div>
+                </div>
+                <div class="split">
+                    <div class="field">
+                        <label>Amount</label>
+                        <input class="input mono" value="RM 18,420" />
+                    </div>
+                    <div class="field">
+                        <label>Due Date</label>
+                        <input class="input mono" value="2026‑01‑07" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Notes</label>
+                    <textarea placeholder="Optional notes for audit trail…"></textarea>
+                    <div class="help">Plain text only • auto-audited</div>
+                </div>
+                <div class="hr"></div>
+                <div class="meta">Next</div>
+                <div class="small">Attach docs → run 3‑way match → request evidence (if needed)</div>
+            </div>
+            <div class="ft">
+                <button class="btn" type="button">Save Draft</button>
+                <button class="btn btn-primary" type="button">Save & Run Match</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toasts -->
+    <div class="toasts" aria-label="Notifications">
+        <div class="toast t1" role="status" aria-live="polite">
+            <div class="trow">
+                <div>
+                    <b>Case created</b>
+                    <p>Mismatch flagged for INV‑24107. Assigned to Finance Ops.</p>
+                </div>
+                <label class="x" for="toast1" aria-label="Dismiss">✕</label>
+            </div>
+        </div>
+        <div class="toast t2" role="status" aria-live="polite">
+            <div class="trow">
+                <div>
+                    <b>Reminder</b>
+                    <p>3 approvals pending. SLA: 2h remaining.</p>
+                </div>
+                <label class="x" for="toast2" aria-label="Dismiss">✕</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- anchors -->
+    <div id="delete" hidden></div>
+</body>
+
+</html>

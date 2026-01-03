@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo‑Analog • Next‑Gen ERP Dashboard (CRUD + Kanban + Gantt + Live)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           ERP DASHBOARD: PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Comprehensive ERP with CRUD, Kanban, Gantt, Real-time Ticker
+           All base styles from style.css
+           ================================================================= */
+
+        body {
+            overflow: hidden;
+        }
+
+        /* 3-Pane ERP Shell */
+        .erp-shell {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 380px;
+            grid-template-rows: 56px 1fr 34px;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Header */
+        .erp-head {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.72);
+            backdrop-filter: blur(18px);
+        }
+
+        /* Rail (Sidebar) */
+        .erp-rail {
+            grid-row: 2 / 4;
+            border-right: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.72);
+            backdrop-filter: blur(14px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .erp-rail-top {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--color-stroke);
+        }
+
+        .erp-rail input {
+            width: 100%;
+            height: 34px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.5);
+            color: var(--color-lux);
+            padding: 0 12px;
+        }
+
+        .erp-nav {
+            padding: 10px;
+            overflow: auto;
+        }
+
+        .erp-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: var(--radius-card);
+            border: 1px solid transparent;
+            color: var(--color-lux-dim);
+            transition: all var(--duration-150) var(--ease-premium);
+            text-decoration: none;
+        }
+
+        .erp-nav a:hover {
+            background: rgba(39, 39, 42, 0.55);
+            border-color: rgba(63, 63, 70, 0.45);
+            color: var(--color-lux);
+        }
+
+        .erp-nav a.active {
+            background: color-mix(in oklab, var(--color-paper) 92%, var(--color-gold) 8%);
+            border-color: color-mix(in oklab, var(--color-gold) 22%, var(--color-stroke));
+            color: var(--color-lux);
+        }
+
+        .erp-pill {
+            height: 20px;
+            min-width: 20px;
+            padding: 0 8px;
+            border-radius: 999px;
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.55);
+            color: var(--color-clay);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .erp-pill.live {
+            border-color: rgba(16, 185, 129, 0.35);
+            color: color-mix(in oklab, var(--color-success) 85%, var(--color-lux) 15%);
+        }
+
+        .erp-pill.warn {
+            border-color: rgba(245, 158, 11, 0.35);
+            color: color-mix(in oklab, var(--color-warning) 85%, var(--color-lux) 15%);
+        }
+
+        /* Main Content */
+        .erp-main {
+            grid-row: 2 / 3;
+            overflow: auto;
+            padding: 16px;
+        }
+
+        .erp-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.4fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        /* KPI Grid */
+        .erp-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .erp-kpi {
+            border-radius: 14px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(24, 24, 27, 0.55);
+            padding: 10px 10px 12px;
+        }
+
+        .erp-kpi-v {
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .erp-kpi-s {
+            color: var(--color-lux-dim);
+            font-size: 12px;
+        }
+
+        .erp-kpi-m {
+            margin-top: 6px;
+            color: var(--color-clay);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        /* Real-time Ticker */
+        .erp-ticker {
+            display: flex;
+            gap: 18px;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+        }
+
+        .erp-ticker-track {
+            display: flex;
+            gap: 18px;
+            animation: ticker 18s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .erp-t-item {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            color: var(--color-lux-dim);
+            font-size: 11px;
+        }
+
+        .erp-t-item b {
+            color: var(--color-lux);
+            font-weight: 700;
+        }
+
+        .erp-up {
+            color: color-mix(in oklab, var(--color-success) 80%, var(--color-lux) 20%);
+        }
+
+        .erp-down {
+            color: color-mix(in oklab, var(--color-error) 80%, var(--color-lux) 20%);
+        }
+
+        /* Tabs */
+        .erp-tabs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .erp-tab {
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.55);
+            color: var(--color-lux-dim);
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--duration-150) var(--ease-premium);
+            font-size: 12px;
+        }
+
+        .erp-tab:hover {
+            background: var(--color-paper-2);
+            color: var(--color-lux);
+            border-color: var(--color-stroke-strong);
+        }
+
+        .erp-tab[aria-selected="true"] {
+            background: color-mix(in oklab, var(--color-paper) 92%, var(--color-gold) 8%);
+            border-color: color-mix(in oklab, var(--color-gold) 25%, var(--color-stroke));
+            color: var(--color-lux);
+            box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.10);
+        }
+
+        /* Kanban Board */
+        .erp-kanban {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .erp-klane {
+            border-radius: 14px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(24, 24, 27, 0.45);
+            overflow: hidden;
+        }
+
+        .erp-klane-lh {
+            padding: 10px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--color-lux-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .erp-kcards {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .erp-kcard {
+            border-radius: var(--radius-card);
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.68);
+            padding: 10px;
+            transition: all var(--duration-150) var(--ease-premium);
+        }
+
+        .erp-kcard:hover {
+            transform: translateY(-1px);
+            border-color: rgba(63, 63, 70, 0.65);
+            background: rgba(24, 24, 27, 0.78);
+        }
+
+        .erp-kcard-t {
+            font-size: 13px;
+            margin: 0 0 6px;
+        }
+
+        .erp-kcard-sub {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            color: var(--color-clay);
+            font-size: 11px;
+        }
+
+        .erp-badge {
+            height: 18px;
+            padding: 0 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(39, 39, 42, 0.9);
+            background: rgba(18, 18, 20, 0.65);
+            color: var(--color-lux-dim);
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .erp-badge.g {
+            border-color: rgba(16, 185, 129, 0.35);
+            color: color-mix(in oklab, var(--color-success) 85%, var(--color-lux) 15%);
+        }
+
+        .erp-badge.y {
+            border-color: rgba(245, 158, 11, 0.35);
+            color: color-mix(in oklab, var(--color-warning) 85%, var(--color-lux) 15%);
+        }
+
+        .erp-badge.r {
+            border-color: rgba(244, 63, 94, 0.35);
+            color: color-mix(in oklab, var(--color-error) 85%, var(--color-lux) 15%);
+        }
+
+        /* Gantt Chart */
+        .erp-gantt {
+            display: grid;
+            gap: 8px;
+        }
+
+        .erp-g-head {
+            display: grid;
+            grid-template-columns: 180px repeat(12, 1fr);
+            gap: 2px;
+            color: var(--color-clay);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .erp-g-head div {
+            padding: 6px 8px;
+        }
+
+        .erp-g-row {
+            display: grid;
+            grid-template-columns: 180px repeat(12, 1fr);
+            gap: 2px;
+            align-items: center;
+        }
+
+        .erp-g-task {
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.65);
+            color: var(--color-lux-dim);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .erp-g-track {
+            grid-column: 2 / -1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2px;
+            padding: 2px;
+            border-radius: 10px;
+            background: rgba(39, 39, 42, 0.45);
+            border: 1px solid rgba(39, 39, 42, 0.75);
+        }
+
+        .erp-g-bar {
+            height: 10px;
+            border-radius: 6px;
+            grid-column: var(--start) / span var(--span);
+            background: color-mix(in oklab, var(--color-gold) 65%, var(--color-info));
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35) inset;
+        }
+
+        .erp-g-bar.ok {
+            background: color-mix(in oklab, var(--color-success) 70%, var(--color-info));
+        }
+
+        .erp-g-bar.risk {
+            background: color-mix(in oklab, var(--color-warning) 74%, var(--color-gold));
+        }
+
+        .erp-g-bar.crit {
+            background: color-mix(in oklab, var(--color-error) 70%, var(--color-gold));
+        }
+
+        /* Data Grid Tools */
+        .erp-table-tools {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .erp-tool-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .erp-tool-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .erp-select {
+            height: 32px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.45);
+            color: var(--color-lux);
+            padding: 0 10px;
+        }
+
+        /* Inspector Panel */
+        .erp-insp {
+            grid-row: 2 / 4;
+            border-left: 1px solid var(--color-stroke);
+            background: rgba(18, 18, 20, 0.72);
+            backdrop-filter: blur(14px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .erp-insp-head {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--color-stroke);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .erp-insp-body {
+            padding: 14px;
+            overflow: auto;
+        }
+
+        .erp-field {
+            margin-bottom: 12px;
+        }
+
+        .erp-input,
+        .erp-textarea {
+            width: 100%;
+            height: 36px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--color-stroke);
+            background: rgba(9, 9, 11, 0.45);
+            color: var(--color-lux);
+            padding: 0 12px;
+        }
+
+        .erp-textarea {
+            height: auto;
+            padding: 10px 12px;
+            min-height: 92px;
+            resize: vertical;
+        }
+
+        .erp-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Footer */
+        .erp-footer {
+            grid-column: 2 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-top: 1px solid var(--color-stroke);
+            color: var(--color-clay);
+            font-size: 11px;
+            background: rgba(9, 9, 11, 0.72);
+            backdrop-filter: blur(16px);
+        }
+
+        .erp-led {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .erp-led i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--color-success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+        }
+
+        .erp-iconbtn {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-control);
+            border: 1px solid rgba(39, 39, 42, 0.75);
+            background: rgba(18, 18, 20, 0.6);
+            color: var(--color-lux-dim);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all var(--duration-150) var(--ease-premium);
+            text-decoration: none;
+        }
+
+        .erp-iconbtn:hover {
+            background: rgba(24, 24, 27, 0.85);
+            border-color: rgba(63, 63, 70, 0.8);
+            color: var(--color-lux);
+        }
+
+        .erp-iconbtn.danger {
+            border-color: rgba(244, 63, 94, 0.28);
+        }
+
+        .erp-iconbtn.danger:hover {
+            border-color: rgba(244, 63, 94, 0.45);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .erp-ticker-track {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="na-app">
+    <a class="na-skip-link" href="#main-content">Skip to main content</a>
+    <div class="na-bg-grain" aria-hidden="true"></div>
+
+    <div class="erp-shell" role="application" aria-label="Neo‑Analog Next‑Gen ERP Dashboard">
+        <!-- Header -->
+        <header class="erp-head">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <h1 class="na-h5 m-0">Next‑Gen ERP Dashboard</h1>
+                    <div class="na-metadata-small">Daily Ops • CRUD‑first • Realtime • Boards • Timeline</div>
+                </div>
+            </div>
+
+            <div class="na-search" role="search" aria-label="Global search">
+                <input class="na-search-input" type="search" placeholder="Search vendors, invoices, GRN, PO, approvals, journal…" aria-label="Search" />
+                <span class="na-search-icon" aria-hidden="true">⌕</span>
+                <span class="na-badge" aria-hidden="true">⌘K</span>
+            </div>
+
+            <div class="na-header-actions">
+                <button class="na-btn" type="button">Filters</button>
+                <button class="na-btn" type="button">Export</button>
+                <a class="na-btn na-btn-primary" href="#new" role="button" aria-label="Create new record">＋ New</a>
+            </div>
+        </header>
+
+        <!-- Rail -->
+        <aside class="erp-rail" aria-label="Primary navigation">
+            <div class="erp-rail-top">
+                <div class="na-nav-section">Workspaces</div>
+                <input class="na-input" type="text" placeholder="Jump to module…" aria-label="Jump to module" />
+            </div>
+            <nav class="erp-nav">
+                <a class="active" href="#" aria-current="page">
+                    <span>Operations Dashboard</span>
+                    <span class="erp-pill live">LIVE</span>
+                </a>
+                <a href="#"><span>Approval Queue</span><span class="erp-pill">12</span></a>
+                <a href="#"><span>3‑Way Match</span><span class="erp-pill warn">8</span></a>
+                <a href="#"><span>SOA Reconciliation</span><span class="erp-pill">5</span></a>
+                <a href="#"><span>Payment Tracker</span><span class="erp-pill">22</span></a>
+                <a href="#"><span>Vendor Master</span><span class="erp-pill">A‑01</span></a>
+                <a href="#"><span>Client Master</span><span class="erp-pill">C‑01</span></a>
+                <a href="#"><span>Audit Trail</span><span class="erp-pill">∞</span></a>
+                <a href="#"><span>Data Lineage</span><span class="erp-pill">LIN</span></a>
+                <a href="#"><span>System Health</span><span class="erp-pill">OK</span></a>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <main class="erp-main" id="main-content">
+            <!-- Live KPI + Ticker -->
+            <section class="na-card" aria-label="Realtime overview">
+                <div class="na-panel-head">
+                    <div>
+                        <div class="na-label">Realtime stream</div>
+                        <div class="na-metadata-small">WebSocket → approvals • matching • payments • sync • anomalies</div>
+                    </div>
+                    <div class="erp-tabs" role="tablist" aria-label="Dashboard modes">
+                        <button class="erp-tab" aria-selected="true" type="button">Dashboard</button>
+                        <button class="erp-tab" aria-selected="false" type="button">Kanban</button>
+                        <button class="erp-tab" aria-selected="false" type="button">Gantt</button>
+                        <button class="erp-tab" aria-selected="false" type="button">Console</button>
+                    </div>
+                </div>
+                <div class="na-panel-body">
+                    <div class="erp-kpis" role="list">
+                        <div class="erp-kpi" role="listitem">
+                            <div class="erp-kpi-m">Approvals</div>
+                            <div class="erp-kpi-v">12</div>
+                            <div class="erp-kpi-s">pending today</div>
+                        </div>
+                        <div class="erp-kpi" role="listitem">
+                            <div class="erp-kpi-m">3‑Way Match</div>
+                            <div class="erp-kpi-v">8</div>
+                            <div class="erp-kpi-s">needs evidence</div>
+                        </div>
+                        <div class="erp-kpi" role="listitem">
+                            <div class="erp-kpi-m">Payments</div>
+                            <div class="erp-kpi-v na-tabular">RM 184,220</div>
+                            <div class="erp-kpi-s">scheduled</div>
+                        </div>
+                        <div class="erp-kpi" role="listitem">
+                            <div class="erp-kpi-m">Risk</div>
+                            <div class="erp-kpi-v">3</div>
+                            <div class="erp-kpi-s">alerts</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 pt-3 border-t border-stroke">
+                        <div class="erp-ticker" aria-label="Live ticker">
+                            <div class="erp-ticker-track" aria-hidden="true">
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>INV‑24091</b>
+                                    <span>approved</span>
+                                    <span class="erp-up">+1</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-warning" aria-hidden="true"></span>
+                                    <b>GRN‑11920</b>
+                                    <span>variance</span>
+                                    <span class="erp-down">‑0.8%</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>PAY‑8841</b>
+                                    <span>released</span>
+                                    <span class="erp-up">RM 12,900</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-error" aria-hidden="true"></span>
+                                    <b>SOA‑AUG</b>
+                                    <span>mismatch</span>
+                                    <span class="erp-down">3 lines</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>VND‑332</b>
+                                    <span>KYB ok</span>
+                                    <span class="erp-up">pass</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-warning" aria-hidden="true"></span>
+                                    <b>PO‑55320</b>
+                                    <span>late</span>
+                                    <span class="erp-down">2d</span>
+                                </div>
+                                <!-- Repeat for seamless loop -->
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>INV‑24091</b>
+                                    <span>approved</span>
+                                    <span class="erp-up">+1</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-warning" aria-hidden="true"></span>
+                                    <b>GRN‑11920</b>
+                                    <span>variance</span>
+                                    <span class="erp-down">‑0.8%</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>PAY‑8841</b>
+                                    <span>released</span>
+                                    <span class="erp-up">RM 12,900</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-error" aria-hidden="true"></span>
+                                    <b>SOA‑AUG</b>
+                                    <span>mismatch</span>
+                                    <span class="erp-down">3 lines</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                    <b>VND‑332</b>
+                                    <span>KYB ok</span>
+                                    <span class="erp-up">pass</span>
+                                </div>
+                                <div class="erp-t-item">
+                                    <span class="na-status-dot na-status-dot-warning" aria-hidden="true"></span>
+                                    <b>PO‑55320</b>
+                                    <span>late</span>
+                                    <span class="erp-down">2d</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div style="height: 16px"></div>
+
+            <!-- Combined board + timeline + grid -->
+            <div class="erp-grid">
+                <!-- Left column: Kanban + Gantt -->
+                <div class="na-stack gap-4">
+                    <section class="na-card" aria-label="Kanban board">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-label">Kanban</div>
+                                <div class="na-metadata-small">Daily execution — approvals & exceptions</div>
+                            </div>
+                            <div class="erp-tabs" aria-label="Board filters">
+                                <button class="erp-tab" aria-selected="true" type="button">All</button>
+                                <button class="erp-tab" aria-selected="false" type="button">AP</button>
+                                <button class="erp-tab" aria-selected="false" type="button">AR</button>
+                                <button class="erp-tab" aria-selected="false" type="button">Ops</button>
+                            </div>
+                        </div>
+                        <div class="na-panel-body">
+                            <div class="erp-kanban">
+                                <div class="erp-klane">
+                                    <div class="erp-klane-lh">
+                                        <span>Inbox</span>
+                                        <span class="erp-pill">6</span>
+                                    </div>
+                                    <div class="erp-kcards">
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">New Vendor: De Heus</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge y">KYB</span>
+                                                <span class="na-tabular">VND‑441</span>
+                                            </div>
+                                        </div>
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">Invoice Upload: INV‑24102</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge">Docs</span>
+                                                <span class="na-tabular">RM 28,900</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-klane">
+                                    <div class="erp-klane-lh">
+                                        <span>Review</span>
+                                        <span class="erp-pill warn">3</span>
+                                    </div>
+                                    <div class="erp-kcards">
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">3‑Way Match Variance</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge y">GRN</span>
+                                                <span class="na-tabular">‑0.8%</span>
+                                            </div>
+                                        </div>
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">SOA: Line mismatch</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge r">Risk</span>
+                                                <span class="na-tabular">3 lines</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-klane">
+                                    <div class="erp-klane-lh">
+                                        <span>Approve</span>
+                                        <span class="erp-pill">2</span>
+                                    </div>
+                                    <div class="erp-kcards">
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">Payment Batch Release</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge g">OK</span>
+                                                <span class="na-tabular">PAY‑8841</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-klane">
+                                    <div class="erp-klane-lh">
+                                        <span>Done</span>
+                                        <span class="erp-pill live">LIVE</span>
+                                    </div>
+                                    <div class="erp-kcards">
+                                        <div class="erp-kcard">
+                                            <p class="erp-kcard-t">INV‑24091 Approved</p>
+                                            <div class="erp-kcard-sub">
+                                                <span class="erp-badge g">Pass</span>
+                                                <span class="na-tabular">RM 12,900</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="na-card" aria-label="Gantt timeline">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-label">Gantt</div>
+                                <div class="na-metadata-small">Today's operational timeline</div>
+                            </div>
+                            <div class="erp-tabs" aria-label="Timeline scope">
+                                <button class="erp-tab" aria-selected="true" type="button">Day</button>
+                                <button class="erp-tab" aria-selected="false" type="button">Week</button>
+                                <button class="erp-tab" aria-selected="false" type="button">Month</button>
+                            </div>
+                        </div>
+                        <div class="na-panel-body">
+                            <div class="erp-gantt">
+                                <div class="erp-g-head" aria-hidden="true">
+                                    <div></div>
+                                    <div>1</div>
+                                    <div>2</div>
+                                    <div>3</div>
+                                    <div>4</div>
+                                    <div>5</div>
+                                    <div>6</div>
+                                    <div>7</div>
+                                    <div>8</div>
+                                    <div>9</div>
+                                    <div>10</div>
+                                    <div>11</div>
+                                    <div>12</div>
+                                </div>
+
+                                <div class="erp-g-row">
+                                    <div class="erp-g-task">AP approvals (batch)</div>
+                                    <div class="erp-g-track">
+                                        <div class="erp-g-bar ok" style="--start: 2; --span: 5"></div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-g-row">
+                                    <div class="erp-g-task">3‑Way match exceptions</div>
+                                    <div class="erp-g-track">
+                                        <div class="erp-g-bar risk" style="--start: 4; --span: 4"></div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-g-row">
+                                    <div class="erp-g-task">Payment run</div>
+                                    <div class="erp-g-track">
+                                        <div class="erp-g-bar" style="--start: 7; --span: 3"></div>
+                                    </div>
+                                </div>
+
+                                <div class="erp-g-row">
+                                    <div class="erp-g-task">SOA reconciliation</div>
+                                    <div class="erp-g-track">
+                                        <div class="erp-g-bar crit" style="--start: 6; --span: 5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right column: Data grid (CRUD source-of-truth) -->
+                <div class="na-stack gap-4">
+                    <section class="na-table-wrap" aria-label="CRUD data grid">
+                        <div class="erp-table-tools">
+                            <div class="erp-tool-left">
+                                <span class="na-label">Data grid</span>
+                                <select class="erp-select" aria-label="Entity">
+                                    <option>Invoices</option>
+                                    <option>Purchase Orders</option>
+                                    <option>Goods Receive Notes</option>
+                                    <option>Vendors</option>
+                                    <option>Payments</option>
+                                </select>
+                                <select class="erp-select" aria-label="View">
+                                    <option>Today</option>
+                                    <option>This week</option>
+                                    <option>Open items</option>
+                                    <option>Exceptions</option>
+                                </select>
+                            </div>
+                            <div class="erp-tool-right">
+                                <button class="na-btn" type="button">Bulk</button>
+                                <button class="na-btn" type="button">Columns</button>
+                                <a class="na-btn na-btn-primary" href="#new" role="button">Create</a>
+                            </div>
+                        </div>
+
+                        <div style="max-height: 420px; overflow: auto">
+                            <table class="na-table" role="table" aria-label="Invoices">
+                                <thead>
+                                    <tr>
+                                        <th class="na-th">State</th>
+                                        <th class="na-th">Invoice</th>
+                                        <th class="na-th">Vendor</th>
+                                        <th class="na-th na-tabular">Amount</th>
+                                        <th class="na-th">Match</th>
+                                        <th class="na-th">Due</th>
+                                        <th class="na-th">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="na-tr na-tr-interactive">
+                                        <td class="na-td"><span class="na-status-dot na-status-dot-success" aria-label="ok"></span></td>
+                                        <td class="na-td na-tabular">INV‑24091</td>
+                                        <td class="na-td">Greenfeed</td>
+                                        <td class="na-td na-tabular">RM 12,900</td>
+                                        <td class="na-td"><span class="erp-badge g">PASS</span></td>
+                                        <td class="na-td na-tabular">2025‑12‑29</td>
+                                        <td class="na-td">
+                                            <div class="flex gap-2">
+                                                <a class="erp-iconbtn" href="#edit" title="Edit" aria-label="Edit">✎</a>
+                                                <a class="erp-iconbtn" href="#view" title="Inspect" aria-label="Inspect">⌁</a>
+                                                <a class="erp-iconbtn danger" href="#delete" title="Soft delete" aria-label="Delete">⌫</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="na-tr na-tr-interactive">
+                                        <td class="na-td"><span class="na-status-dot na-status-dot-warning" aria-label="warn"></span></td>
+                                        <td class="na-td na-tabular">INV‑24102</td>
+                                        <td class="na-td">ANT</td>
+                                        <td class="na-td na-tabular">RM 28,900</td>
+                                        <td class="na-td"><span class="erp-badge y">EVIDENCE</span></td>
+                                        <td class="na-td na-tabular">2026‑01‑03</td>
+                                        <td class="na-td">
+                                            <div class="flex gap-2">
+                                                <a class="erp-iconbtn" href="#edit" title="Edit" aria-label="Edit">✎</a>
+                                                <a class="erp-iconbtn" href="#view" title="Inspect" aria-label="Inspect">⌁</a>
+                                                <a class="erp-iconbtn danger" href="#delete" title="Soft delete" aria-label="Delete">⌫</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="na-tr na-tr-interactive">
+                                        <td class="na-td"><span class="na-status-dot na-status-dot-error" aria-label="error"></span></td>
+                                        <td class="na-td na-tabular">INV‑24107</td>
+                                        <td class="na-td">De Heus</td>
+                                        <td class="na-td na-tabular">RM 41,120</td>
+                                        <td class="na-td"><span class="erp-badge r">MISMATCH</span></td>
+                                        <td class="na-td na-tabular">2025‑12‑28</td>
+                                        <td class="na-td">
+                                            <div class="flex gap-2">
+                                                <a class="erp-iconbtn" href="#edit" title="Edit" aria-label="Edit">✎</a>
+                                                <a class="erp-iconbtn" href="#view" title="Inspect" aria-label="Inspect">⌁</a>
+                                                <a class="erp-iconbtn danger" href="#delete" title="Soft delete" aria-label="Delete">⌫</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="na-tr na-tr-interactive">
+                                        <td class="na-td"><span class="na-status-dot na-status-dot-success" aria-label="ok"></span></td>
+                                        <td class="na-td na-tabular">INV‑24111</td>
+                                        <td class="na-td">Japfa</td>
+                                        <td class="na-td na-tabular">RM 9,480</td>
+                                        <td class="na-td"><span class="erp-badge">PENDING</span></td>
+                                        <td class="na-td na-tabular">2026‑01‑05</td>
+                                        <td class="na-td">
+                                            <div class="flex gap-2">
+                                                <a class="erp-iconbtn" href="#edit" title="Edit" aria-label="Edit">✎</a>
+                                                <a class="erp-iconbtn" href="#view" title="Inspect" aria-label="Inspect">⌁</a>
+                                                <a class="erp-iconbtn danger" href="#delete" title="Soft delete" aria-label="Delete">⌫</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="erp-table-tools" style="border-top: 1px solid rgba(39, 39, 42, 0.65); border-bottom: none">
+                            <div class="na-metadata-small">
+                                Showing <b class="text-lux">1–4</b> of <b class="text-lux">128</b> • Sort: Due date • View: Exceptions
+                            </div>
+                            <div class="erp-tool-right">
+                                <button class="na-btn" type="button" aria-label="Previous page">Prev</button>
+                                <button class="na-btn" type="button" aria-label="Next page">Next</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="na-card" aria-label="Activity stream">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-label">Audit stream</div>
+                                <div class="na-metadata-small">Every decision emits events — traceable & explainable</div>
+                            </div>
+                            <button class="na-btn" type="button">Open Log</button>
+                        </div>
+                        <div class="na-panel-body">
+                            <div class="na-metadata-small">
+                                <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                INV‑24091 approved by Andy • 10:42
+                            </div>
+                            <div class="na-metadata-small mt-2">
+                                <span class="na-status-dot na-status-dot-warning" aria-hidden="true"></span>
+                                INV‑24102 needs evidence • 10:18
+                            </div>
+                            <div class="na-metadata-small mt-2">
+                                <span class="na-status-dot na-status-dot-error" aria-hidden="true"></span>
+                                INV‑24107 mismatch flagged • 09:55
+                            </div>
+                            <div class="na-metadata-small mt-2">
+                                <span class="na-status-dot na-status-dot-success" aria-hidden="true"></span>
+                                PAY‑8841 released • 09:21
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Inspector -->
+        <aside class="erp-insp" aria-label="CRUD inspector">
+            <div class="erp-insp-head">
+                <div>
+                    <h3 class="na-h4 m-0">Record Inspector</h3>
+                    <div class="na-metadata-small mt-1">Create • Read • Update • Soft Delete</div>
+                </div>
+                <div class="flex gap-2">
+                    <a class="erp-iconbtn" href="#view" title="Read" aria-label="Read">⌁</a>
+                    <a class="erp-iconbtn" href="#edit" title="Update" aria-label="Update">✎</a>
+                    <a class="erp-iconbtn danger" href="#delete" title="Soft delete" aria-label="Delete">⌫</a>
+                </div>
+            </div>
+
+            <div class="erp-insp-body">
+                <div class="na-label">Edit invoice</div>
+                <div class="na-metadata-small">Workflow: Update(enum) → Approve / Reject / Withdraw / Cancel</div>
+
+                <div class="na-divider my-4"></div>
+
+                <div class="erp-split">
+                    <div class="erp-field">
+                        <label class="na-label">Invoice No</label>
+                        <input class="erp-input na-tabular" value="INV‑24102" />
+                        <div class="na-metadata-small text-clay mt-1">Immutable key (suggest lock after posting)</div>
+                    </div>
+                    <div class="erp-field">
+                        <label class="na-label">Status</label>
+                        <select class="erp-input">
+                            <option>requested</option>
+                            <option selected>uploaded</option>
+                            <option>accepted</option>
+                            <option>rejected</option>
+                            <option>cancelled</option>
+                        </select>
+                        <div class="na-metadata-small text-clay mt-1">Enum only — prevents workflow drift</div>
+                    </div>
+                </div>
+
+                <div class="erp-split">
+                    <div class="erp-field">
+                        <label class="na-label">Vendor</label>
+                        <input class="erp-input" value="ANT" />
+                    </div>
+                    <div class="erp-field">
+                        <label class="na-label">Amount</label>
+                        <input class="erp-input na-tabular" value="RM 28,900" />
+                    </div>
+                </div>
+
+                <div class="erp-field">
+                    <label class="na-label">Reason / Note</label>
+                    <textarea class="erp-textarea">Evidence required due to delivery date variance. Awaiting POD upload.</textarea>
+                    <div class="na-metadata-small text-clay mt-1">All notes append to audit trail</div>
+                </div>
+
+                <div class="na-divider my-4"></div>
+
+                <div class="na-label">Update decision</div>
+                <div class="erp-split">
+                    <button class="na-btn na-btn-primary" type="button">Approve</button>
+                    <button class="na-btn na-btn-error" type="button">Reject</button>
+                </div>
+                <div style="height: 8px"></div>
+                <div class="erp-split">
+                    <button class="na-btn" type="button">Withdraw</button>
+                    <button class="na-btn" type="button">Cancel</button>
+                </div>
+
+                <div class="na-divider my-4"></div>
+
+                <div class="na-label">Attachments</div>
+                <div class="na-metadata-small text-clay">PO • GRN • POD • Invoice Copy • Contract • SOA</div>
+                <div class="flex gap-2 mt-3 flex-wrap">
+                    <span class="erp-badge">PO</span>
+                    <span class="erp-badge y">GRN</span>
+                    <span class="erp-badge r">POD</span>
+                    <span class="erp-badge">SOA</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Footer -->
+        <footer class="erp-footer">
+            <div class="erp-led">
+                <i aria-hidden="true"></i>
+                <span>Realtime connected</span>
+                <span class="na-metadata-small text-clay">p95 42ms</span>
+            </div>
+            <div class="na-metadata-small text-clay">
+                Tenant: DLB‑MY • Role: Finance Manager • Mode: Shadow + Explain
+            </div>
+        </footer>
+    </div>
+
+    <!-- CSS-only lightbox targets (no JS). Kept minimal to show flow. -->
+    <div id="new" hidden></div>
+    <div id="edit" hidden></div>
+    <div id="view" hidden></div>
+    <div id="delete" hidden></div>
+</body>
+</html>

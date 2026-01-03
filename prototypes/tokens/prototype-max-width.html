@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Max Width Grids (Myna UI)</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Max-width scale derived from Figma node 2628:1492 */
+    :root {
+      --max-xs: 320px;  /* 20rem */
+      --max-sm: 384px;  /* 24rem */
+      --max-md: 448px;  /* 28rem */
+      --max-lg: 512px;  /* 32rem */
+      --max-xl: 576px;  /* 36rem */
+      --max-2xl: 672px; /* 42rem */
+      --max-3xl: 768px; /* 48rem */
+      --max-4xl: 896px; /* 56rem */
+      --max-5xl: 1024px;/* 64rem */
+      --max-6xl: 1152px;/* 72rem */
+      --max-7xl: 1280px;/* 80rem */
+    }
+
+    /* Semantic utilities */
+    .na-max-xs { max-width: var(--max-xs); }
+    .na-max-sm { max-width: var(--max-sm); }
+    .na-max-md { max-width: var(--max-md); }
+    .na-max-lg { max-width: var(--max-lg); }
+    .na-max-xl { max-width: var(--max-xl); }
+    .na-max-2xl { max-width: var(--max-2xl); }
+    .na-max-3xl { max-width: var(--max-3xl); }
+    .na-max-4xl { max-width: var(--max-4xl); }
+    .na-max-5xl { max-width: var(--max-5xl); }
+    .na-max-6xl { max-width: var(--max-6xl); }
+    .na-max-7xl { max-width: var(--max-7xl); }
+
+    .grid-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-4);
+    }
+
+    .grid-card {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      padding: var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .grid-rail {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      justify-content: space-between;
+      border: 1px dashed var(--color-stroke);
+      border-radius: var(--radius-panel);
+      padding: var(--spacing-3);
+      background: var(--color-paper-2);
+    }
+
+    .demo-stage {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-panel);
+      background: linear-gradient(90deg, color-mix(in oklab, var(--color-info) 16%, var(--color-paper) 84%), color-mix(in oklab, var(--color-gold) 16%, var(--color-paper) 84%));
+      padding: var(--spacing-6);
+      display: flex;
+      justify-content: center;
+    }
+
+    .demo-surface {
+      background: var(--color-paper);
+      border: 1px solid color-mix(in oklab, var(--color-stroke) 80%, var(--color-lux) 20%);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-5);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+      width: 100%;
+    }
+
+    .keycap {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background: var(--color-paper-2);
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-void);
+      letter-spacing: 0.02em;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding-inline: var(--spacing-3);
+      padding-block: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper-2);
+      font-size: 12px;
+      color: var(--color-void);
+    }
+
+    .tokens {
+      display: grid;
+      gap: var(--spacing-3);
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">📐</div>
+        <div>
+          <div class="na-brand-title">Max Width</div>
+          <div class="na-metadata-small">Myna UI • Figma 2628:1492</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#scale" aria-current="page">Scale</a>
+      <a class="na-nav-item" href="#usage">Usage</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Headless • Semantic • Drift-Proof</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Max Width Grids</h1>
+            <p class="na-metadata">Semantic container widths from xs → 7xl aligned to Tailwind/Figma</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scale -->
+      <section class="na-content" id="scale">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Max Width Scale</h2>
+              <p class="na-metadata">Each rail shows label, px/rem value, and a keycap hint</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="grid-list">
+            <div class="grid-card na-max-xs">
+              <div class="grid-rail">
+                <span class="na-label">max-w-xs</span>
+                <span class="na-metadata">320px / 20rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 320px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-sm">
+              <div class="grid-rail">
+                <span class="na-label">max-w-sm</span>
+                <span class="na-metadata">384px / 24rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 384px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-md">
+              <div class="grid-rail">
+                <span class="na-label">max-w-md</span>
+                <span class="na-metadata">448px / 28rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 448px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-lg">
+              <div class="grid-rail">
+                <span class="na-label">max-w-lg</span>
+                <span class="na-metadata">512px / 32rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 512px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-xl</span>
+                <span class="na-metadata">576px / 36rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 576px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-2xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-2xl</span>
+                <span class="na-metadata">672px / 42rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 672px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-3xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-3xl</span>
+                <span class="na-metadata">768px / 48rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 768px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-4xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-4xl</span>
+                <span class="na-metadata">896px / 56rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 896px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-5xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-5xl</span>
+                <span class="na-metadata">1024px / 64rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 1024px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-6xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-6xl</span>
+                <span class="na-metadata">1152px / 72rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 1152px.</div>
+              </div>
+            </div>
+            <div class="grid-card na-max-7xl">
+              <div class="grid-rail">
+                <span class="na-label">max-w-7xl</span>
+                <span class="na-metadata">1280px / 80rem</span>
+                <span class="keycap">shift + G</span>
+              </div>
+              <div class="demo-stage">
+                <div class="demo-surface">Responsive content capped at 1280px.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage -->
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Usage Patterns</h2>
+              <p class="na-metadata">Apply semantic widths to grids, prose, and forms</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <div class="usage-card na-max-3xl">
+              <h4 class="na-h5">Content Column</h4>
+              <p class="na-metadata">Keep long-form text comfortably readable.</p>
+              <div class="na-panel" style="background: var(--color-paper-2);">
+                <p class="na-body">Apply <span class="pill">.na-max-3xl</span> to limit prose width.</p>
+              </div>
+            </div>
+
+            <div class="usage-card na-max-5xl">
+              <h4 class="na-h5">Dashboard Grid</h4>
+              <p class="na-metadata">Cap the main grid to avoid edge-to-edge sprawl.</p>
+              <div class="na-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--spacing-3);">
+                <div class="na-card na-card-compact">Widget A</div>
+                <div class="na-card na-card-compact">Widget B</div>
+                <div class="na-card na-card-compact">Widget C</div>
+              </div>
+              <div class="na-metadata" style="margin-top: var(--spacing-2);">Wrap container with <span class="pill">.na-max-5xl</span></div>
+            </div>
+
+            <div class="usage-card na-max-lg">
+              <h4 class="na-h5">Form Shell</h4>
+              <p class="na-metadata">Limit form width for focus and legibility.</p>
+              <div class="na-stack" style="gap: var(--spacing-2);">
+                <input class="na-input" placeholder="Email" />
+                <input class="na-input" placeholder="Company" />
+                <button class="na-btn">Submit</button>
+              </div>
+              <div class="na-metadata" style="margin-top: var(--spacing-2);">Container set with <span class="pill">.na-max-lg</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tokens -->
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">Max width variables and semantic classes</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="tokens">
+            <div class="na-panel">
+              <h4 class="na-h5">CSS Variables</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>--max-xs: 320px;  /* 20rem */
+--max-sm: 384px;  /* 24rem */
+--max-md: 448px;  /* 28rem */
+--max-lg: 512px;  /* 32rem */
+--max-xl: 576px;  /* 36rem */
+--max-2xl: 672px; /* 42rem */
+--max-3xl: 768px; /* 48rem */
+--max-4xl: 896px; /* 56rem */
+--max-5xl: 1024px;/* 64rem */
+--max-6xl: 1152px;/* 72rem */
+--max-7xl: 1280px;/* 80rem */</code></pre>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Semantic Classes</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>&lt;div class="na-max-3xl"&gt;Prose content&lt;/div&gt;
+&lt;div class="na-max-5xl"&gt;Dashboard grid&lt;/div&gt;
+&lt;div class="na-max-lg"&gt;Form shell&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 12%, var(--color-paper) 88%); border-color: var(--color-gold);">
+              <h4 class="na-h5">Figma → Neo-Analog</h4>
+              <div class="na-metadata" style="margin-top: var(--spacing-2);">❌ max-w-[1024px] → ✅ .na-max-5xl</div>
+              <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ max-w-screen-lg → ✅ .na-max-6xl (1152px) if matching layout</div>
+              <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ container mx-auto w-full max-w-4xl → ✅ .na-max-4xl + width: 100% + centered shell</div>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Compliance Checklist</h4>
+              <div class="na-metadata">✓ Semantic utilities • ✓ Design tokens • ✓ No arbitrary Tailwind values • ✓ Matches Figma 2628:1492</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Max Width • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • Drift-Proof</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

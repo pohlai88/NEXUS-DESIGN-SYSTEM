@@ -1,7 +1,7 @@
 # API Reference
 
 > **Auto-generated** from `dist/api-docs.json`  
-> **Last updated**: 2026-01-03T09:49:26.160Z  
+> **Last updated**: 2026-01-03T15:00:40.618Z  
 > **Source**: Design system classes and components
 
 ---
@@ -110,102 +110,106 @@ This document provides a complete API reference for the Neo-Analog Design System
 
 | Class | Category | Description |
 |-------|----------|-------------|
-| `na-shimmer` | utility | AIBOS design system class: na-shimmer |
-| `na-mode-app` | utility | AIBOS design system class: na-mode-app |
-| `na-mode-doc` | utility | AIBOS design system class: na-mode-doc |
 | `na-bg-grain` | utility | AIBOS design system class: na-bg-grain |
-| `na-shell-main` | layout | AIBOS design system class: na-shell-main |
-| `na-panel` | component | AIBOS design system class: na-panel |
-| `na-clickable` | utility | AIBOS design system class: na-clickable |
-| `na-select-all` | utility | AIBOS design system class: na-select-all |
-| `na-select-none` | utility | AIBOS design system class: na-select-none |
+| `na-tabular` | utility | AIBOS design system class: na-tabular |
+| `na-muted` | utility | AIBOS design system class: na-muted |
+| `na-shimmer` | utility | AIBOS design system class: na-shimmer |
+| `na-scroll` | utility | AIBOS design system class: na-scroll |
 | `na-h1` | typography | Page title (32px bold) |
 | `na-h2` | typography | Section title (24px semibold) |
 | `na-h3` | typography | Subsection title (20px semibold) |
 | `na-h4` | typography | Card title (18px semibold) |
 | `na-h5` | typography | AIBOS design system class: na-h5 |
 | `na-h6` | typography | AIBOS design system class: na-h6 |
-| `na-balance` | utility | AIBOS design system class: na-balance |
-| `na-pretty` | utility | AIBOS design system class: na-pretty |
 | `na-data` | typography | Primary data values, table cells |
 | `na-data-large` | typography | KPI values, hero numbers |
 | `na-metadata` | typography | Field labels, column headers |
 | `na-metadata-small` | typography | AIBOS design system class: na-metadata-small |
-| `na-body` | utility | AIBOS design system class: na-body |
-| `na-body-sm` | utility | AIBOS design system class: na-body-sm |
-| `na-label` | utility | AIBOS design system class: na-label |
-| `na-field` | utility | AIBOS design system class: na-field |
-| `na-tabular` | utility | AIBOS design system class: na-tabular |
-| `na-muted` | utility | AIBOS design system class: na-muted |
-| `na-truncate` | utility | AIBOS design system class: na-truncate |
-| `na-clamp-2` | utility | AIBOS design system class: na-clamp-2 |
-| `na-clamp-3` | utility | AIBOS design system class: na-clamp-3 |
-| `na-z-base` | utility | AIBOS design system class: na-z-base |
-| `na-z-sticky` | utility | AIBOS design system class: na-z-sticky |
-| `na-z-drawer` | utility | AIBOS design system class: na-z-drawer |
-| `na-z-overlay` | utility | AIBOS design system class: na-z-overlay |
-| `na-z-modal` | utility | AIBOS design system class: na-z-modal |
-| `na-z-toast` | utility | AIBOS design system class: na-z-toast |
-| `na-divider` | utility | AIBOS design system class: na-divider |
-| `na-pulse-success` | utility | AIBOS design system class: na-pulse-success |
-| `na-pulse-warning` | utility | AIBOS design system class: na-pulse-warning |
-| `na-pulse-error` | utility | AIBOS design system class: na-pulse-error |
-| `na-pulse-info` | utility | AIBOS design system class: na-pulse-info |
-| `na-pulse-gold` | utility | AIBOS design system class: na-pulse-gold |
-| `na-scroll` | utility | AIBOS design system class: na-scroll |
-| `na-app` | utility | AIBOS design system class: na-app |
-| `na-content` | utility | AIBOS design system class: na-content |
 | `na-skip-link` | utility | AIBOS design system class: na-skip-link |
+| `na-grid-kpi` | layout | AIBOS design system class: na-grid-kpi |
+| `na-grid-3` | layout | AIBOS design system class: na-grid-3 |
+| `na-card-interactive` | component | AIBOS design system class: na-card-interactive |
+| `na-grid-chart` | layout | AIBOS design system class: na-grid-chart |
+| `na-activity-item` | utility | AIBOS design system class: na-activity-item |
+| `na-grid-actions` | layout | AIBOS design system class: na-grid-actions |
+| `na-gap-2` | utility | AIBOS design system class: na-gap-2 |
+| `na-gap-3` | utility | AIBOS design system class: na-gap-3 |
+| `na-gap-6` | utility | AIBOS design system class: na-gap-6 |
+| `na-mt-2` | utility | AIBOS design system class: na-mt-2 |
+| `na-mt-3` | utility | AIBOS design system class: na-mt-3 |
+| `na-mt-6` | utility | AIBOS design system class: na-mt-6 |
+| `na-mb-2` | utility | AIBOS design system class: na-mb-2 |
+| `na-mb-3` | utility | AIBOS design system class: na-mb-3 |
+| `na-my-3` | utility | AIBOS design system class: na-my-3 |
+| `na-grid-2` | layout | AIBOS design system class: na-grid-2 |
+| `na-grid-2-1` | layout | AIBOS design system class: na-grid-2-1 |
+| `na-flex` | utility | AIBOS design system class: na-flex |
+| `na-items-center` | utility | AIBOS design system class: na-items-center |
+| `na-p-2` | utility | AIBOS design system class: na-p-2 |
+| `na-px-2` | utility | AIBOS design system class: na-px-2 |
+| `na-py-2` | utility | AIBOS design system class: na-py-2 |
+| `na-bg-paper-2` | utility | AIBOS design system class: na-bg-paper-2 |
+| `na-rounded-md` | utility | AIBOS design system class: na-rounded-md |
+| `na-text-xs` | utility | AIBOS design system class: na-text-xs |
+| `na-text-sm` | utility | AIBOS design system class: na-text-sm |
+| `na-mb-1` | utility | AIBOS design system class: na-mb-1 |
+| `na-mb-4` | utility | AIBOS design system class: na-mb-4 |
+| `na-mt-4` | utility | AIBOS design system class: na-mt-4 |
+| `na-p-4` | utility | AIBOS design system class: na-p-4 |
+| `na-rounded-control` | utility | AIBOS design system class: na-rounded-control |
+| `na-font-semibold` | utility | AIBOS design system class: na-font-semibold |
+| `na-flex-1` | utility | AIBOS design system class: na-flex-1 |
+| `na-flex-wrap` | utility | AIBOS design system class: na-flex-wrap |
+| `na-chip` | utility | AIBOS design system class: na-chip |
+| `na-grid-chart-health` | layout | AIBOS design system class: na-grid-chart-health |
+| `na-status-dot-success` | status | AIBOS design system class: na-status-dot-success |
+| `na-bar` | utility | AIBOS design system class: na-bar |
 | `na-shell` | layout | Sidebar + Main area grid |
+| `na-mark` | utility | AIBOS design system class: na-mark |
+| `na-nav-meta` | utility | AIBOS design system class: na-nav-meta |
+| `na-search` | utility | AIBOS design system class: na-search |
+| `na-search-input` | utility | AIBOS design system class: na-search-input |
+| `na-btn` | button | Standard button |
+| `na-btn-primary` | button | Primary action button |
+| `na-iconbtn` | utility | AIBOS design system class: na-iconbtn |
+| `na-dot` | utility | AIBOS design system class: na-dot |
+| `na-card` | component | Paper background, shadow, filament top border |
+| `na-card-title` | component | AIBOS design system class: na-card-title |
+| `na-card-meta` | component | AIBOS design system class: na-card-meta |
 | `na-shell-omni` | layout | AIBOS design system class: na-shell-omni |
 | `na-shell-head` | layout | AIBOS design system class: na-shell-head |
 | `na-shell-rail` | layout | AIBOS design system class: na-shell-rail |
-| `na-shell-foot` | layout | AIBOS design system class: na-shell-foot |
+| `na-shell-main` | layout | AIBOS design system class: na-shell-main |
 | `na-shell-drawer` | layout | AIBOS design system class: na-shell-drawer |
-| `na-sidebar` | utility | AIBOS design system class: na-sidebar |
-| `na-brand` | utility | AIBOS design system class: na-brand |
-| `na-mark` | utility | AIBOS design system class: na-mark |
-| `na-nav-section` | utility | AIBOS design system class: na-nav-section |
-| `na-nav-item` | utility | AIBOS design system class: na-nav-item |
-| `na-header` | typography | AIBOS design system class: na-header |
-| `na-search` | utility | AIBOS design system class: na-search |
-| `na-search-input` | utility | AIBOS design system class: na-search-input |
-| `na-search-icon` | utility | AIBOS design system class: na-search-icon |
-| `na-card` | component | Paper background, shadow, filament top border |
-| `na-card-interactive` | component | AIBOS design system class: na-card-interactive |
-| `na-kpi` | utility | AIBOS design system class: na-kpi |
+| `na-shell-foot` | layout | AIBOS design system class: na-shell-foot |
+| `na-state-radio` | utility | AIBOS design system class: na-state-radio |
+| `na-state-label` | utility | AIBOS design system class: na-state-label |
+| `na-view-pane` | utility | AIBOS design system class: na-view-pane |
+| `na-grid-frozen` | layout | AIBOS design system class: na-grid-frozen |
+| `na-table-frozen` | utility | AIBOS design system class: na-table-frozen |
+| `na-status-opt` | status | AIBOS design system class: na-status-opt |
+| `na-viewport` | utility | AIBOS design system class: na-viewport |
+| `na-kpi-icon` | utility | AIBOS design system class: na-kpi-icon |
 | `na-kpi-value` | utility | AIBOS design system class: na-kpi-value |
 | `na-kpi-label` | utility | AIBOS design system class: na-kpi-label |
-| `na-kpi-icon` | utility | AIBOS design system class: na-kpi-icon |
 | `na-trend` | utility | AIBOS design system class: na-trend |
-| `na-chart` | utility | AIBOS design system class: na-chart |
-| `na-bars` | utility | AIBOS design system class: na-bars |
-| `na-bar` | utility | AIBOS design system class: na-bar |
+| `na-panel` | component | AIBOS design system class: na-panel |
+| `na-panel-title` | component | AIBOS design system class: na-panel-title |
+| `na-editorial` | utility | AIBOS design system class: na-editorial |
 | `na-table-wrap` | utility | AIBOS design system class: na-table-wrap |
-| `na-table` | utility | AIBOS design system class: na-table |
 | `na-th` | utility | AIBOS design system class: na-th |
+| `na-tr` | utility | AIBOS design system class: na-tr |
+| `na-lineage-badge` | utility | AIBOS design system class: na-lineage-badge |
+| `na-grid-metadata` | layout | AIBOS design system class: na-grid-metadata |
+| `na-progress-fill` | utility | AIBOS design system class: na-progress-fill |
 | `na-td` | utility | AIBOS design system class: na-td |
-| `na-tr-interactive` | utility | AIBOS design system class: na-tr-interactive |
-| `na-btn` | button | Standard button |
-| `na-btn-primary` | button | Primary action button |
-| `na-btn-ghost` | button | AIBOS design system class: na-btn-ghost |
-| `na-btn-destructive` | button | AIBOS design system class: na-btn-destructive |
-| `na-iconbtn` | utility | AIBOS design system class: na-iconbtn |
-| `na-dot` | utility | AIBOS design system class: na-dot |
-| `na-input` | utility | AIBOS design system class: na-input |
 | `na-status` | status | AIBOS design system class: na-status |
-| `na-avatar` | utility | AIBOS design system class: na-avatar |
-| `na-switch` | utility | AIBOS design system class: na-switch |
-| `na-switch-thumb` | utility | AIBOS design system class: na-switch-thumb |
-| `na-dropdown` | utility | AIBOS design system class: na-dropdown |
-| `na-dropdown-menu` | utility | AIBOS design system class: na-dropdown-menu |
-| `na-modal` | utility | AIBOS design system class: na-modal |
-| `na-tooltip` | utility | AIBOS design system class: na-tooltip |
-| `na-toasts` | utility | AIBOS design system class: na-toasts |
-| `na-toast` | utility | AIBOS design system class: na-toast |
-| `na-skeleton` | utility | AIBOS design system class: na-skeleton |
+| `na-rowbtn` | utility | AIBOS design system class: na-rowbtn |
+| `na-footnote` | utility | AIBOS design system class: na-footnote |
+| `na-footnote-link` | utility | AIBOS design system class: na-footnote-link |
 | `na-empty` | utility | AIBOS design system class: na-empty |
 | `na-empty-illustration` | utility | AIBOS design system class: na-empty-illustration |
+| `na-empty-title` | utility | AIBOS design system class: na-empty-title |
 
 ## Package Exports
 

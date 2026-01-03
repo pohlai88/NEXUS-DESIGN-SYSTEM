@@ -1,0 +1,728 @@
+/**
+ * Integration Tests for Dialog Web Component
+ * 
+ * Tests the Dialog component in a realistic browser environment
+ */
+
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { JSDOM } from 'jsdom';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+describe('Dialog Web Component Integration', () => {
+  let dom: JSDOM;
+  let document: Document;
+  let window: Window & typeof globalThis;
+
+  beforeEach(async () => {
+    // Create a JSDOM environment
+    dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+      url: 'http://localhost',
+      pretendToBeVisual: true,
+      resources: 'usable',
+      runScripts: 'dangerously',
+    });
+
+    window = dom.window as unknown as Window & typeof globalThis;
+    document = window.document;
+
+    // Mock primitives module
+    const primitivesModule = {
+      DialogPrimitive: {
+        setAriaAttributes: (element: HTMLElement, options: { open: boolean }) => {
+          if (options.open) {
+            element.setAttribute('aria-hidden', 'false');
+            element.setAttribute('role', 'dialog');
+          } else {
+            element.setAttribute('aria-hidden', 'true');
+          }
+        },
+        trapFocus: (element: HTMLElement) => {
+          // Mock focus trap
+          return () => {};
+        },
+        handleEscape: (element: HTMLElement, callback: () => void) => {
+          const handler = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+              callback();
+            }
+          };
+          element.addEventListener('keydown', handler);
+          return () => element.removeEventListener('keydown', handler);
+        },
+        restoreFocus: (element: HTMLElement | null) => {
+          if (element) {
+            element.focus();
+          }
+        },
+      },
+    };
+
+    // Inject primitives module into global scope for the component to use
+    (window as any).__testPrimitivesModule = primitivesModule;
+    
+    // Mock dynamic import for primitives
+    (window as any).import = async (path: string) => {
+      if (path.includes('primitives.js')) {
+        return primitivesModule;
+      }
+      return {};
+    };
+
+    // Load actual Dialog component from dist
+    const dialogCode = readFileSync(
+      join(process.cwd(), 'dist/adapters/vanilla/dialog.js'),
+      'utf-8'
+    );
+    
+    // Transform ES module code to work in JSDOM
+    // Strategy: Remove ALL TypeScript/ES6 features that JSDOM can't handle
+    // Process in order: interfaces/declares first, then types, then keywords
+    
+    let transformedCode = dialogCode;
+    
+    // PHASE 0: Replace __getCachedPrimitive function FIRST (before any transformations)
+    // Use regex to match and replace the entire function block reliably
+    const functionReplacement = `const __primitiveCache = new Map();
+function __getCachedPrimitive(primitiveName) {
+  if (!__primitiveCache.has(primitiveName)) {
+    const importPromise = Promise.resolve(window.__testPrimitivesModule[primitiveName]);
+    __primitiveCache.set(primitiveName, importPromise);
+  }
+  return __primitiveCache.get(primitiveName);
+}`;
+    
+    // Match: const declaration + function with nested braces
+    // Use a pattern that matches the const, optional whitespace, then the function
+    const functionPattern = /const __primitiveCache\s*=\s*new\s+Map[^;]*;[\s\S]*?function\s+__getCachedPrimitive[^{]*\{[^}]*\{[^}]*\}[^}]*return[^}]*\}/;
+    
+    if (functionPattern.test(transformedCode)) {
+      transformedCode = transformedCode.replace(functionPattern, functionReplacement);
+    } else {
+      // Fallback: manual replacement using brace matching
+      const funcStart = transformedCode.indexOf('function __getCachedPrimitive');
+      if (funcStart !== -1) {
+        let openBrace = transformedCode.indexOf('{', funcStart);
+        if (openBrace !== -1) {
+          let depth = 1;
+          let closeBrace = openBrace + 1;
+          while (closeBrace < transformedCode.length && depth > 0) {
+            if (transformedCode[closeBrace] === '{') depth++;
+            else if (transformedCode[closeBrace] === '}') depth--;
+            closeBrace++;
+          }
+          if (depth === 0) {
+            const before = transformedCode.substring(0, funcStart);
+            const constMatch = before.lastIndexOf('const __primitiveCache');
+            if (constMatch !== -1) {
+              const after = transformedCode.substring(closeBrace);
+              transformedCode = transformedCode.substring(0, constMatch) + functionReplacement + '\n' + after;
+            }
+          }
+        }
+      }
+    }
+    
+    // PHASE 1: Remove TypeScript declarations that cause syntax errors
+    // Remove interfaces completely (including all content and closing brace)
+    function removeInterfaces(code: string): string {
+      let result = '';
+      let i = 0;
+      
+      while (i < code.length) {
+        // Check for interface declaration
+        const interfaceMatch = code.substring(i).match(/^(export\s+)?interface\s+\w+\s*\{/);
+        
+        if (interfaceMatch) {
+          // Skip the interface declaration
+          i += interfaceMatch[0].length;
+          
+          // Find matching closing brace (handle nested braces)
+          let depth = 1;
+          while (i < code.length && depth > 0) {
+            if (code[i] === '{') depth++;
+            else if (code[i] === '}') depth--;
+            i++;
+          }
+          // Skip whitespace after interface
+          while (i < code.length && /\s/.test(code[i])) i++;
+        } else {
+          result += code[i];
+          i++;
+        }
+      }
+      
+      return result;
+    }
+    transformedCode = removeInterfaces(transformedCode);
+    
+    // Remove declare global blocks (handle nested braces properly)
+    function removeDeclareGlobal(code: string): string {
+      let result = '';
+      let i = 0;
+      
+      while (i < code.length) {
+        const declareMatch = code.substring(i).match(/^declare\s+global\s*\{/);
+        
+        if (declareMatch) {
+          // Skip the declare global declaration
+          i += declareMatch[0].length;
+          
+          // Find matching closing brace (handle nested braces)
+          let depth = 1;
+          while (i < code.length && depth > 0) {
+            if (code[i] === '{') depth++;
+            else if (code[i] === '}') depth--;
+            i++;
+          }
+          // Skip whitespace after declare global
+          while (i < code.length && /\s/.test(code[i])) i++;
+        } else {
+          result += code[i];
+          i++;
+        }
+      }
+      
+      return result;
+    }
+    transformedCode = removeDeclareGlobal(transformedCode);
+    
+    // Remove import statements
+    transformedCode = transformedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"][^'"]+['"];?\s*/g, '');
+    
+    // PHASE 2: Remove generic type parameters (must be before removing type annotations)
+    // Use bracket matching to handle nested generics correctly
+    function removeGenerics(code: string): string {
+      let result = '';
+      let depth = 0;
+      let inString = false;
+      let stringChar = '';
+      
+      for (let i = 0; i < code.length; i++) {
+        const char = code[i];
+        const prevChar = i > 0 ? code[i - 1] : '';
+        const nextChar = i < code.length - 1 ? code[i + 1] : '';
+        const prev2Char = i > 1 ? code[i - 2] : '';
+        
+        // Handle string literals
+        if ((char === '"' || char === "'" || char === '`') && prevChar !== '\\') {
+          if (!inString) {
+            inString = true;
+            stringChar = char;
+          } else if (char === stringChar) {
+            inString = false;
+            stringChar = '';
+          }
+        }
+        
+        if (inString) {
+          if (depth === 0) result += char;
+          continue;
+        }
+        
+        // Skip escaped characters
+        if (prevChar === '\\') {
+          if (depth === 0) result += char;
+          continue;
+        }
+        
+        // Detect generic brackets (not comparisons or arrows)
+        // Generic < comes after identifier, comma, or closing bracket/paren
+        if (char === '<' && nextChar !== '=') {
+          const before = code.substring(Math.max(0, i - 15), i);
+          // Check if this looks like a generic (after word char, comma, ), ], or whitespace)
+          if (/[\w,)\]]\s*$/.test(before)) {
+            depth++;
+            continue; // Skip the <
+          }
+        }
+        
+        // Detect closing generic bracket
+        if (char === '>' && depth > 0) {
+          // Not part of >= or =>
+          if (prevChar !== '=' && !(prevChar === '-' && prev2Char === '=')) {
+            depth--;
+            continue; // Skip the >
+          }
+        }
+        
+        // Only add character if we're not inside a generic
+        if (depth === 0) {
+          result += char;
+        }
+      }
+      
+      return result;
+    }
+    
+    transformedCode = removeGenerics(transformedCode);
+    
+    // PHASE 4: Remove type annotations from function signatures
+    // Remove return types: function name(): ReturnType {
+    transformedCode = transformedCode.replace(/\)\s*:\s*[^{]+(\{)/g, ') $1');
+    
+    // Remove parameter types: function name(param: type)
+    transformedCode = transformedCode.replace(/(\w+)\s*\(([^)]*)\)/g, (match, funcName, params) => {
+      if (!params.includes(':')) return match;
+      const cleanParams = params.split(',').map((p: string) => {
+        const trimmed = p.trim();
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex > 0) {
+          return trimmed.substring(0, colonIndex).trim();
+        }
+        return trimmed;
+      }).join(', ');
+      return `${funcName}(${cleanParams})`;
+    });
+    
+    // PHASE 5: Remove type annotations from variables and properties
+    // Remove from variable declarations: const name: type =
+    transformedCode = transformedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*[^=]+=/g, '$1 $2 =');
+    
+    // Remove from class properties: private name: type =
+    transformedCode = transformedCode.replace(/(private|public|protected|readonly)\s+(\w+)\s*:\s*[^=]+=/g, '$1 $2 =');
+    
+    // PHASE 6: Remove type assertions and non-null assertions
+    transformedCode = transformedCode.replace(/\s+as\s+\w+/g, '');
+    transformedCode = transformedCode.replace(/(\w+)!\s*([,;\)\]\}])/g, '$1$2');
+    
+    // PHASE 7: Remove access modifiers
+    transformedCode = transformedCode.replace(/\b(private|public|protected|readonly)\s+/g, '');
+    
+    // PHASE 8: Remove export keywords
+    transformedCode = transformedCode.replace(/export\s+\{([^}]+)\}\s*;?\s*/g, '');
+    transformedCode = transformedCode.replace(/export\s+(class|function|const|let|var)\s+/g, '$1 ');
+    
+    // PHASE 9: Fix browser APIs for JSDOM
+    transformedCode = transformedCode.replace(/requestAnimationFrame/g, 'setTimeout');
+    transformedCode = transformedCode.replace(/cancelAnimationFrame/g, 'clearTimeout');
+    
+    // PHASE 10: Clean up orphaned characters and whitespace
+    // Remove orphaned > and } characters (leftover from removals)
+    transformedCode = transformedCode.replace(/^>\s*;?\s*$/gm, '');
+    transformedCode = transformedCode.replace(/\s+>\s*;?\s*$/gm, '');
+    transformedCode = transformedCode.replace(/^\s*\}\s*$/gm, '');
+    transformedCode = transformedCode.replace(/\n\s*\}\s*\n/g, '\n');
+    // Clean up whitespace
+    transformedCode = transformedCode.replace(/\n\s*\n\s*\n+/g, '\n\n');
+    transformedCode = transformedCode.replace(/  +/g, ' ');
+    
+    // Execute the transformed component code in the JSDOM context
+    // Use window.eval to execute in the correct scope
+    try {
+      (window as any).eval(transformedCode);
+    } catch (error: any) {
+      // Log transformation errors for debugging
+      console.error('Error executing transformed code:', error.message);
+      // Write transformed code to a temp file for inspection
+      const { writeFileSync } = require('fs');
+      const { join } = require('path');
+      const debugPath = join(process.cwd(), 'transformed-dialog-debug.js');
+      writeFileSync(debugPath, transformedCode);
+      console.error(`Transformed code written to ${debugPath}`);
+      console.error('First 1000 chars of transformed code:', transformedCode.substring(0, 1000));
+      throw error;
+    }
+    
+    // Wait for custom element to be defined and component to initialize
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    /* Original hardcoded code - replaced with actual component
+    const dialogCode = `
+      export interface DialogEvents {
+        'na-open-change': CustomEvent<Record<string, unknown>>;
+        'na-open': CustomEvent<{ open: boolean; timestamp: number }>;
+        'na-close': CustomEvent<{ reason: 'escape' | 'click-outside' | 'programmatic' }>;
+        'na-error': CustomEvent<{ error: string; source: string }>;
+      }
+
+      declare global {
+        interface HTMLElementEventMap extends DialogEvents {}
+      }
+
+      class Dialog extends HTMLElement {
+        static get observedAttributes() {
+          return ['variant', 'size', 'disabled', 'loading', 'open'];
+        }
+        
+        private _open: boolean = false;
+        private _variant: string = 'default';
+        private _size: string = 'md';
+        private _disabled: boolean = false;
+        private _loading: boolean = false;
+        private _previousFocus: HTMLElement | null = null;
+        private _cleanupFunctions: Array<() => void> = [];
+        private _Primitive: any = null;
+        private _primitivesLoaded: boolean = false;
+        
+        constructor() {
+          super();
+        }
+        
+        async connectedCallback() {
+          try {
+            if (!this._primitivesLoaded) {
+              const primitives = await window.import('../lib/primitives.js');
+              this._primitivesLoaded = true;
+              this._Primitive = primitives.DialogPrimitive;
+            }
+            this.setupComponent();
+          } catch (error) {
+            console.warn('Dialog: Failed to load primitives, using fallback', error);
+            this.setupComponentFallback();
+            this.dispatchNaEvent('na-error', { 
+              error: error instanceof Error ? error.message : 'Unknown error',
+              source: 'Dialog'
+            });
+          }
+        }
+        
+        disconnectedCallback() {
+          this.cleanup();
+        }
+        
+        attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+          if (oldValue === newValue) return;
+          
+          switch (name) {
+            case 'open':
+              this._open = newValue !== null;
+              this.updateComponent();
+              break;
+            case 'variant':
+              this._variant = newValue || 'default';
+              this.updateClasses();
+              break;
+            case 'size':
+              this._size = newValue || 'md';
+              break;
+            case 'disabled':
+              this._disabled = newValue !== null;
+              this.updateAttributes();
+              break;
+            case 'loading':
+              this._loading = newValue !== null;
+              this.updateAttributes();
+              break;
+          }
+        }
+        
+        private setupComponent() {
+          if (this._Primitive) {
+            this._Primitive.setAriaAttributes(this, { open: this._open });
+            const cleanup = this._Primitive.trapFocus(this);
+            this._cleanupFunctions.push(cleanup);
+            
+            const escapeCleanup = this._Primitive.handleEscape(this, () => this.close());
+            this._cleanupFunctions.push(escapeCleanup);
+          }
+          this.updateClasses();
+          this.updateAttributes();
+        }
+        
+        private setupComponentFallback() {
+          this.setAttribute('role', 'dialog');
+          this.updateClasses();
+          this.updateAttributes();
+        }
+        
+        private updateClasses() {
+          const variantClasses = this.getVariantClasses();
+          const stateClasses = this.getStateClasses();
+          this.className = [...variantClasses, ...stateClasses].filter(Boolean).join(' ');
+        }
+        
+        private getVariantClasses(): string[] {
+          const variantClassMap: Record<string, string[]> = {
+            'default': ['na-card', 'na-modal'],
+            'center': ['na-card', 'na-modal', 'na-modal--center']
+          };
+          return variantClassMap[this._variant] || variantClassMap['default'];
+        }
+        
+        private getStateClasses(): string[] {
+          return [];
+        }
+        
+        private updateAttributes() {
+          if (this._disabled || this._loading) {
+            this.setAttribute('aria-disabled', 'true');
+          } else {
+            this.removeAttribute('aria-disabled');
+          }
+          
+          if (this._open) {
+            this.removeAttribute('aria-hidden');
+          } else {
+            this.setAttribute('aria-hidden', 'true');
+          }
+        }
+        
+        private updateComponent() {
+          if (this._Primitive) {
+            this._Primitive.setAriaAttributes(this, { open: this._open });
+          }
+          this.updateAttributes();
+        }
+        
+        public open() {
+          this._open = true;
+          this.setAttribute('open', '');
+          this.dispatchNaEvent('na-open', { open: true, timestamp: Date.now() });
+          if (this._Primitive) {
+            this._previousFocus = document.activeElement as HTMLElement;
+            this._Primitive.trapFocus(this);
+          }
+        }
+        
+        public close() {
+          this._open = false;
+          this.removeAttribute('open');
+          this.dispatchNaEvent('na-close', { reason: 'programmatic' });
+          if (this._Primitive && this._previousFocus) {
+            this._Primitive.restoreFocus(this._previousFocus);
+          }
+        }
+        
+        private cleanup() {
+          this._cleanupFunctions.forEach(fn => fn());
+          this._cleanupFunctions = [];
+        }
+        
+        private dispatchNaEvent(eventName: string, detail?: unknown): boolean {
+          const event = new CustomEvent(eventName, {
+            bubbles: true,
+            cancelable: true,
+            detail
+          });
+          return this.dispatchEvent(event);
+        }
+      }
+
+      customElements.define('na-dialog', Dialog);
+    `;
+    */
+  });
+
+  afterEach(() => {
+    dom.window.close();
+  });
+
+  describe('Component Registration', () => {
+    it('should register na-dialog custom element', () => {
+      expect(customElements.get('na-dialog')).toBeDefined();
+    });
+
+    it('should create dialog element', () => {
+      const dialog = document.createElement('na-dialog');
+      expect(dialog).toBeInstanceOf(HTMLElement);
+      expect(dialog.tagName.toLowerCase()).toBe('na-dialog');
+    });
+  });
+
+  describe('Attributes', () => {
+    it('should observe variant attribute', async () => {
+      const dialog = document.createElement('na-dialog');
+      dialog.setAttribute('variant', 'center');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.className).toContain('na-modal--center');
+    });
+
+    it('should observe open attribute', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      dialog.setAttribute('open', '');
+      
+      expect(dialog.hasAttribute('open')).toBe(true);
+      expect(dialog.getAttribute('aria-hidden')).toBeNull();
+    });
+  });
+
+  describe('Open/Close Methods', () => {
+    it('should open dialog programmatically', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      dialog.open();
+      
+      expect(dialog.hasAttribute('open')).toBe(true);
+      expect(dialog.getAttribute('aria-hidden')).toBeNull();
+    });
+
+    it('should close dialog programmatically', async () => {
+      const dialog = document.createElement('na-dialog');
+      dialog.setAttribute('open', '');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      dialog.close();
+      
+      expect(dialog.hasAttribute('open')).toBe(false);
+      expect(dialog.getAttribute('aria-hidden')).toBe('true');
+    });
+  });
+
+  describe('Events', () => {
+    it('should dispatch na-open event when opened', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      let eventFired = false;
+      let eventDetail: any = null;
+      
+      dialog.addEventListener('na-open', (e: Event) => {
+        eventFired = true;
+        eventDetail = (e as CustomEvent).detail;
+      });
+      
+      dialog.open();
+      
+      expect(eventFired).toBe(true);
+      expect(eventDetail).toHaveProperty('open');
+      expect(eventDetail).toHaveProperty('timestamp');
+    });
+
+    it('should dispatch na-close event when closed', async () => {
+      const dialog = document.createElement('na-dialog');
+      dialog.setAttribute('open', '');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      let eventFired = false;
+      let eventDetail: any = null;
+      
+      dialog.addEventListener('na-close', (e: Event) => {
+        eventFired = true;
+        eventDetail = (e as CustomEvent).detail;
+      });
+      
+      dialog.close();
+      
+      expect(eventFired).toBe(true);
+      expect(eventDetail).toHaveProperty('reason');
+      expect(eventDetail.reason).toBe('programmatic');
+    });
+
+    it('should dispatch na-error event on primitive load failure', async () => {
+      // Mock failed import
+      (window as any).import = async () => {
+        throw new Error('Failed to load primitives');
+      };
+      
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      let errorEventFired = false;
+      
+      dialog.addEventListener('na-error', () => {
+        errorEventFired = true;
+      });
+      
+      // Wait for error event
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      // Error should be handled gracefully
+      expect(dialog.hasAttribute('role')).toBe(true);
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should set ARIA attributes when open', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      dialog.open();
+      
+      expect(dialog.getAttribute('role')).toBe('dialog');
+      expect(dialog.getAttribute('aria-hidden')).toBeNull();
+    });
+
+    it('should set aria-hidden when closed', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.getAttribute('aria-hidden')).toBe('true');
+    });
+  });
+
+  describe('Variant Classes', () => {
+    it('should apply default variant classes', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.className).toContain('na-card');
+      expect(dialog.className).toContain('na-modal');
+    });
+
+    it('should apply center variant classes', async () => {
+      const dialog = document.createElement('na-dialog');
+      dialog.setAttribute('variant', 'center');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.className).toContain('na-modal--center');
+    });
+  });
+
+  describe('Light DOM', () => {
+    it('should not use Shadow DOM', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.shadowRoot).toBeNull();
+    });
+
+    it('should allow content in Light DOM', async () => {
+      const dialog = document.createElement('na-dialog');
+      const content = document.createElement('div');
+      content.textContent = 'Dialog Content';
+      dialog.appendChild(content);
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(dialog.querySelector('div')).toBe(content);
+      expect(dialog.textContent).toContain('Dialog Content');
+    });
+  });
+
+  describe('Cleanup', () => {
+    it('should cleanup on disconnect', async () => {
+      const dialog = document.createElement('na-dialog');
+      document.body.appendChild(dialog);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      dialog.open();
+      
+      document.body.removeChild(dialog);
+      
+      // Cleanup should be called (no errors)
+      expect(true).toBe(true);
+    });
+  });
+});
+

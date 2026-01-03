@@ -1,0 +1,364 @@
+﻿/* 10-tokens.css */
+@theme {
+   /* ========================================================================
+      NEO-ANALOG: COMFORT EDITION (DESIGN TOKENS)
+      Target: Tailwind v4
+      Philosophy: 15px Base, 24px Padding, Editorial Hierarchy.
+      ======================================================================== */
+ 
+   /* ------------------------------------------------------------------------
+      1. PRIMITIVES (The "Palette")
+      Raw values. Do not use directly in components; use semantic mappings.
+      ------------------------------------------------------------------------ */
+ 
+   /* Colors: Void & Paper (Zinc-based) */
+   --color-void:        #09090b; /* Main Background */
+   --color-paper:       #121214; /* Panel/Card Background */
+   --color-paper-2:     #18181b; /* Secondary/Hover/Input */
+   --color-paper-hover: #27272a; /* Interactive Hover */
+ 
+   /* Colors: Text & Contrast (WCAG AA+ Compliant) */
+   --color-white:       #ffffff;
+   --color-lux:         #f4f4f5; /* Primary Text (Zinc-50) */
+   --color-lux-dim:     #a1a1aa; /* Secondary Text (Zinc-400) */
+   --color-clay:        #71717a; /* Meta/Label Text (Zinc-500) */
+   --color-gold:        #eab308; /* Brand Accent (Amber-500) */
+   --color-gold-deep:   #b45309; /* Brand Accent Deep (Amber-700) - for gradients */
+ 
+   /* Colors: Structure */
+   --color-stroke:        #27272a; /* Borders */
+   --color-stroke-strong: #3f3f46; /* Hover Borders */
+   --color-stroke-soft:   #1f1f22; /* Subtle Dividers */
+ 
+   /* Colors: Status Indicators */
+   --color-success: #10b981; /* Emerald */
+   --color-warning: #f59e0b; /* Amber */
+   --color-error:   #f43f5e; /* Rose */
+   --color-info:    #3b82f6; /* Blue */
+ 
+   /* Typography: Families */
+   --font-family-sans:  "Inter", system-ui, sans-serif;
+   --font-family-serif: "Playfair Display", georgia, serif;
+   --font-family-mono:  "JetBrains Mono", ui-monospace, monospace;
+ 
+   /* Typography: Weights */
+   --font-weight-thin:       100;
+   --font-weight-extralight: 200;
+   --font-weight-light:      300;
+   --font-weight-normal:     400;
+   --font-weight-medium:     500;
+   --font-weight-semibold:   600;
+   --font-weight-bold:       700;
+   --font-weight-extrabold:  800;
+   --font-weight-black:      900;
+ 
+   /* Typography: Scale */
+   --font-size-xs:  0.75rem;   /* 12px */
+   --font-size-sm:  0.875rem;  /* 14px */
+   --font-size-base: 1rem;     /* 16px */
+   --font-size-lg:  1.125rem;  /* 18px */
+   --font-size-xl:  1.25rem;   /* 20px */
+   --font-size-2xl: 1.5rem;    /* 24px */
+   --font-size-3xl: 1.875rem;  /* 30px */
+   --font-size-4xl: 2.25rem;   /* 36px */
+   --font-size-5xl: 3rem;      /* 48px */
+ 
+   /* Spacing Scale (0px to 384px) */
+   --spacing-0:    0;
+   --spacing-px:   1px;
+   --spacing-0_5:  0.125rem;
+   --spacing-1:    0.25rem;
+   --spacing-1_5:  0.375rem;
+   --spacing-2:    0.5rem;
+   --spacing-2_5:  0.625rem;
+   --spacing-3:    0.75rem;
+   --spacing-3_5:  0.875rem;
+   --spacing-4:    1rem;     /* 16px */
+   --spacing-5:    1.25rem;
+   --spacing-6:    1.5rem;   /* 24px */
+   --spacing-7:    1.75rem;
+   --spacing-8:    2rem;     /* 32px */
+   --spacing-9:    2.25rem;
+   --spacing-10:   2.5rem;
+   --spacing-11:   2.75rem;
+   --spacing-12:   3rem;
+   --spacing-14:   3.5rem;
+   --spacing-16:   4rem;     /* 64px */
+   --spacing-20:   5rem;
+   --spacing-24:   6rem;
+   --spacing-32:   8rem;
+   --spacing-40:   10rem;
+   --spacing-48:   12rem;
+   --spacing-56:   14rem;
+   --spacing-64:   16rem;
+   --spacing-80:   20rem;
+   --spacing-96:   24rem;
+ 
+   /* Radius Scale */
+   --radius-none: 0;
+   --radius-xs:   0.125rem;
+   --radius-sm:   0.25rem;
+   --radius-md:   0.375rem;
+   --radius-lg:   0.5rem;
+   --radius-xl:   0.75rem;
+   --radius-2xl:  1rem;
+   --radius-3xl:  1.5rem;
+   --radius-full: 9999px;
+ 
+   /* Shadows */
+   --shadow-none: none;
+   --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.05);
+   --shadow-sm:   0 1px 2px rgba(0, 0, 0, 0.05);
+   --shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+   --shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+   --shadow-xl:   0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+   --shadow-2xl:  0 25px 50px -12px rgba(0, 0, 0, 0.25);
+   --shadow-inset-sm: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+ 
+   /* Animation & Motion */
+   --ease-linear: linear;
+   --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+   --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+ 
+   --duration-50:   50ms;  /* Fast press feedback */
+   --duration-75:   75ms;
+   --duration-100: 100ms;
+   --duration-150: 150ms;
+   --duration-200: 200ms;
+   --duration-300: 300ms;
+   --duration-500: 500ms;
+   --duration-700: 700ms;
+ 
+   /* Z-Index Scale (Semantic Layering)
+      Prevents "z-fighting" bugs and makes layering intent clear
+   */
+   --z-0: 0;
+   --z-deep: -10;     /* Background grain/noise */
+   --z-base: 1;       /* Standard content */
+   --z-sticky: 20;    /* Sticky headers/navs */
+   --z-drawer: 30;    /* Slide-out drawers */
+   --z-overlay: 40;   /* Backdrops */
+   --z-modal: 50;     /* Dialogs/Modals */
+   --z-toast: 60;     /* Notifications (Must be highest) */
+   --z-cursor: 100;   /* Custom cursors or drag ghosts */
+   --z-auto: auto;
+
+   /* ------------------------------------------------------------------------
+      2. LAYOUT & RESPONSIVENESS (Enterprise Standard)
+      Defines how the system behaves across different devices.
+      ------------------------------------------------------------------------ */
+   
+   /* Breakpoints (Tailwind Default Compatible) */
+   --breakpoint-sm:  640px;  /* Mobile Landscape */
+   --breakpoint-md:  768px;  /* Tablet Portrait */
+   --breakpoint-lg:  1024px; /* Tablet Landscape / Laptop */
+   --breakpoint-xl:  1280px; /* Desktop */
+   --breakpoint-2xl: 1536px; /* Large Screens */
+
+   /* Container Max-Widths (Prevents "Stretched" UI on Ultrawide) */
+   --container-sm:   640px;
+   --container-md:   768px;
+   --container-lg:   1024px;
+   --container-xl:   1280px;
+   --container-2xl:  1400px; /* Capped for readability */
+
+   /* ------------------------------------------------------------------------
+      3. COMPONENT DENSITY (Scalability)
+      Variables controlling "tightness". Override these for "Compact Mode".
+      ------------------------------------------------------------------------ */
+   
+   /* Control Heights */
+   --height-control-sm: 1.75rem; /* 28px - Compact */
+   --height-control:    2.5rem;  /* 40px - Standard */
+   --height-control-lg: 3rem;    /* 48px - Touch/Comfort */
+   
+   /* Touch Targets */
+   --touch-target:      44px;    /* WCAG AA Minimum */
+
+   /* ------------------------------------------------------------------------
+      4. SEMANTIC MAPPINGS (The "Usage")
+      Maps primitives to logical UI roles.
+      ------------------------------------------------------------------------ */
+ 
+   /* Base & Surfaces */
+   --color-background: var(--color-void);
+   --color-foreground: var(--color-lux);
+   --color-card:       var(--color-paper);
+   --color-card-foreground: var(--color-lux);
+   --color-popover:    var(--color-paper);
+   --color-popover-foreground: var(--color-lux);
+ 
+   /* Interactive */
+   --color-primary:    var(--color-gold);
+   --color-primary-foreground: var(--color-void);
+   --color-secondary:  var(--color-paper-2);
+   --color-secondary-foreground: var(--color-lux);
+   --color-muted:      var(--color-paper-2);
+   --color-muted-foreground: var(--color-clay);
+   --color-accent:     var(--color-paper-2);
+   --color-accent-foreground: var(--color-lux);
+ 
+   /* Form & Feedback */
+   --color-border:      var(--color-stroke);
+   --color-input:       var(--color-stroke);
+   --color-ring:        var(--color-gold);
+   --color-destructive: var(--color-error);
+   --color-destructive-foreground: var(--color-lux);
+ 
+   /* Charts & Visuals */
+   --color-chart-1: #eab308;
+   --color-chart-2: #10b981;
+   --color-chart-3: #3b82f6;
+   --color-chart-4: #f59e0b;
+   --color-chart-5: #f43f5e;
+ 
+   /* Sidebar */
+   --color-sidebar-background: var(--color-void);
+   --color-sidebar-foreground: var(--color-lux-dim);
+   --color-sidebar-primary:    var(--color-lux);
+   --color-sidebar-primary-foreground: var(--color-void);
+   --color-sidebar-accent:     var(--color-paper-2);
+   --color-sidebar-accent-foreground: var(--color-lux);
+   --color-sidebar-border:     var(--color-stroke);
+   --color-sidebar-ring:       var(--color-gold);
+ 
+   /* ------------------------------------------------------------------------
+      5. EXTENSIONS (The "Neo-Analog" Signature)
+      Custom tokens that define the specific feel of the application.
+      ------------------------------------------------------------------------ */
+ 
+   /* Component Radii */
+   --radius-card:    var(--radius-xl);  /* 12px */
+   --radius-panel:   var(--radius-2xl); /* 16px */
+   --radius-control: var(--radius-lg);  /* 8px */
+ 
+   /* Signature Shadows */
+   --shadow-card:    0 1px 2px -1px rgba(0, 0, 0, 0.5), 0 1px 0 0 rgba(255, 255, 255, 0.03) inset;
+   --shadow-lift:    0 10px 30px -10px rgba(0, 0, 0, 0.5);
+   --shadow-deep:    0 22px 60px -28px rgba(0, 0, 0, 0.8);
+   --shadow-gilded:  0 0 0 1px rgba(234, 179, 8, 0.15), 0 4px 12px rgba(234, 179, 8, 0.1);
+ 
+   /* Motion Curves (Premium Feel) */
+   --ease-premium: cubic-bezier(0.2, 0, 0, 1);
+   --ease-smooth:  cubic-bezier(0.2, 0, 0, 1);
+   --ease-back:    cubic-bezier(0.34, 1.56, 0.64, 1);
+   --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+ 
+   /* Animation Definitions */
+   --animate-fade-in:      fade-in var(--duration-200) var(--ease-premium) both;
+   --animate-slide-up:     slide-up var(--duration-300) var(--ease-premium) both;
+   --animate-scale-in:     scale-in var(--duration-150) var(--ease-premium) both;
+   --animate-soft-pulse:   soft-pulse 2.4s var(--ease-smooth) infinite;
+   --animate-shimmer:      shimmer 1.35s var(--ease-linear) infinite;
+   --animate-card-entrance: na-card-entrance var(--duration-300) var(--ease-premium) both;
+   
+   /* Shimmer Effect Stops (Tokenized for theme flexibility) */
+   --shimmer-stop-weak:   rgba(255, 255, 255, 0.03);
+   --shimmer-stop-strong: rgba(255, 255, 255, 0.08);
+   
+   /* Filament Gold (Neo-Analog signature highlight)
+      Used for card edges, toast tops, chart glows
+   */
+   --na-filament:        rgba(212, 181, 114, 0.95); /* Strong filament (card/toast edges) */
+   --na-filament-soft:   rgba(212, 181, 114, 0.08);  /* Soft glow (chart backgrounds) */
+   
+   /* Overlay & Surface Tints (Theme-safe glass/film effects) */
+   --color-overlay-backdrop: rgba(10, 10, 12, 0.72); /* Modal/dialog backdrops */
+   --surface-tint-1:         rgba(255, 255, 255, 0.03); /* Subtle surface highlight (trend pills, chart grids) */
+   --surface-tint-2:         rgba(255, 255, 255, 0.04); /* Medium surface highlight (KPI icon insets) */
+   
+   /* Scrollbar Colors (Theme-safe, prevents drift in light themes) */
+   --scrollbar-thumb:        rgba(228, 228, 231, 0.16); /* Scrollbar thumb (default) */
+   --scrollbar-thumb-hover:  rgba(228, 228, 231, 0.18); /* Scrollbar thumb (hover) */
+   --scrollbar-track:        transparent; /* Scrollbar track */
+   
+   /* Chart Bar Gradients (Tokenized for theme flexibility) */
+   --chart-bar-start:        rgba(228, 228, 231, 0.2);  /* Bar gradient start */
+   --chart-bar-end:          rgba(228, 228, 231, 0.06);  /* Bar gradient end */
+   
+   /* Component-Specific Shadows */
+   --dot-shadow:             rgba(10, 10, 12, 0.85);    /* Notification dot shadow */
+   
+   /* Layout Dimensions */
+   --w-sidebar:              17.5rem;  /* 280px - Standard sidebar width */
+   --w-toast-max:            26.25rem; /* 420px - Toast max width */
+   --w-indicator:            3px;      /* Navigation indicator bar width */
+   --outline-width:          2px;      /* Focus outline width */
+   --outline-offset:         2px;       /* Focus outline offset */
+   
+   /* Motion Values (Transform distances for animations) */
+   --motion-lift:            -2px;     /* Card hover lift */
+   --motion-slide:           10px;      /* Standard slide distance */
+   --motion-slide-sm:       6px;       /* Subtle slide distance */
+   --motion-slide-xs:       8px;       /* Medium slide distance */
+   --motion-shake:          2px;       /* Error shake distance */
+   --motion-blur:           4px;        /* Backdrop blur amount */
+   
+   /* Scale Values (Press effects) */
+   --scale-press-card:      0.99;      /* Card press scale */
+   --scale-press-btn:       0.97;      /* Button press scale */
+   --scale-press-modal:     0.98;      /* Modal entrance scale */
+ 
+   /* Stagger Delays (Figma-compliant: names match values) */
+   --delay-0:   0ms;
+   --delay-50:  50ms;
+   --delay-75:  75ms;  /* For bar chart choreography */
+   --delay-100: 100ms;
+   --delay-150: 150ms;
+   --delay-200: 200ms;
+   
+   /* Chart Animation Delays (Explicit scale for bar choreography) */
+   --chart-delay-1:  0.05s;  /* 50ms */
+   --chart-delay-2:  0.10s;  /* 100ms */
+   --chart-delay-3:  0.15s;  /* 150ms */
+   --chart-delay-4:  0.20s;  /* 200ms */
+   --chart-delay-5:  0.25s;  /* 250ms */
+   --chart-delay-6:  0.30s;  /* 300ms */
+   --chart-delay-7:  0.35s;  /* 350ms */
+   --chart-delay-8:  0.40s;  /* 400ms */
+   --chart-delay-9:  0.45s;  /* 450ms */
+   --chart-delay-10: 0.50s;  /* 500ms */
+   --chart-delay-11: 0.55s;  /* 550ms */
+   --chart-delay-12: 0.60s;  /* 600ms */
+ 
+   /* Layout Dimensions */
+   --w-search-bar: 30rem; /* 480px */
+ 
+   /* ------------------------------------------------------------------------
+      6. TYPOGRAPHY EXTENSIONS (Drift Prevention)
+      Variables for strict hierarchy classes (.na-h1, .na-data, etc.)
+      ------------------------------------------------------------------------ */
+ 
+   /* Headings */
+   --heading-1-size: 2rem;        --heading-1-weight: 700; --heading-1-tracking: -0.02em; --heading-1-line-height: 1.2;
+   --heading-2-size: 1.5rem;      --heading-2-weight: 600; --heading-2-tracking: -0.01em; --heading-2-line-height: 1.3;
+   --heading-3-size: 1.25rem;     --heading-3-weight: 600; --heading-3-tracking: 0;       --heading-3-line-height: 1.4;
+   --heading-4-size: 1.125rem;    --heading-4-weight: 600; --heading-4-tracking: 0;       --heading-4-line-height: 1.4;
+   --heading-5-size: 1rem;        --heading-5-weight: 600; --heading-5-tracking: 0;       --heading-5-line-height: 1.5;
+   --heading-6-size: 0.875rem;    --heading-6-weight: 600; --heading-6-tracking: 0.05em;  --heading-6-line-height: 1.5;
+ 
+   /* Data & Metadata */
+   --data-size: 0.875rem;         --data-weight: 400;      --data-font: var(--font-family-mono);
+   --data-large-size: 1.875rem;   --data-large-weight: 500; --data-large-font: var(--font-family-serif);
+   --metadata-size: 0.6875rem;    --metadata-weight: 500;  --metadata-tracking: 0.1em;
+   --metadata-small-size: 0.625rem; --metadata-small-weight: 400;
+   
+   /* KPI Value (Named UI Role - Hero Numbers) */
+   --kpi-value-size: 1.625rem;    /* 26px - KPI-specific size */
+   --kpi-value-line: 1.05;        /* Tight line height for numbers */
+   --kpi-value-weight: 600;       /* Semibold for emphasis */
+ 
+   /* Explicit Colors for Typography Mapping */
+   --heading-1-color: var(--color-lux);
+   --heading-2-color: var(--color-lux);
+   --heading-3-color: var(--color-lux);
+   --heading-4-color: var(--color-lux);
+   --heading-5-color: var(--color-lux);
+   --heading-6-color: var(--color-lux-dim);
+   --data-color:      var(--color-lux);
+   --data-large-color: var(--color-lux);
+   --metadata-color:  var(--color-clay);
+   --metadata-small-color: var(--color-clay);
+   --kpi-value-color: var(--color-lux);
+ }

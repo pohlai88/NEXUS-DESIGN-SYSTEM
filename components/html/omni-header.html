@@ -1,0 +1,62 @@
+<!-- OMNI HEADER COMPONENT
+     Usage: Include in shell-omni.html
+     Features: Brand, Ticker, Search Bar (⌘K), Action Buttons, Drawer Toggle
+-->
+<header class="na-shell-head">
+    <div class="na-header">
+        <!-- Left: Brand & Drawer Toggle -->
+        <div class="flex items-center gap-6">
+            <!-- Drawer Toggle Button -->
+            <label for="na-toggle-drawer" class="na-iconbtn" aria-label="Toggle drawer">
+                <span aria-hidden="true">☰</span>
+            </label>
+
+            <!-- Brand -->
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">NA</div>
+                <div>
+                    <span class="na-h4">Neo-Analog</span>
+                    <span class="na-metadata-small text-clay ml-2">// OMNI v2.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center: Enhanced Global Search with Command Bar -->
+        <div class="na-search" role="search" style="position: relative;">
+            <label for="omni-search" class="sr-only">Search ERP data</label>
+            <input type="search" id="omni-search" class="na-search-input"
+                placeholder="Search orders, invoices, customers... (⌘K for commands)" aria-label="Search ERP data">
+            <span class="na-search-icon" aria-hidden="true">⌕</span>
+            <kbd class="na-search-kbd">⌘K</kbd>
+        </div>
+
+        <!-- Right: Header Actions with Ticker -->
+        <div class="flex items-center gap-4">
+            <!-- Live Ticker -->
+            <div class="na-ticker" aria-label="Live metrics">
+                <div class="na-ticker-item">
+                    <span>Orders</span>
+                    <span class="val-up">+12</span>
+                </div>
+                <div class="na-ticker-item">
+                    <span>Revenue</span>
+                    <span class="val-up">RM 2.4M</span>
+                </div>
+                <div class="na-ticker-item">
+                    <span>Sync</span>
+                    <span style="color: var(--color-lux);">24ms</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <button class="na-btn" type="button" aria-label="Filter data">Filter</button>
+            <button class="na-btn" type="button" aria-label="Export data">Export</button>
+            <a href="#command-palette" class="na-btn-primary" aria-label="Open command palette">⌘K</a>
+
+            <button class="na-iconbtn" type="button" aria-label="Notifications">
+                <span aria-hidden="true">🔔</span>
+            </button>
+            <div class="na-avatar" aria-label="User profile"></div>
+        </div>
+    </div>
+</header>

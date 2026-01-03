@@ -1,0 +1,185 @@
+﻿/* 30-base.css */
+@layer base {
+  /* ========================================================================
+     1. ROBUST RESET & NORMALIZATION
+     Ensure consistent rendering across all browsers.
+     ======================================================================== */
+  
+  /* Global Box Sizing (Crucial for Layout Math) */
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  /* HTML/Body Base */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* Default: App Mode (Hidden overflow). Shell handles scrolling. */
+    overflow: hidden;
+  }
+
+  /* ========================================================================
+     2. LAYOUT MODES (Explicit Control)
+     Enterprise Rule: Explicit > Implicit.
+     ======================================================================== */
+
+  /* MODE A: APP (Default)
+     Usage: <body class="na-mode-app"> (Optional, as it is default)
+     Behavior: Body is locked. .na-shell-* handles internal scrolling.
+  */
+  body.na-mode-app {
+    overflow: hidden;
+  }
+
+  /* MODE B: DOCUMENT
+     Usage: <body class="na-mode-doc">
+     Behavior: Body scrolls naturally. Used for LP, Docs, Auth pages.
+     
+     Modern browsers: Automatic detection via :has() selector
+     Legacy browsers: Explicit class required (.na-mode-doc)
+  */
+  body:not(:has(.na-shell)):not(:has(.na-shell-omni)),
+  body.na-mode-doc {
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* Document Scrollbar Styling */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-hover) var(--scrollbar-track);
+  }
+
+  /* Webkit Scrollbar Styling (Chrome/Edge/Safari) */
+  body:not(:has(.na-shell)):not(:has(.na-shell-omni))::-webkit-scrollbar,
+  body.na-mode-doc::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  body:not(:has(.na-shell)):not(:has(.na-shell-omni))::-webkit-scrollbar-thumb,
+  body.na-mode-doc::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  body:not(:has(.na-shell)):not(:has(.na-shell-omni))::-webkit-scrollbar-thumb:hover,
+  body.na-mode-doc::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+  body:not(:has(.na-shell)):not(:has(.na-shell-omni))::-webkit-scrollbar-track,
+  body.na-mode-doc::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  body {
+    @apply bg-void text-lux font-sans antialiased;
+
+    /* COMFORT STANDARD: 15px Base / 1.6 Line Height */
+    font-size: 15px;
+    line-height: 1.6;
+
+    /* Text Rendering Optimization */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Font Features: Single-story 'a' (cv11) */
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* ========================================================================
+     3. GLOBAL TYPOGRAPHY
+     Base styles for technical text.
+     ======================================================================== */
+  
+  code,
+  pre {
+    font-family: var(--font-family-mono);
+    font-size: 0.9em; /* Optical alignment */
+    line-height: 1.4;
+  }
+
+  /* ========================================================================
+     4. INTERACTION STATES
+     Signature Neo-Analog focus and selection.
+     ======================================================================== */
+
+  /* Selection: Warm Gold High Contrast */
+  ::selection {
+    background: color-mix(in srgb, var(--color-gold) 70%, var(--color-white) 10%);
+    color: var(--color-void);
+  }
+
+  /* Focus Visible: Keyboard users only */
+  :focus-visible {
+    outline: var(--outline-width) solid color-mix(in srgb, var(--color-gold) 75%, var(--color-white) 10%);
+    outline-offset: var(--outline-offset);
+  }
+
+  /* ========================================================================
+     5. ENVIRONMENT TEXTURES
+     Global atmospheric effects.
+     ======================================================================== */
+
+  /* Neo-Analog Grain */
+  .na-bg-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+
+  /* ========================================================================
+     6. PRINT STYLES
+     Save ink and remove UI chrome.
+     ======================================================================== */
+  
+  @media print {
+    /* Hide UI Chrome */
+    .na-shell-rail, 
+    .na-shell-head, 
+    .na-shell-foot, 
+    .na-shell-drawer,
+    .na-skip-link, 
+    .na-btn, 
+    .na-iconbtn,
+    .atmosphere,
+    .na-bg-grain {
+      display: none !important;
+    }
+
+    /* Reset Layouts */
+    html, body, .na-shell-omni, .na-shell-main {
+      height: auto !important;
+      overflow: visible !important;
+      width: 100% !important;
+      display: block !important;
+      position: static !important;
+    }
+
+    /* Ink Saving Mode */
+    body, .na-card, .na-panel {
+      background-color: white !important;
+      color: black !important;
+      border: 1px solid #ccc !important; /* Simple border for cards */
+      box-shadow: none !important;
+    }
+    
+    /* Typography Legibility */
+    .na-data, .na-h1, .na-h2, .na-h3, .na-h4, p { 
+      color: black !important; 
+      text-shadow: none !important;
+    }
+    
+    /* Ensure links are useful */
+    a[href]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.8em;
+      color: #666;
+    }
+  }
+}

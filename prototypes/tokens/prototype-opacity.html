@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Opacity Scale (Myna UI)</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Opacity scale derived from Figma node 418:1338 */
+    :root {
+      --opacity-0: 0;
+      --opacity-5: 0.05;
+      --opacity-10: 0.1;
+      --opacity-15: 0.15;
+      --opacity-20: 0.2;
+      --opacity-25: 0.25;
+      --opacity-30: 0.3;
+      --opacity-35: 0.35;
+      --opacity-40: 0.4;
+      --opacity-45: 0.45;
+      --opacity-50: 0.5;
+      --opacity-55: 0.55;
+      --opacity-60: 0.6;
+      --opacity-65: 0.65;
+      --opacity-70: 0.7;
+      --opacity-75: 0.75;
+      --opacity-80: 0.8;
+      --opacity-85: 0.85;
+      --opacity-90: 0.9;
+      --opacity-95: 0.95;
+      --opacity-100: 1;
+      --opacity-box-size: 96px;
+      --opacity-box-radius: var(--radius-control, 8px);
+      --opacity-bg: url("https://www.figma.com/api/mcp/asset/ae8962e1-9a3a-45fd-838e-1a68590fbc8b");
+    }
+
+    .opacity-stage {
+      position: relative;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-panel);
+      overflow: hidden;
+      background: var(--color-paper);
+    }
+
+    .opacity-stage__bg {
+      position: absolute;
+      inset: 0;
+      background-image: var(--opacity-bg);
+      background-size: cover;
+      background-position: center;
+      filter: saturate(110%) contrast(102%);
+      opacity: 0.9;
+    }
+
+    .opacity-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--spacing-7);
+      padding: var(--spacing-8);
+    }
+
+    .opacity-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3);
+      align-items: center;
+      text-align: center;
+    }
+
+    .opacity-box {
+      width: var(--opacity-box-size);
+      height: var(--opacity-box-size);
+      border-radius: var(--opacity-box-radius);
+      background: var(--color-paper);
+      border: 1px solid color-mix(in oklab, var(--color-stroke) 70%, var(--color-lux) 30%);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-void);
+      opacity: 1;
+      transition: opacity 180ms var(--ease-premium, ease);
+    }
+
+    .opacity-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-clay);
+      letter-spacing: 0.02em;
+    }
+
+    /* Semantic opacity utilities */
+    .na-opacity-0 { opacity: var(--opacity-0); }
+    .na-opacity-5 { opacity: var(--opacity-5); }
+    .na-opacity-10 { opacity: var(--opacity-10); }
+    .na-opacity-15 { opacity: var(--opacity-15); }
+    .na-opacity-20 { opacity: var(--opacity-20); }
+    .na-opacity-25 { opacity: var(--opacity-25); }
+    .na-opacity-30 { opacity: var(--opacity-30); }
+    .na-opacity-35 { opacity: var(--opacity-35); }
+    .na-opacity-40 { opacity: var(--opacity-40); }
+    .na-opacity-45 { opacity: var(--opacity-45); }
+    .na-opacity-50 { opacity: var(--opacity-50); }
+    .na-opacity-55 { opacity: var(--opacity-55); }
+    .na-opacity-60 { opacity: var(--opacity-60); }
+    .na-opacity-65 { opacity: var(--opacity-65); }
+    .na-opacity-70 { opacity: var(--opacity-70); }
+    .na-opacity-75 { opacity: var(--opacity-75); }
+    .na-opacity-80 { opacity: var(--opacity-80); }
+    .na-opacity-85 { opacity: var(--opacity-85); }
+    .na-opacity-90 { opacity: var(--opacity-90); }
+    .na-opacity-95 { opacity: var(--opacity-95); }
+    .na-opacity-100 { opacity: var(--opacity-100); }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--spacing-6);
+      padding: var(--spacing-6);
+    }
+
+    .usage-card {
+      padding: var(--spacing-6);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">🧊</div>
+        <div>
+          <div class="na-brand-title">Opacity Scale</div>
+          <div class="na-metadata-small">Myna UI • Figma 418:1338</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#scale" aria-current="page">Scale</a>
+      <a class="na-nav-item" href="#examples">Examples</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <a class="na-nav-item" href="#usage">Usage</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Headless • Semantic • Drift-Proof</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Opacity System</h1>
+            <p class="na-metadata">20-step opacity scale from 0 → 100 using semantic tokens</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="na-content" id="scale">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Opacity Scale</h2>
+              <p class="na-metadata">Matches Figma steps: 0, 5, 10 ... 100</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="opacity-stage">
+            <div class="opacity-stage__bg" aria-hidden="true"></div>
+            <div class="opacity-grid">
+              <div class="opacity-item"><div class="opacity-box na-opacity-0">0%</div><div class="opacity-label">opacity-0</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-5">5%</div><div class="opacity-label">opacity-5</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-10">10%</div><div class="opacity-label">opacity-10</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-15">15%</div><div class="opacity-label">opacity-15</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-20">20%</div><div class="opacity-label">opacity-20</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-25">25%</div><div class="opacity-label">opacity-25</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-30">30%</div><div class="opacity-label">opacity-30</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-35">35%</div><div class="opacity-label">opacity-35</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-40">40%</div><div class="opacity-label">opacity-40</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-45">45%</div><div class="opacity-label">opacity-45</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-50">50%</div><div class="opacity-label">opacity-50</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-55">55%</div><div class="opacity-label">opacity-55</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-60">60%</div><div class="opacity-label">opacity-60</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-65">65%</div><div class="opacity-label">opacity-65</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-70">70%</div><div class="opacity-label">opacity-70</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-75">75%</div><div class="opacity-label">opacity-75</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-80">80%</div><div class="opacity-label">opacity-80</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-85">85%</div><div class="opacity-label">opacity-85</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-90">90%</div><div class="opacity-label">opacity-90</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-95">95%</div><div class="opacity-label">opacity-95</div></div>
+              <div class="opacity-item"><div class="opacity-box na-opacity-100">100%</div><div class="opacity-label">opacity-100</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="examples">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Real-World Usage</h2>
+              <p class="na-metadata">Use opacity for emphasis and layering</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <div class="usage-card">
+              <h4 class="na-h5">Disabled Button</h4>
+              <p class="na-metadata">Lower opacity for disabled states</p>
+              <div style="margin-top: var(--spacing-4); display: flex; gap: var(--spacing-3);">
+                <button class="na-btn">Primary</button>
+                <button class="na-btn na-opacity-50" aria-disabled="true">Disabled</button>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Overlay Tint</h4>
+              <p class="na-metadata">Tint hero banners without losing image detail</p>
+              <div style="margin-top: var(--spacing-4); position: relative; height: 120px; border-radius: var(--radius-card); overflow: hidden;">
+                <div style="position: absolute; inset: 0; background-image: linear-gradient(135deg, var(--color-info), var(--color-gold));"></div>
+                <div class="na-opacity-65" style="position: absolute; inset: 0; background: var(--color-void);"></div>
+                <div style="position: relative; padding: var(--spacing-4); color: var(--color-lux);">Readable text on tinted image</div>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Skeleton Loading</h4>
+              <p class="na-metadata">Pulse opacity for shimmering placeholders</p>
+              <div style="margin-top: var(--spacing-4); display: grid; gap: var(--spacing-2);">
+                <div class="na-opacity-80" style="height: 12px; background: var(--color-paper-2); border-radius: var(--radius-control);"></div>
+                <div class="na-opacity-60" style="height: 12px; background: var(--color-paper-2); border-radius: var(--radius-control);"></div>
+                <div class="na-opacity-40" style="height: 12px; background: var(--color-paper-2); border-radius: var(--radius-control);"></div>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Muted Metadata</h4>
+              <p class="na-metadata">Lower emphasis on secondary text</p>
+              <div style="margin-top: var(--spacing-4); display: flex; flex-direction: column; gap: var(--spacing-1_5);">
+                <div class="na-data">Primary value</div>
+                <div class="na-metadata na-opacity-70">Updated 3m ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">Opacity variables (0 → 1)</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="na-panel">
+            <h4 class="na-h5">Opacity Tokens</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>--opacity-0: 0;
+--opacity-5: 0.05;
+--opacity-10: 0.1;
+--opacity-15: 0.15;
+--opacity-20: 0.2;
+--opacity-25: 0.25;
+--opacity-30: 0.3;
+--opacity-35: 0.35;
+--opacity-40: 0.4;
+--opacity-45: 0.45;
+--opacity-50: 0.5;
+--opacity-55: 0.55;
+--opacity-60: 0.6;
+--opacity-65: 0.65;
+--opacity-70: 0.7;
+--opacity-75: 0.75;
+--opacity-80: 0.8;
+--opacity-85: 0.85;
+--opacity-90: 0.9;
+--opacity-95: 0.95;
+--opacity-100: 1;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Code Usage</h2>
+              <p class="na-metadata">Semantic classes and CSS variables</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-5);">
+            <div class="na-panel">
+              <h4 class="na-h5">Semantic Classes</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>&lt;div class="na-opacity-0"&gt;Hidden&lt;/div&gt;
+&lt;div class="na-opacity-50"&gt;50% visible&lt;/div&gt;
+&lt;div class="na-opacity-100"&gt;Fully visible&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Using Tokens</h4>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>.overlay {
+  background: rgba(0, 0, 0, 0.6);
+  opacity: var(--opacity-65);
+}
+
+.muted-label {
+  opacity: var(--opacity-70);
+}
+
+.skeleton-line {
+  animation: pulse 1.6s ease-in-out infinite;
+  opacity: var(--opacity-60);
+}
+</code></pre>
+            </div>
+
+            <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 12%, var(--color-paper) 88%); border-color: var(--color-gold);">
+              <h4 class="na-h5">Figma → Neo-Analog</h4>
+              <div class="na-metadata" style="margin-top: var(--spacing-2);">
+                ❌ opacity-[var(--opacity/25,0.25)] → ✅ .na-opacity-25 or opacity: var(--opacity-25)
+              </div>
+              <div class="na-metadata" style="margin-top: var(--spacing-1_5);">
+                ❌ opacity-[var(--opacity/75,0.75)] → ✅ .na-opacity-75 or opacity: var(--opacity-75)
+              </div>
+            </div>
+
+            <div class="na-panel">
+              <h4 class="na-h5">Compliance Checklist</h4>
+              <div class="na-metadata">✓ Semantic utilities • ✓ Design tokens • ✓ No arbitrary Tailwind values • ✓ Matches Figma 418:1338</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Opacity • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • Drift-Proof</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

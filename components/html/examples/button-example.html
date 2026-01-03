@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Web Component Example - Neo-Analog Design System</title>
+  
+  <!-- Global Design System Styles -->
+  <link rel="stylesheet" href="../../../style.css">
+  
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+      background: var(--na-bg-primary, #0a0a0a);
+      color: var(--na-text-primary, #ffffff);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .demo-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--na-bg-secondary, #1a1a1a);
+      border-radius: 8px;
+      border: 1px solid var(--na-border-primary, #333);
+    }
+    
+    .demo-section h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .demo-item {
+      margin-bottom: 1.5rem;
+    }
+    
+    .demo-item label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--na-text-secondary, #999);
+    }
+    
+    .event-log {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--na-bg-primary, #0a0a0a);
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--na-border-primary, #333);
+    }
+    
+    .event-log-header {
+      color: var(--na-text-secondary, #999);
+      margin-bottom: 0.5rem;
+    }
+    
+    .event-log-entry {
+      margin-bottom: 0.25rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Button Web Component Examples</h1>
+    
+    <!-- Variants -->
+    <div class="demo-section">
+      <h2>Variants</h2>
+      <p>Different button style variants.</p>
+      <div class="button-group">
+        <na-button variant="primary">Primary</na-button>
+        <na-button variant="secondary">Secondary</na-button>
+        <na-button variant="danger">Danger</na-button>
+        <na-button variant="ghost">Ghost</na-button>
+        <na-button variant="outline">Outline</na-button>
+      </div>
+    </div>
+    
+    <!-- Sizes -->
+    <div class="demo-section">
+      <h2>Sizes</h2>
+      <p>Different button sizes.</p>
+      <div class="button-group">
+        <na-button size="sm">Small</na-button>
+        <na-button size="md">Medium</na-button>
+        <na-button size="lg">Large</na-button>
+      </div>
+    </div>
+    
+    <!-- States -->
+    <div class="demo-section">
+      <h2>States</h2>
+      <p>Button states: default, disabled, and loading.</p>
+      <div class="button-group">
+        <na-button>Default</na-button>
+        <na-button disabled>Disabled</na-button>
+        <na-button loading>Loading</na-button>
+      </div>
+    </div>
+    
+    <!-- Event Handling -->
+    <div class="demo-section">
+      <h2>Event Handling</h2>
+      <p>Click the buttons below to see events logged.</p>
+      <div class="button-group">
+        <na-button id="event-button-1" variant="primary">Click Me</na-button>
+        <na-button id="event-button-2" variant="secondary">Click Me Too</na-button>
+        <na-button id="event-button-3" variant="danger">Danger Click</na-button>
+      </div>
+      
+      <div class="event-log">
+        <div class="event-log-header">Event Log:</div>
+        <div id="event-log-content"></div>
+      </div>
+    </div>
+    
+    <!-- Dynamic Attributes -->
+    <div class="demo-section">
+      <h2>Dynamic Attributes</h2>
+      <p>Buttons with dynamically changed attributes.</p>
+      <div class="demo-item">
+        <label>Toggle Disabled State:</label>
+        <na-button id="toggle-disabled" variant="primary">Toggle Me</na-button>
+        <na-button id="disable-button" variant="secondary" size="sm">Disable/Enable</na-button>
+      </div>
+      <div class="demo-item">
+        <label>Toggle Loading State:</label>
+        <na-button id="toggle-loading" variant="primary">Loading Button</na-button>
+        <na-button id="loading-button" variant="secondary" size="sm">Toggle Loading</na-button>
+      </div>
+      <div class="demo-item">
+        <label>Change Variant:</label>
+        <na-button id="variant-button" variant="primary">Change Variant</na-button>
+        <na-button id="change-variant" variant="secondary" size="sm">Cycle Variant</na-button>
+      </div>
+    </div>
+    
+    <!-- Icon Buttons -->
+    <div class="demo-section">
+      <h2>Icon Buttons</h2>
+      <p>Buttons with icons (using emoji for demo).</p>
+      <div class="button-group">
+        <na-button variant="primary" aria-label="Save">💾 Save</na-button>
+        <na-button variant="secondary" aria-label="Delete">🗑️ Delete</na-button>
+        <na-button variant="ghost" aria-label="Edit">✏️ Edit</na-button>
+        <na-button variant="outline" aria-label="Share">📤 Share</na-button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Import Web Components -->
+  <script type="module" src="../../../dist/adapters/vanilla/button.js"></script>
+  
+  <script>
+    // Wait for component to be defined
+    customElements.whenDefined('na-button').then(() => {
+      console.log('✅ Button Web Component loaded!');
+      
+      // Event Logging
+      const eventLog = document.getElementById('event-log-content');
+      
+      function logEvent(eventName, detail) {
+        const time = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = 'event-log-entry';
+        logEntry.textContent = `[${time}] ${eventName}: ${JSON.stringify(detail || {})}`;
+        eventLog.appendChild(logEntry);
+        eventLog.scrollTop = eventLog.scrollHeight;
+      }
+      
+      // Event handling examples
+      const eventButton1 = document.getElementById('event-button-1');
+      const eventButton2 = document.getElementById('event-button-2');
+      const eventButton3 = document.getElementById('event-button-3');
+      
+      eventButton1.addEventListener('click', (e) => {
+        logEvent('click', { button: 'event-button-1', variant: eventButton1.getAttribute('variant') });
+      });
+      
+      eventButton2.addEventListener('click', (e) => {
+        logEvent('click', { button: 'event-button-2', variant: eventButton2.getAttribute('variant') });
+      });
+      
+      eventButton3.addEventListener('click', (e) => {
+        logEvent('click', { button: 'event-button-3', variant: eventButton3.getAttribute('variant') });
+      });
+      
+      // Listen to na-error events
+      document.querySelectorAll('na-button').forEach(button => {
+        button.addEventListener('na-error', (e) => {
+          logEvent('na-error', e.detail);
+        });
+      });
+      
+      // Dynamic attribute examples
+      const toggleDisabled = document.getElementById('toggle-disabled');
+      const disableButton = document.getElementById('disable-button');
+      let isDisabled = false;
+      
+      disableButton.addEventListener('click', () => {
+        isDisabled = !isDisabled;
+        if (isDisabled) {
+          toggleDisabled.setAttribute('disabled', '');
+          logEvent('attribute-change', { attribute: 'disabled', value: true });
+        } else {
+          toggleDisabled.removeAttribute('disabled');
+          logEvent('attribute-change', { attribute: 'disabled', value: false });
+        }
+      });
+      
+      const toggleLoading = document.getElementById('toggle-loading');
+      const loadingButton = document.getElementById('loading-button');
+      let isLoading = false;
+      
+      loadingButton.addEventListener('click', () => {
+        isLoading = !isLoading;
+        if (isLoading) {
+          toggleLoading.setAttribute('loading', '');
+          logEvent('attribute-change', { attribute: 'loading', value: true });
+        } else {
+          toggleLoading.removeAttribute('loading');
+          logEvent('attribute-change', { attribute: 'loading', value: false });
+        }
+      });
+      
+      const variantButton = document.getElementById('variant-button');
+      const changeVariant = document.getElementById('change-variant');
+      const variants = ['primary', 'secondary', 'danger', 'ghost', 'outline'];
+      let variantIndex = 0;
+      
+      changeVariant.addEventListener('click', () => {
+        variantIndex = (variantIndex + 1) % variants.length;
+        const newVariant = variants[variantIndex];
+        variantButton.setAttribute('variant', newVariant);
+        logEvent('attribute-change', { attribute: 'variant', value: newVariant });
+      });
+    });
+  </script>
+</body>
+</html>
+

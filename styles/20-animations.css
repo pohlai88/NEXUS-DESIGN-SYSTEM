@@ -1,0 +1,242 @@
+﻿/* 20-animations.css */
+@layer base {
+  /* ========================================================================
+     1. GLOBAL PRIMITIVES (In/Out)
+     Standardized entrances and exits. 
+     Prefix: 'na-' to prevent library collisions.
+     ======================================================================== */
+
+  /* Legacy aliases (backward compatibility) */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes slide-up {
+    from { transform: translateY(var(--motion-slide)); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  @keyframes scale-in {
+    from { transform: scale(0.985); opacity: 0; }
+    to   { transform: scale(1);     opacity: 1; }
+  }
+
+  /* --- Fades --- */
+  @keyframes na-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes na-fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  /* --- Slides (Y-Axis) --- */
+  @keyframes na-slide-up-in {
+    from { transform: translateY(var(--motion-slide)); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes na-slide-down-out {
+    from { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(var(--motion-slide)); opacity: 0; }
+  }
+
+  /* --- Scales (Dialogs/Popovers) --- */
+  @keyframes na-scale-in {
+    from { transform: scale(0.96); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  @keyframes na-scale-out {
+    from { transform: scale(1);    opacity: 1; }
+    to   { transform: scale(0.96); opacity: 0; }
+  }
+
+  /* Used for Skeleton Loading & "Active" states */
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Used for Status Dots (Opacity Pulse) */
+  @keyframes soft-pulse {
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1; }
+  }
+
+  /* ========================================================================
+     2. COMPONENT ENTRANCES
+     Specific choreography for UI elements.
+     ======================================================================== */
+
+  /* Cards & Tiles Entrance */
+  @keyframes na-card-entrance {
+    from { opacity: 0; transform: translateY(var(--motion-slide-xs)); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Chart Bars (Growth) */
+  @keyframes na-bar-grow {
+    from { height: 0; opacity: 0; }
+    to   { opacity: 1; } /* Height is handled by the element's inline style or class */
+  }
+
+  /* Progress Bars (Width) */
+  @keyframes na-progress-grow {
+    from { width: 0; }
+  }
+
+  /* Accordion / Details Reveal */
+  @keyframes na-reveal {
+    from { opacity: 0; transform: translateY(var(--motion-slide-sm)); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========================================================================
+     2A. DATA VISUALIZATION CHOREOGRAPHY
+     Optimized for high-performance (GPU) rendering.
+     ======================================================================== */
+
+  /* Performance Note: Animating 'height' triggers layout recalculation (slow).
+     We use 'scaleY' instead for 60fps rendering on large dashboards.
+     *REQUIREMENT*: The element must have 'transform-origin: bottom' set.
+  */
+  @keyframes na-scale-y-up {
+    from { transform: scaleY(0); opacity: 0; }
+    to   { transform: scaleY(1); opacity: 1; }
+  }
+
+  /* Progress Bar Growth (X-Axis) */
+  /* Requirement: 'transform-origin: left' */
+  @keyframes na-scale-x-right {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* ========================================================================
+     2B. LOADING & STATES
+     ======================================================================== */
+
+  /* Skeleton Loading (High Performance background shift) */
+  @keyframes na-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Standard Spinner */
+  @keyframes na-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Status Indicator Pulse (Opacity only) */
+  @keyframes na-pulse-fade {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+  }
+
+  /* Attention Ping (Radar effect) */
+  @keyframes na-ping {
+    75%, 100% { transform: scale(2); opacity: 0; }
+  }
+
+  /* ========================================================================
+     2C. BEAST MODE SPECIFICS (Cinematic)
+     The "Soul" of Neo-Analog.
+     ======================================================================== */
+
+  /* The "Living" Icon Breathe (Subtle Scale + Glow) */
+  @keyframes na-breathe {
+    0%, 100% { 
+      transform: scale(1); 
+      filter: drop-shadow(0 0 0 rgba(0,0,0,0)); 
+    }
+    50% { 
+      transform: scale(1.05); 
+      filter: drop-shadow(0 0 12px rgba(234, 179, 8, 0.3)); /* Gold Glow */
+    }
+  }
+
+  /* Filament Scan (For Borders) */
+  @keyframes na-filament-scan {
+    0%   { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* ========================================================================
+     3. MICRO-INTERACTIONS & FEEDBACK
+     Tactile responses to user input.
+     ======================================================================== */
+
+  /* Invalid Input Shake (Horizontal) */
+  @keyframes na-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(calc(var(--motion-shake) * -1)); }
+    40%, 80% { transform: translateX(var(--motion-shake)); }
+  }
+
+  /* Generic Ring Pulse (Box Shadow)
+     Usage: Set --pulse-color locally in the component.
+     Example: .my-component { --pulse-color: var(--color-warning); animation: pulse-ring ... }
+  */
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 transparent; }
+    45%  { box-shadow: 0 0 0 4px color-mix(in srgb, var(--pulse-color) 10%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* Focus Ring Expansion */
+  @keyframes na-pulse-ring {
+    0%   { box-shadow: 0 0 0 0 transparent; }
+    70%  { box-shadow: 0 0 0 4px color-mix(in srgb, var(--pulse-color) 10%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* Legacy aliases for backward compatibility (maps to new pulse-ring) */
+  @keyframes na-softpulse {
+    /* Previously hardcoded to Amber - now uses tokenized color */
+    0%   { box-shadow: 0 0 0 0 transparent; }
+    45%  { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-warning) 10%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  @keyframes na-inkpulse {
+    /* Previously hardcoded to Emerald - now uses tokenized color */
+    0%   { box-shadow: 0 0 0 0 transparent; }
+    45%  { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-success) 10%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* ========================================================================
+     4. ACCESSIBILITY OVERRIDES
+     Robust "Reduced Motion" support.
+     ======================================================================== */
+  @media (prefers-reduced-motion: reduce) {
+    /* Strategy: Don't disable everything (which breaks JS logic waiting for 'animationend').
+       Instead, speed it up instantly so it feels immediate but triggers events.
+    */
+    *, ::before, ::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    /* Force specific overrides for infinite animations to stop distracting motion */
+    .animate-spin, .animate-ping, .animate-bounce, 
+    .na-breathe, .na-shimmer {
+      animation: none !important;
+    }
+    
+    /* Token-level override (for programmatic control) */
+    :root {
+      --duration-50:   1ms;
+      --duration-75:   1ms;
+      --duration-100:  1ms;
+      --duration-150:  1ms;
+      --duration-200:  1ms;
+      --duration-300:  1ms;
+      --duration-500:  1ms;
+      --duration-700:  1ms;
+    }
+  }
+}

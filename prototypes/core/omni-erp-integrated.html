@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI // INTEGRATED ERP OS</title>
+    <!-- Design System: Beast Mode Patterns -->
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           CORE PHYSICS: The "Omni" Design Token System
+           Merging 'God Mode' Aesthetics with 'IDE' Density
+           ================================================================= */
+        :root {
+            /* SPATIAL DIMENSIONS */
+            --w-rail: 64px;
+            /* Mini-sidebar for max data */
+            --w-drawer: 400px;
+            /* Context Inspector */
+            --h-head: 56px;
+            /* Command Bar */
+            --h-foot: 32px;
+            /* Status Bar */
+            --h-row: 40px;
+            /* Grid Row Height */
+
+            /* PALETTE: "Deep Void" (High Contrast, Low Fatigue) */
+            --bg-void: #050505;
+            --bg-panel: #0a0a0b;
+            --bg-surface: #121214;
+            --bg-surface-2: #18181b;
+            --bg-highlight: #27272a;
+            --bg-active: #1f1f22;
+            /* FIXED: Defined active state background */
+
+            /* BORDERS */
+            --border: #27272a;
+            --border-light: #3f3f46;
+
+            /* SIGNALS (The "LED" Colors) */
+            --c-text: #e4e4e7;
+            --c-dim: #71717a;
+            --c-accent: #eab308;
+            /* Amber (Attention) */
+            --c-success: #10b981;
+            /* Emerald (Good) */
+            --c-danger: #f43f5e;
+            /* Rose (Error) */
+            --c-info: #3b82f6;
+            /* Blue (Neutral) */
+
+            /* Z-INDEX STRATOSPHERE */
+            --z-grid-base: 1;
+            --z-sticky-col: 10;
+            --z-sticky-row: 20;
+            --z-sticky-corner: 30;
+            --z-drawer: 50;
+            --z-modal: 100;
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background: var(--bg-void);
+            color: var(--c-text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 13px;
+            margin: 0;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- GLOBAL ATMOSPHERE --- */
+        .omni-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03), transparent 70%);
+        }
+
+        .omni-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            mix-blend-mode: overlay;
+        }
+
+        /* --- LAYOUT SHELL (CSS Grid) --- */
+        /* Using design system .na-shell-omni pattern with custom dimensions */
+        .shell {
+            /* Extends .na-shell-omni from design system */
+            position: relative;
+            z-index: var(--z-grid-base);
+            display: grid;
+            grid-template-areas:
+                "head head head"
+                "rail main drawer"
+                "foot foot foot";
+            grid-template-columns: var(--w-rail) 1fr 0px;
+            /* Drawer closed by default */
+            grid-template-rows: var(--h-head) 1fr var(--h-foot);
+            height: 100vh;
+            width: 100vw;
+            transition: grid-template-columns 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* DRAWER STATE LOGIC (No JS required for layout shift) */
+        /* If checkbox #toggle-drawer is checked, expand the drawer column */
+        body:has(#toggle-drawer:checked) .shell {
+            grid-template-columns: var(--w-rail) 1fr var(--w-drawer);
+        }
+
+        /* --- 1. HEADER (Command Center) --- */
+        .head {
+            grid-area: head;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 40;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mark {
+            width: 28px;
+            height: 28px;
+            background: var(--c-accent);
+            color: black;
+            font-weight: 900;
+            font-size: 14px;
+            display: grid;
+            place-items: center;
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.3);
+        }
+
+        /* The Live Ticker */
+        .ticker {
+            display: flex;
+            gap: 24px;
+            font-size: 11px;
+            color: var(--c-dim);
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+        }
+
+        .ticker-item {
+            display: flex;
+            gap: 6px;
+        }
+
+        .val-up {
+            color: var(--c-success);
+        }
+
+        .val-down {
+            color: var(--c-danger);
+        }
+
+        /* Search Bar */
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 6px 12px 6px 32px;
+            border-radius: 6px;
+            width: 280px;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--c-accent);
+            width: 360px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            color: var(--c-dim);
+            font-size: 12px;
+        }
+
+        .kbd {
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            font-size: 9px;
+            color: var(--c-dim);
+            border: 1px solid var(--border);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        /* --- 2. RAIL (Mini Navigation) --- */
+        /* Extends .na-shell-rail from design system */
+        .rail {
+            grid-area: rail;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--spacing-3) 0;
+            gap: var(--spacing-2);
+        }
+
+        .nav-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--c-dim);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.1s;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-surface);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--bg-surface-2);
+            color: var(--c-accent);
+            border: 1px solid var(--border-light);
+        }
+
+        /* Tooltip hack */
+        .nav-item:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            left: 48px;
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c-accent);
+            box-shadow: 0 0 0 2px var(--bg-panel);
+        }
+
+        /* --- 3. MAIN WORKSPACE (The Engine) --- */
+        /* Extends .na-shell-main from design system */
+        .main {
+            grid-area: main;
+            background: var(--bg-void);
+            display: grid;
+            grid-template-rows: 3rem 1fr;
+            /* 48px toolbar */
+            overflow: hidden;
+        }
+
+        /* The View Switcher Toolbar */
+        .toolbar {
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: var(--bg-panel);
+        }
+
+        /* Breadcrumbs */
+        .crumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--c-dim);
+        }
+
+        .crumb-sep {
+            color: var(--border-light);
+        }
+
+        .crumb-active {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* View Tabs (Radio Logic) - Using design system .na-view-controls pattern */
+        .view-controls {
+            /* Extends .na-view-controls from design system */
+            display: flex;
+            gap: 2px;
+            background: var(--bg-surface);
+            padding: 3px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .view-radio {
+            /* Using .na-state-radio pattern from design system */
+            display: none;
+        }
+
+        .view-label {
+            /* Extends .na-state-label from design system */
+            padding: 4px 12px;
+            font-size: var(--font-size-xs);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            color: var(--c-dim);
+            font-weight: var(--font-weight-medium);
+            transition: 0.1s;
+        }
+
+        .view-label:hover {
+            color: white;
+        }
+
+        /* State Switching Logic */
+        #v-grid:checked~.shell #lbl-grid {
+            background: var(--bg-active);
+            color: white;
+            border: 1px solid var(--border-light);
+        }
+
+        #v-board:checked~.shell #lbl-board {
+            background: var(--bg-active);
+            color: white;
+            border: 1px solid var(--border-light);
+        }
+
+        #v-gantt:checked~.shell #lbl-gantt {
+            background: var(--bg-active);
+            color: white;
+            border: 1px solid var(--border-light);
+        }
+
+        #v-grid:checked~.shell #view-grid {
+            display: block;
+        }
+
+        #v-board:checked~.shell #view-board {
+            display: block;
+        }
+
+        #v-gantt:checked~.shell #view-gantt {
+            display: block;
+        }
+
+        /* THE VIEWS - Using design system .na-view-pane pattern */
+        .view-pane {
+            /* Extends .na-view-pane from design system */
+            display: none;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- VIEW A: SUPER GRID (Bi-Directional Sticky) --- */
+        /* Using design system .na-grid-frozen and .na-table-frozen patterns */
+        .super-grid-container {
+            /* Extends .na-grid-frozen from design system */
+            height: 100%;
+            overflow: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-light) var(--bg-void);
+        }
+
+        .super-table {
+            /* Extends .na-table-frozen from design system */
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .super-table th,
+        .super-table td {
+            height: var(--h-row);
+            padding: 0 var(--spacing-3);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            white-space: nowrap;
+            background: var(--bg-void);
+        }
+
+        /* Sticky Headers - Using design system z-index tokens */
+        .super-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky-row);
+            background: var(--bg-surface);
+            color: var(--c-dim);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            font-weight: var(--font-weight-semibold);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Sticky First Column - Using design system z-index tokens */
+        .super-table th:first-child,
+        .super-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: var(--z-sticky-col);
+            background: var(--bg-panel);
+            border-right: 2px solid var(--border);
+            font-family: var(--font-family-mono);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .super-table thead th:first-child {
+            z-index: var(--z-sticky-corner);
+            background: var(--bg-surface);
+        }
+
+        /* Row Selection / Hover */
+        .super-table tr:hover td {
+            background: var(--bg-active);
+        }
+
+        .super-table tr:has(input:checked) td {
+            background: rgba(234, 179, 8, 0.08);
+        }
+
+        /* --- VIEW B: KANBAN --- */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 280px);
+            gap: 12px;
+            height: 100%;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .k-col {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .k-head {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .k-body {
+            padding: 8px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .k-card {
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 6px;
+            cursor: grab;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            transition: 0.1s;
+        }
+
+        .k-card:hover {
+            border-color: var(--c-dim);
+            transform: translateY(-2px);
+        }
+
+        /* --- VIEW C: GANTT --- */
+        .gantt-wrap {
+            padding: 16px;
+            overflow: auto;
+            height: 100%;
+        }
+
+        .gantt-row {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            border-bottom: 1px solid var(--bg-active);
+            height: 36px;
+        }
+
+        .gantt-label {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+            border-right: 1px solid var(--border);
+            background: var(--bg-panel);
+            padding-left: 12px;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+
+        .gantt-track {
+            display: grid;
+            grid-template-columns: repeat(30, 1fr);
+            background: var(--bg-void);
+            position: relative;
+            align-items: center;
+        }
+
+        .g-bar {
+            height: 18px;
+            border-radius: 4px;
+            background: var(--c-accent);
+            opacity: 0.8;
+            grid-column: var(--s) / span var(--d);
+            font-size: 10px;
+            color: black;
+            display: flex;
+            align-items: center;
+            padding-left: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .g-bar:hover {
+            transform: scaleY(1.1);
+            z-index: 2;
+            opacity: 1;
+            box-shadow: 0 0 10px var(--c-accent);
+        }
+
+        /* --- 4. DRAWER (Context Inspector) --- */
+        /* Extends .na-shell-drawer from design system */
+        .drawer {
+            grid-area: drawer;
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Toggle Logic: Hide content if drawer is 0px width */
+        #toggle-drawer:not(:checked)~.shell .drawer {
+            border-left: none;
+        }
+
+        #toggle-drawer:not(:checked)~.shell .drawer * {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .drawer-head {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .drawer-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Form Elements */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--c-dim);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .input:focus {
+            border-color: var(--c-accent);
+            outline: none;
+        }
+
+        /* Status Select (Custom) - Using design system .na-status-select pattern */
+        /* Note: Design system classes are used, but keeping custom styles for "Deep Void" color scheme */
+        .status-select {
+            /* Extends .na-status-select from design system */
+            display: flex;
+            gap: 1px;
+            background: var(--border);
+            padding: 1px;
+            border-radius: var(--radius-md);
+        }
+
+        .status-opt {
+            /* Extends .na-status-opt from design system */
+            flex: 1;
+            text-align: center;
+            padding: 6px;
+            font-size: var(--font-size-xs);
+            cursor: pointer;
+            background: var(--bg-panel);
+            color: var(--c-dim);
+        }
+
+        .status-opt.active {
+            background: var(--bg-active);
+            color: white;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .status-opt:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+
+        .status-opt:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* --- 5. FOOTER (Status) --- */
+        .foot {
+            grid-area: foot;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 11px;
+            color: var(--c-dim);
+            z-index: 50;
+        }
+
+        /* --- UTILITIES --- */
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .dot.live {
+            background: var(--c-success);
+            box-shadow: 0 0 8px var(--c-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-surface-2);
+            color: var(--c-text);
+        }
+
+        .btn:hover {
+            background: var(--bg-highlight);
+        }
+
+        .btn-primary {
+            background: var(--c-accent);
+            color: black;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
+        .hidden-check {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Radio Button State Machine - Using design system .na-state-radio pattern -->
+    <input type="radio" name="view" id="v-grid" class="na-state-radio" checked>
+    <input type="radio" name="view" id="v-board" class="na-state-radio">
+    <input type="radio" name="view" id="v-gantt" class="na-state-radio">
+
+    <input type="checkbox" id="toggle-drawer" class="hidden-check" checked>
+
+    <div class="omni-bg"></div>
+
+    <div class="shell">
+
+        <header class="head">
+            <div class="brand">
+                <div class="mark">OM</div>
+                <span>OMNI ERP</span>
+                <span style="color:var(--c-dim); font-weight:400;">// MASTER CONSOLE</span>
+            </div>
+
+            <div class="ticker">
+                <div class="ticker-item"><span class="val-up">▲ ORDERS +12</span></div>
+                <div class="ticker-item"><span class="val-up">▲ REVENUE $2.4M</span></div>
+                <div class="ticker-item"><span class="val-down">▼ STOCK -4%</span></div>
+            </div>
+
+            <div class="search-wrap">
+                <span class="search-icon">☌</span>
+                <input type="text" class="search-input" placeholder="Global Search...">
+                <span class="kbd">⌘K</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div style="font-size:11px; color:var(--c-dim); display:flex; align-items:center;">
+                    <span class="dot live"></span> SOCKET_ACTIVE
+                </div>
+                <label for="toggle-drawer" class="btn" style="padding: 4px 8px;">◨</label>
+            </div>
+        </header>
+
+        <aside class="rail">
+            <div class="nav-item active" data-tip="Dashboard">◆</div>
+            <div class="nav-item" data-tip="Orders">
+                📦 <div class="badge"></div>
+            </div>
+            <div class="nav-item" data-tip="Finance">💰</div>
+            <div class="nav-item" data-tip="Inventory">📊</div>
+            <div style="margin-top:auto;" class="nav-item" data-tip="Settings">⚙</div>
+        </aside>
+
+        <main class="main">
+            <div class="toolbar">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="crumbs">
+                        <span>Production</span> <span class="crumb-sep">/</span>
+                        <span>Orders</span> <span class="crumb-sep">/</span>
+                        <span class="crumb-active">Active Batch</span>
+                    </div>
+                </div>
+
+                <!-- Using design system .na-view-controls and .na-state-label patterns -->
+                <div class="view-controls">
+                    <label for="v-grid" class="view-label na-state-label" id="lbl-grid">Grid</label>
+                    <label for="v-board" class="view-label na-state-label" id="lbl-board">Board</label>
+                    <label for="v-gantt" class="view-label na-state-label" id="lbl-gantt">Plan</label>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                    <button class="btn">Filter</button>
+                    <button class="btn-primary">+ Order</button>
+                </div>
+            </div>
+
+            <!-- Using design system .na-viewport pattern -->
+            <div class="na-viewport">
+
+                <div id="view-grid" class="view-pane">
+                    <div class="super-grid-container">
+                        <table class="super-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:140px;">Order ID</th>
+                                    <th>Status</th>
+                                    <th>Client</th>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Value</th>
+                                    <th>Due Date</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: rgba(234, 179, 8, 0.05);">
+                                    <td style="color:var(--c-accent);">ORD-2025-001</td>
+                                    <td><span
+                                            style="color:var(--c-accent); border:1px solid var(--c-accent); padding:2px 6px; border-radius:4px; font-size:10px;">WIP</span>
+                                    </td>
+                                    <td>Acme Corp</td>
+                                    <td contenteditable="true">Circuit A1</td>
+                                    <td style="text-align:right;">500</td>
+                                    <td style="text-align:right;">$12,450</td>
+                                    <td>2025-02-15</td>
+                                    <td>High</td>
+                                </tr>
+                                <script>
+                                    for (let i = 2; i <= 30; i++) {
+                                        document.write(`
+                                    <tr>
+                                        <td style="color:var(--c-dim);">ORD-2025-0${i < 10 ? '0' + i : i}</td>
+                                        <td><span style="color:var(--c-dim); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-size:10px;">Plan</span></td>
+                                        <td>Client-${i}</td>
+                                        <td contenteditable="true">Component X-${i}</td>
+                                        <td style="text-align:right;">${Math.floor(Math.random() * 1000)}</td>
+                                        <td style="text-align:right;">$${(Math.random() * 5000).toFixed(0)}</td>
+                                        <td>2025-02-${10 + (i % 18)}</td>
+                                        <td>Normal</td>
+                                    </tr>`);
+                                    }
+                                </script>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="view-board" class="view-pane">
+                    <div class="kanban-board">
+                        <div class="k-col">
+                            <div class="k-head">Backlog <span style="color:var(--c-dim); font-weight:400;">12</span>
+                            </div>
+                            <div class="k-body">
+                                <div class="k-card">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">ORD-2025-002</div>
+                                    <div style="font-size: 11px; color:var(--c-dim);">Component X-2</div>
+                                </div>
+                                <div class="k-card">ORD-2025-005</div>
+                            </div>
+                        </div>
+                        <div class="k-col">
+                            <div class="k-head" style="color:var(--c-accent);">In Progress <span
+                                    style="color:var(--c-dim); font-weight:400;">2</span></div>
+                            <div class="k-body">
+                                <div class="k-card" style="border-left:2px solid var(--c-accent);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                        <span style="font-weight: 600;">ORD-2025-001</span>
+                                        <span style="font-size: 10px; color:var(--c-accent);">75%</span>
+                                    </div>
+                                    <div style="font-size: 11px; color:var(--c-dim); margin-bottom: 8px;">Circuit A1
+                                    </div>
+                                    <div
+                                        style="height: 4px; background:var(--bg-active); border-radius: 2px; overflow: hidden;">
+                                        <div style="width: 75%; background:var(--c-accent); height: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="k-col">
+                            <div class="k-head" style="color:var(--c-success);">Done <span
+                                    style="color:var(--c-dim); font-weight:400;">48</span></div>
+                            <div class="k-body">
+                                <div class="k-card" style="opacity:0.6;">ORD-Legacy-99</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-gantt" class="view-pane">
+                    <div class="gantt-wrap">
+                        <div
+                            style="display: grid; grid-template-columns: 160px 1fr; border-bottom: 1px solid var(--border); margin-bottom: 10px; padding-bottom: 8px;">
+                            <div style="font-weight: 600; padding-left: 12px;">Order Sequence</div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 10px; color: var(--c-dim); padding-right: 12px;">
+                                <span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span>
+                            </div>
+                        </div>
+                        <div class="gantt-row">
+                            <div class="gantt-label">ORD-2025-001</div>
+                            <div class="gantt-track">
+                                <div class="g-bar" style="--s: 2; --d: 5; background:var(--c-accent);">Assembly</div>
+                            </div>
+                        </div>
+                        <div class="gantt-row">
+                            <div class="gantt-label">ORD-2025-002</div>
+                            <div class="gantt-track">
+                                <div class="g-bar" style="--s: 6; --d: 4; background:var(--c-dim);">Prep</div>
+                            </div>
+                        </div>
+                        <div class="gantt-row">
+                            <div class="gantt-label">ORD-2025-003</div>
+                            <div class="gantt-track">
+                                <div class="g-bar" style="--s: 9; --d: 6; background:var(--c-info);">QC Test</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+        </main>
+
+        <aside class="drawer">
+            <div class="drawer-head">
+                <div class="label" style="margin-bottom: 4px;">Context Inspector</div>
+                <div style="font-size: 18px; font-weight: 700; color: white;">ORD-2025-001</div>
+                <div style="color: var(--c-dim); font-size: 11px; margin-top: 2px;">Acme Corp // Circuit Assembly</div>
+            </div>
+
+            <div class="drawer-body">
+                <div class="field">
+                    <div class="label">Workflow State</div>
+                    <!-- Using design system .na-status-select pattern -->
+                    <div class="status-select">
+                        <div class="status-opt">Plan</div>
+                        <div class="status-opt active">WIP</div>
+                        <div class="status-opt">Done</div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">Quantity</div>
+                    <input type="text" class="input" value="500">
+                </div>
+
+                <div class="field">
+                    <div class="label">Due Date</div>
+                    <input type="date" class="input" value="2025-02-15">
+                </div>
+
+                <div class="field">
+                    <div class="label">Dependencies</div>
+                    <div
+                        style="background:var(--bg-surface); padding:10px; border-radius:6px; border:1px solid var(--border);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:11px;">
+                            <span>Material Availability</span>
+                            <span style="color:var(--c-success);">100%</span>
+                        </div>
+                        <div style="height:4px; background:var(--bg-active); border-radius:2px;">
+                            <div style="width:100%; background:var(--c-success); height:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:16px; border-top:1px solid var(--border);">
+                <button class="btn-primary" style="width:100%;">Save Changes</button>
+            </div>
+        </aside>
+
+        <footer class="foot"
+            style="grid-area: foot; background:var(--bg-surface); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 16px; font-size:11px; color:var(--c-dim);">
+            <div style="display:flex; gap:16px;">
+                <span>SYNC: <span style="color:var(--c-success);">OK</span></span>
+                <span>LATENCY: 14ms</span>
+            </div>
+            <div>PROD-SHARD-01</div>
+        </footer>
+
+    </div>
+</body>
+
+</html>

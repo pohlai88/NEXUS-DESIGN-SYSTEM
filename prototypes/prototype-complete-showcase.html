@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo-Analog Design System - Complete Showcase</title>
+
+  <!-- Import the compiled CSS (built from styles/input.css) -->
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    /* Additional demo-specific styles */
+    .demo-section {
+      margin-bottom: var(--spacing-12);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-6);
+      margin-top: var(--spacing-6);
+    }
+
+    .demo-title {
+      margin-bottom: var(--spacing-4);
+      padding-bottom: var(--spacing-2);
+      border-bottom: 1px solid var(--color-stroke);
+    }
+
+    .color-swatch {
+      width: 100%;
+      height: 60px;
+      border-radius: var(--radius-card);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .spacing-demo {
+      background: var(--color-paper);
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-4);
+    }
+  </style>
+</head>
+
+<body class="na-app">
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+  <!-- Omni Shell Layout -->
+  <div class="na-shell-omni">
+    <!-- Header -->
+    <header class="na-shell-head">
+      <div class="na-header flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <div class="na-brand">
+            <div class="na-mark text-gold">N</div>
+            <span class="na-h4 ml-2">Neo-Analog</span>
+          </div>
+          <nav class="flex gap-4">
+            <a href="#typography" class="na-nav-item">Typography</a>
+            <a href="#components" class="na-nav-item is-active">Components</a>
+            <a href="#forms" class="na-nav-item">Forms</a>
+            <a href="#tables" class="na-nav-item">Tables</a>
+          </nav>
+        </div>
+        <div class="na-search">
+          <input type="search" class="na-search-input" placeholder="Search components...">
+          <span class="na-search-icon">🔍</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Rail (Sidebar) -->
+    <aside class="na-shell-rail">
+      <button class="na-iconbtn" title="Dashboard">📊</button>
+      <button class="na-iconbtn" title="Components">🧩</button>
+      <button class="na-iconbtn" title="Settings">⚙️</button>
+      <button class="na-iconbtn" title="Profile">👤</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="na-shell-main" id="main-content">
+      <div class="p-8 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="demo-section">
+          <h1 class="na-h1 mb-4">Neo-Analog Design System</h1>
+          <p class="na-data text-lux-dim mb-6">Complete component showcase using the new modular CSS architecture</p>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <div class="na-h4 mb-2">254 Design Tokens</div>
+              <div class="na-data-large text-gold mb-2">254</div>
+              <div class="na-metadata">Colors, spacing, typography, motion</div>
+            </div>
+
+            <div class="na-card p-6">
+              <div class="na-h4 mb-2">171 Semantic Classes</div>
+              <div class="na-data-large text-gold mb-2">171</div>
+              <div class="na-metadata">Reusable component classes</div>
+            </div>
+
+            <div class="na-card p-6">
+              <div class="na-h4 mb-2">100% Figma Compliant</div>
+              <div class="na-data-large text-gold mb-2">100%</div>
+              <div class="na-metadata">Design-to-code alignment</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Typography Hierarchy -->
+        <section class="demo-section" id="typography">
+          <h2 class="na-h2 demo-title">Typography Hierarchy</h2>
+
+          <div class="na-card p-6 space-y-6">
+            <div>
+              <h1 class="na-h1">Page Title (H1)</h1>
+              <div class="na-metadata">32px Bold - Top of page, unique H1</div>
+            </div>
+
+            <div>
+              <h2 class="na-h2">Section Title (H2)</h2>
+              <div class="na-metadata">24px Semibold - Major page divisions</div>
+            </div>
+
+            <div>
+              <h3 class="na-h3">Subsection (H3)</h3>
+              <div class="na-metadata">20px Semibold - Grouping content within sections</div>
+            </div>
+
+            <div>
+              <h4 class="na-h4">Card Title (H4)</h4>
+              <div class="na-metadata">18px Semibold - Inside card containers</div>
+            </div>
+
+            <div>
+              <h5 class="na-h5">Small Title (H5)</h5>
+              <div class="na-metadata">16px Semibold - Minor groupings</div>
+            </div>
+
+            <div>
+              <h6 class="na-h6">Micro Title (H6)</h6>
+              <div class="na-metadata">14px Semibold - Tiny headers, tooltips</div>
+            </div>
+
+            <div class="pt-4 border-t border-stroke">
+              <div class="na-data mb-2">$12,450.00</div>
+              <div class="na-metadata">DATA - 14px Monospace - Table cells, primary values</div>
+            </div>
+
+            <div>
+              <div class="na-data-large text-gold mb-2">1,234,567</div>
+              <div class="na-metadata">KPI - 30px Serif - Hero numbers, dashboard stats</div>
+            </div>
+
+            <div>
+              <div class="na-metadata mb-2">PO-88219 • Feed Supply</div>
+              <div class="na-metadata-small">METADATA - 11px Uppercase - Field labels, column headers</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="demo-section" id="components">
+          <h2 class="na-h2 demo-title">Buttons & Interactive Elements</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Button Variants</h3>
+              <div class="space-y-3">
+                <button class="na-btn na-btn-primary w-full">Primary Button</button>
+                <button class="na-btn w-full">Standard Button</button>
+                <button class="na-btn na-btn-ghost w-full">Ghost Button</button>
+                <button class="na-btn na-btn-destructive w-full">Destructive</button>
+                <button class="na-iconbtn">⚙️</button>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Status Badges</h3>
+              <div class="space-y-3">
+                <div class="na-status ok">✓ Active</div>
+                <div class="na-status pending">⏳ Pending</div>
+                <div class="na-status bad">✗ Error</div>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Avatars</h3>
+              <div class="flex gap-3">
+                <div class="na-avatar">JD</div>
+                <div class="na-avatar">AB</div>
+                <div class="na-avatar">SM</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interactive Cards -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">Interactive Cards</h2>
+
+          <div class="demo-grid">
+            <div class="na-card na-card-interactive p-6">
+              <h3 class="na-h4 mb-2">Interactive Card</h3>
+              <p class="na-data text-lux-dim mb-4">Hover and click to feel the physical feedback</p>
+              <div class="na-metadata">Click me!</div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-2">Standard Card</h3>
+              <p class="na-data text-lux-dim mb-4">Regular card with filament border</p>
+              <div class="na-metadata">Static content</div>
+            </div>
+
+            <div class="na-panel p-6">
+              <h3 class="na-h4 mb-2">Panel Container</h3>
+              <p class="na-data text-lux-dim mb-4">Muted background for grouping</p>
+              <div class="na-metadata">Internal separation</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- KPI Cards with Charts -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">KPI Cards & Charts</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <div class="na-kpi">
+                <div>
+                  <div class="na-kpi-label">Total Revenue</div>
+                  <div class="na-kpi-value text-gold">$124,567</div>
+                  <div class="na-trend up">↑ 12.5%</div>
+                </div>
+                <div class="na-kpi-icon">📈</div>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <div class="na-kpi">
+                <div>
+                  <div class="na-kpi-label">Active Users</div>
+                  <div class="na-kpi-value">8,432</div>
+                  <div class="na-trend down">↓ 2.1%</div>
+                </div>
+                <div class="na-kpi-icon">👥</div>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <div class="na-chart">
+                <div class="na-bars">
+                  <div class="na-bar" style="height: 60%"></div>
+                  <div class="na-bar" style="height: 80%"></div>
+                  <div class="na-bar" style="height: 45%"></div>
+                  <div class="na-bar" style="height: 90%"></div>
+                  <div class="na-bar" style="height: 70%"></div>
+                  <div class="na-bar" style="height: 55%"></div>
+                  <div class="na-bar" style="height: 85%"></div>
+                  <div class="na-bar" style="height: 65%"></div>
+                  <div class="na-bar" style="height: 75%"></div>
+                  <div class="na-bar" style="height: 50%"></div>
+                  <div class="na-bar" style="height: 95%"></div>
+                  <div class="na-bar" style="height: 40%"></div>
+                </div>
+              </div>
+              <div class="na-metadata mt-4">Monthly Performance</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Forms -->
+        <section class="demo-section" id="forms">
+          <h2 class="na-h2 demo-title">Form Elements</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Input Fields</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="na-label">Email Address</label>
+                  <input type="email" class="na-input w-full" placeholder="user@example.com">
+                </div>
+                <div>
+                  <label class="na-label">Password</label>
+                  <input type="password" class="na-input w-full" placeholder="••••••••">
+                </div>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Switch Toggle</h3>
+              <div class="space-y-4">
+                <label class="na-switch flex items-center gap-3">
+                  <input type="checkbox" class="sr-only" checked>
+                  <span class="na-switch-thumb"></span>
+                  <span class="na-data">Enable notifications</span>
+                </label>
+                <label class="na-switch flex items-center gap-3">
+                  <input type="checkbox" class="sr-only">
+                  <span class="na-switch-thumb"></span>
+                  <span class="na-data">Dark mode</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Form Actions</h3>
+              <div class="space-y-3">
+                <button class="na-btn na-btn-primary w-full">Submit</button>
+                <button class="na-btn w-full">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tables -->
+        <section class="demo-section" id="tables">
+          <h2 class="na-h2 demo-title">Data Tables</h2>
+
+          <div class="na-card p-6">
+            <div class="na-table-wrap na-scroll">
+              <table class="na-table">
+                <thead>
+                  <tr>
+                    <th class="na-th">ID</th>
+                    <th class="na-th">Name</th>
+                    <th class="na-th">Status</th>
+                    <th class="na-th">Amount</th>
+                    <th class="na-th">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="na-tr-interactive">
+                    <td class="na-td">
+                      <div class="na-data">#001</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">John Doe</div>
+                      <div class="na-metadata-small">john@example.com</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-status ok">Active</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">$1,234.56</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-metadata-small">2025-01-27</div>
+                    </td>
+                  </tr>
+                  <tr class="na-tr-interactive">
+                    <td class="na-td">
+                      <div class="na-data">#002</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">Jane Smith</div>
+                      <div class="na-metadata-small">jane@example.com</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-status pending">Pending</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">$2,345.67</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-metadata-small">2025-01-26</div>
+                    </td>
+                  </tr>
+                  <tr class="na-tr-interactive">
+                    <td class="na-td">
+                      <div class="na-data">#003</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">Bob Johnson</div>
+                      <div class="na-metadata-small">bob@example.com</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-status bad">Error</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-data">$3,456.78</div>
+                    </td>
+                    <td class="na-td">
+                      <div class="na-metadata-small">2025-01-25</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="na-metadata mt-4">Hover rows to see interactive feedback</div>
+          </div>
+        </section>
+
+        <!-- Modals & Toasts -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">Modals & Toasts</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Modal Dialog</h3>
+              <p class="na-data text-lux-dim mb-4">Click to open modal with backdrop blur</p>
+              <a href="#demo-modal" class="na-btn na-btn-primary">Open Modal</a>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Toast Notifications</h3>
+              <p class="na-data text-lux-dim mb-4">Click to trigger toast</p>
+              <button class="na-btn" onclick="showToast()">Show Toast</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Loading States -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">Loading States</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Skeleton Loaders</h3>
+              <div class="space-y-3">
+                <div class="na-skeleton" style="height: 20px; width: 100%"></div>
+                <div class="na-skeleton" style="height: 20px; width: 80%"></div>
+                <div class="na-skeleton" style="height: 20px; width: 60%"></div>
+              </div>
+            </div>
+
+            <div class="na-card p-6">
+              <h3 class="na-h4 mb-4">Empty State</h3>
+              <div class="na-empty">
+                <div class="na-empty-illustration">📭</div>
+                <div class="na-h4 mt-4">No data available</div>
+                <div class="na-data text-lux-dim mt-2">Get started by adding your first item</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Color System -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">Color System</h2>
+
+          <div class="demo-grid">
+            <div class="na-card p-6">
+              <div class="color-swatch bg-void"></div>
+              <div class="na-data">Void</div>
+              <div class="na-metadata-small">Main Background</div>
+            </div>
+            <div class="na-card p-6">
+              <div class="color-swatch bg-paper"></div>
+              <div class="na-data">Paper</div>
+              <div class="na-metadata-small">Panel/Card Background</div>
+            </div>
+            <div class="na-card p-6">
+              <div class="color-swatch bg-gold"></div>
+              <div class="na-data">Gold</div>
+              <div class="na-metadata-small">Brand Accent</div>
+            </div>
+            <div class="na-card p-6">
+              <div class="color-swatch" style="background: var(--color-success)"></div>
+              <div class="na-data">Success</div>
+              <div class="na-metadata-small">Emerald</div>
+            </div>
+            <div class="na-card p-6">
+              <div class="color-swatch" style="background: var(--color-error)"></div>
+              <div class="na-data">Error</div>
+              <div class="na-metadata-small">Rose</div>
+            </div>
+            <div class="na-card p-6">
+              <div class="color-swatch" style="background: var(--color-warning)"></div>
+              <div class="na-data">Warning</div>
+              <div class="na-metadata-small">Amber</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Spacing System -->
+        <section class="demo-section">
+          <h2 class="na-h2 demo-title">Spacing System</h2>
+
+          <div class="demo-grid">
+            <div class="spacing-demo">
+              <div class="na-data mb-2">p-4 (16px)</div>
+              <div class="bg-gold/20 p-4 rounded-control">Comfort Standard</div>
+            </div>
+            <div class="spacing-demo">
+              <div class="na-data mb-2">p-6 (24px)</div>
+              <div class="bg-gold/20 p-6 rounded-control">Comfort Standard</div>
+            </div>
+            <div class="spacing-demo">
+              <div class="na-data mb-2">p-8 (32px)</div>
+              <div class="bg-gold/20 p-8 rounded-control">Content Padding</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Drawer (Closed by default) -->
+    <aside class="na-shell-drawer" aria-hidden="true">
+      <div class="p-6">
+        <h3 class="na-h4 mb-4">Drawer Panel</h3>
+        <p class="na-data text-lux-dim">This drawer can be toggled open/closed</p>
+      </div>
+    </aside>
+
+    <!-- Footer -->
+    <footer class="na-shell-foot p-4">
+      <div class="na-metadata text-center">Neo-Analog Design System v2.0 • Built with modular CSS architecture</div>
+    </footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="na-modal" id="demo-modal">
+    <a href="#" class="na-modal__backdrop"></a>
+    <div class="na-modal__panel">
+      <div class="p-6">
+        <h2 class="na-h3 mb-4">Modal Dialog</h2>
+        <p class="na-data text-lux-dim mb-6">
+          This modal demonstrates the z-index system and backdrop blur effect.
+          Click outside or press ESC to close.
+        </p>
+        <div class="flex gap-3">
+          <button class="na-btn na-btn-primary">Confirm</button>
+          <a href="#" class="na-btn">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="na-toasts">
+    <div class="na-toast" id="demo-toast" style="display: none;">
+      <div class="na-data">Toast notification example</div>
+      <div class="na-metadata-small">This demonstrates the toast z-index system</div>
+    </div>
+  </div>
+
+  <script>
+    // Toast functionality
+    function showToast() {
+      const toast = document.getElementById('demo-toast');
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    // Drawer toggle (example)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const drawer = document.querySelector('.na-shell-drawer');
+        if (drawer) {
+          drawer.setAttribute('aria-hidden', 'true');
+        }
+      }
+    });
+
+    // Modal close on backdrop click
+    document.querySelectorAll('.na-modal__backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.hash = '';
+      });
+    });
+  </script>
+</body>
+
+</html>

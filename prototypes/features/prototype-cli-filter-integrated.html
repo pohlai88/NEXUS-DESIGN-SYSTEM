@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Filter + Data Table Supreme: Integrated Demo</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Prototype-local styling */
+    .dt-cli {
+      display: grid;
+      gap: var(--spacing-2);
+      padding: var(--spacing-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: color-mix(in oklab, var(--color-card) 92%, var(--color-paper-2) 8%);
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky-row);
+    }
+
+    .cli-phantom-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: var(--spacing-2);
+    }
+
+    #cli-input,
+    #cli-highlighter {
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0px;
+      padding: 8px 12px;
+      border: 1px solid transparent;
+    }
+
+    #cli-input {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      background: transparent;
+      color: transparent;
+      caret-color: #09090b;
+      resize: none;
+      outline: none;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+    }
+
+    #cli-input::placeholder {
+      color: transparent;
+    }
+
+    #cli-input:focus {
+      outline: none;
+      border-color: var(--color-info);
+      box-shadow: 0 0 0 1px var(--color-info);
+    }
+
+    #cli-highlighter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      color: #09090b;
+      pointer-events: none;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow: hidden;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background-color: var(--color-paper);
+    }
+
+    .syntax-key { color: var(--color-info); font-weight: 600; }
+    .syntax-op { color: var(--color-gold); font-weight: 600; }
+    .syntax-val { color: var(--color-success); font-weight: 500; }
+
+    .dt-cli-label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      color: var(--color-clay);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .dt-cli-presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dt-cli-presets button {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background: color-mix(in oklab, var(--color-paper) 94%, var(--color-paper-2) 6%);
+      color: var(--color-lux);
+      padding: 6px 10px;
+      font-size: var(--font-size-xs);
+      cursor: pointer;
+      transition: all 0.12s var(--ease-out);
+    }
+
+    .dt-cli-presets button:hover {
+      background: color-mix(in oklab, var(--color-paper) 90%, var(--color-info) 10%);
+      border-color: var(--color-info);
+    }
+
+    /* Result counter and empty state */
+    .dt-filter-stats {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      padding: var(--spacing-2);
+      background: color-mix(in oklab, var(--color-info) 8%, var(--color-paper));
+      border-radius: var(--radius-control);
+      font-size: var(--font-size-sm);
+      color: var(--color-lux);
+    }
+
+    .dt-filter-stats strong {
+      color: var(--color-info);
+      font-weight: 600;
+    }
+
+    .dt-empty-state {
+      display: grid;
+      place-items: center;
+      padding: var(--spacing-6);
+      background: color-mix(in oklab, var(--color-success) 6%, var(--color-paper));
+      border: 2px dashed var(--color-success);
+      border-radius: var(--radius-card);
+      text-align: center;
+      color: var(--color-clay);
+    }
+
+    .dt-empty-state-title {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      color: var(--color-lux);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .dt-empty-state-text {
+      font-size: var(--font-size-sm);
+      color: var(--color-clay);
+      margin-bottom: var(--spacing-3);
+    }
+
+    .dt-empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-2);
+    }
+
+    .dt-table-wrap {
+      position: relative;
+      overflow: auto;
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      box-shadow: var(--shadow-md);
+    }
+
+    table.dt-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      min-width: 1080px;
+    }
+
+    .dt-table th,
+    .dt-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      color: var(--color-lux);
+      font-size: var(--font-size-sm);
+      text-align: left;
+    }
+
+    .dt-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in oklab, var(--color-paper) 88%, var(--color-void) 12%);
+      box-shadow: inset 0 -1px 0 var(--color-stroke);
+      font-weight: 600;
+    }
+
+    .dt-table .col-sticky {
+      position: sticky;
+      left: 0;
+      z-index: 9;
+      background: color-mix(in oklab, var(--color-paper) 92%, var(--color-void) 8%);
+      box-shadow: inset -1px 0 0 var(--color-stroke);
+    }
+
+    .dt-row:hover td {
+      background: color-mix(in oklab, var(--color-paper) 90%, var(--color-stroke) 10%);
+    }
+
+    .dt-row.hidden {
+      display: none;
+    }
+
+    .dt-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid var(--color-stroke);
+      background: color-mix(in oklab, var(--color-paper) 94%, var(--color-paper-2) 6%);
+      font-weight: 600;
+    }
+
+    .dt-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .dt-dot.ok { background: var(--color-success); }
+    .dt-dot.warn { background: var(--color-warning); }
+    .dt-dot.bad { background: var(--color-error); }
+
+    .info-panel {
+      padding: var(--spacing-3);
+      background: color-mix(in oklab, var(--color-info) 8%, var(--color-paper));
+      border-left: 3px solid var(--color-info);
+      border-radius: var(--radius-control);
+      margin-bottom: var(--spacing-3);
+    }
+
+    .info-panel-title {
+      font-weight: 600;
+      color: var(--color-info);
+      margin-bottom: var(--spacing-1);
+      font-size: var(--font-size-sm);
+    }
+
+    .info-panel-text {
+      font-size: var(--font-size-sm);
+      color: var(--color-lux);
+      line-height: 1.5;
+    }
+
+    .filter-description {
+      font-family: 'Fira Code', monospace;
+      font-size: var(--font-size-xs);
+      color: var(--color-clay);
+      background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper));
+      padding: 6px 8px;
+      border-radius: var(--radius-control);
+      margin-top: var(--spacing-1);
+    }
+
+    /* Reactive HUD */
+    .hud-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-2);
+      margin-bottom: var(--spacing-3);
+      opacity: 1;
+      transition: opacity 0.2s var(--ease-out);
+    }
+
+    .hud-summary.loading {
+      opacity: 0.6;
+    }
+
+    .hud-card {
+      padding: var(--spacing-3);
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-control);
+      background: color-mix(in oklab, var(--color-paper) 96%, var(--color-paper-2) 4%);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      transition: all 0.12s var(--ease-out);
+    }
+
+    .hud-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-color: var(--color-stroke);
+    }
+
+    .hud-card-label {
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-clay);
+      margin-bottom: var(--spacing-1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-card-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-lux);
+      line-height: 1;
+      margin-bottom: var(--spacing-1);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hud-card-sub {
+      font-size: var(--font-size-xs);
+      color: var(--color-clay);
+    }
+
+    .hud-card-trend {
+      display: inline-block;
+      font-size: 18px;
+      margin-left: 4px;
+    }
+
+    .hud-risk-critical { color: #dc2626; }
+    .hud-risk-high { color: #ea580c; }
+    .hud-risk-medium { color: #f59e0b; }
+    .hud-risk-low { color: #10b981; }
+
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid currentColor;
+    }
+
+    .hud-badge.low {
+      background: #d1fae5;
+      color: #047857;
+      border-color: #6ee7b7;
+    }
+
+    .hud-badge.medium {
+      background: #fef08a;
+      color: #92400e;
+      border-color: #fbbf24;
+    }
+
+    .hud-badge.high {
+      background: #fed7aa;
+      color: #92400e;
+      border-color: #fb923c;
+    }
+
+    .hud-badge.critical {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    .hud-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">CLI</div>
+        <div>
+          <div class="na-brand-title">CLI + Table Integration</div>
+          <div class="na-metadata-small">Brain meets Body</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Demo</div>
+      <a class="na-nav-item is-active" href="#demo" aria-current="page">Live Demo</a>
+      <a class="na-nav-item" href="#guide">How It Works</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Type</div>
+          <div class="na-mono na-status-text-success">status:healthy</div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Zero-latency filtering with Neo-Analog governance</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display:flex;flex-direction:column;gap:var(--spacing-2);">
+            <h1 class="na-h2">CLI + Data Table Integration</h1>
+            <p class="na-metadata">The "Brain" (Command Line) controls the "Body" (Data Table)</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="na-content" id="demo">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <h2 class="na-h3">Live Filtering Demo</h2>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="info-panel">
+            <div class="info-panel-title">💡 How to use this</div>
+            <div class="info-panel-text">
+              Type filter commands below: <code>status:healthy</code>, <code>owner:chen</code>, <code>health>80</code>
+            </div>
+          </div>
+
+          <!-- CLI Input -->
+          <div class="dt-cli" role="search" aria-label="Command filter">
+            <div class="dt-cli-label">Command Line Filter</div>
+            
+            <div class="cli-phantom-container">
+              <div id="cli-highlighter" aria-hidden="true"></div>
+              <input 
+                type="text" 
+                id="cli-input"
+                placeholder="status:healthy owner:chen health>80"
+                spellcheck="false" 
+                autocomplete="off">
+            </div>
+
+            <div class="dt-cli-presets" aria-label="Query presets">
+              <button type="button" data-query="status:healthy">Healthy</button>
+              <button type="button" data-query="status:watch">Watch</button>
+              <button type="button" data-query="owner:patel">Owner: Patel</button>
+              <button type="button" data-query="owner:chen">Owner: Chen</button>
+              <button type="button" data-query="owner:rivera">Owner: Rivera</button>
+              <button type="button" data-query="health>80">Health > 80</button>
+              <button type="button" data-query="health<60">Health < 60</button>
+              <button type="button" data-query="">Clear All</button>
+            </div>
+          </div>
+
+          <!-- Filter Stats -->
+          <div id="filter-stats" class="dt-filter-stats" style="display:none;">
+            <span>Showing <strong id="match-count">0</strong> of <strong id="total-count">0</strong> records</span>
+          </div>
+
+          <!-- Reactive HUD Summary -->
+          <div id="hud-summary" class="hud-summary">
+            <div class="hud-card">
+              <div class="hud-card-label">📊 Governed Revenue</div>
+              <div class="hud-card-value" id="hud-revenue">$0</div>
+              <div class="hud-card-sub" id="hud-revenue-sub">—</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-card-label">💚 Avg Health</div>
+              <div class="hud-card-value" id="hud-health">0%<span class="hud-card-trend" id="hud-trend">→</span></div>
+              <div class="hud-card-sub" id="hud-health-sub">—</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-card-label">⚠️ Risk Level</div>
+              <div class="hud-card-value" id="hud-risk">—</div>
+              <div class="hud-card-sub" id="hud-risk-sub">—</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-card-label">📌 Accounts</div>
+              <div class="hud-card-value" id="hud-count">0</div>
+              <div class="hud-card-sub" id="hud-description">No filters applied</div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="dt-table-wrap">
+            <table class="dt-table" role="grid" aria-label="Filterable data table">
+              <thead>
+                <tr>
+                  <th scope="col" style="width:200px;">Account</th>
+                  <th scope="col" style="width:120px;">Status</th>
+                  <th scope="col" style="width:120px;">Owner</th>
+                  <th scope="col" style="width:140px;">Revenue</th>
+                  <th scope="col" style="width:140px;">Health</th>
+                  <th scope="col" style="width:140px;">Volatility</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <tr class="dt-row" data-account="ACME Robotics" data-status="healthy" data-owner="patel" data-revenue="182400" data-health="88" data-vol="low">
+                  <td>ACME Robotics</td>
+                  <td><span class="dt-status"><span class="dt-dot ok"></span>Healthy</span></td>
+                  <td>A. Patel</td>
+                  <td>$182,400</td>
+                  <td><strong>88</strong> / 100</td>
+                  <td>Low</td>
+                </tr>
+                <tr class="dt-row" data-account="Helio Labs" data-status="watch" data-owner="rivera" data-revenue="94120" data-health="62" data-vol="medium">
+                  <td>Helio Labs</td>
+                  <td><span class="dt-status"><span class="dt-dot warn"></span>Watch</span></td>
+                  <td>J. Rivera</td>
+                  <td>$94,120</td>
+                  <td><strong>62</strong> / 100</td>
+                  <td>Medium</td>
+                </tr>
+                <tr class="dt-row" data-account="Northwind Data" data-status="healthy" data-owner="chen" data-revenue="128900" data-health="91" data-vol="low">
+                  <td>Northwind Data</td>
+                  <td><span class="dt-status"><span class="dt-dot ok"></span>Healthy</span></td>
+                  <td>M. Chen</td>
+                  <td>$128,900</td>
+                  <td><strong>91</strong> / 100</td>
+                  <td>Low</td>
+                </tr>
+                <tr class="dt-row" data-account="Vertex Bio" data-status="watch" data-owner="ortiz" data-revenue="72410" data-health="48" data-vol="high">
+                  <td>Vertex Bio</td>
+                  <td><span class="dt-status"><span class="dt-dot warn"></span>Watch</span></td>
+                  <td>L. Ortiz</td>
+                  <td>$72,410</td>
+                  <td><strong>48</strong> / 100</td>
+                  <td>High</td>
+                </tr>
+                <tr class="dt-row" data-account="Summit Corp" data-status="healthy" data-owner="patel" data-revenue="156200" data-health="84" data-vol="low">
+                  <td>Summit Corp</td>
+                  <td><span class="dt-status"><span class="dt-dot ok"></span>Healthy</span></td>
+                  <td>A. Patel</td>
+                  <td>$156,200</td>
+                  <td><strong>84</strong> / 100</td>
+                  <td>Low</td>
+                </tr>
+                <tr class="dt-row" data-account="Eclipse Inc" data-status="watch" data-owner="chen" data-revenue="108300" data-health="55" data-vol="high">
+                  <td>Eclipse Inc</td>
+                  <td><span class="dt-status"><span class="dt-dot warn"></span>Watch</span></td>
+                  <td>M. Chen</td>
+                  <td>$108,300</td>
+                  <td><strong>55</strong> / 100</td>
+                  <td>High</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="dt-empty-state" style="display:none;">
+              <div class="dt-empty-state-icon">✓</div>
+              <div class="dt-empty-state-title">No governance violations found</div>
+              <div class="dt-empty-state-text">Your filter criteria matched 0 records. This is actually good news!</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="na-content" id="guide">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <h2 class="na-h3">How the Integration Works</h2>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div style="display: grid; gap: var(--spacing-5);">
+            <div>
+              <h4 class="na-h4">1️⃣ The Pipeline</h4>
+              <p style="color: var(--color-clay); margin: var(--spacing-2) 0;">
+                <strong>User Input</strong> → <strong>CLI Parser</strong> → <strong>Filter Engine</strong> → <strong>Table Update</strong>
+              </p>
+              <p style="color: var(--color-lux); line-height: 1.6;">
+                Every keystroke is parsed into tokens. Those tokens are applied against each row. 
+                The table rerenders instantly showing only matching records. Zero server round-trip.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="na-h4">2️⃣ Filter Syntax</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-3); margin-top: var(--spacing-2);">
+                <div style="padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control);">
+                  <div style="font-weight: 600; color: var(--color-info); margin-bottom: var(--spacing-1);">Enums</div>
+                  <code style="color: var(--color-success);">status:healthy</code><br>
+                  <code style="color: var(--color-success);">owner:chen</code>
+                </div>
+                <div style="padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control);">
+                  <div style="font-weight: 600; color: var(--color-info); margin-bottom: var(--spacing-1);">Numbers</div>
+                  <code style="color: var(--color-success);">health>80</code><br>
+                  <code style="color: var(--color-success);">revenue<100000</code>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="na-h4">3️⃣ AND Logic</h4>
+              <p style="color: var(--color-lux); line-height: 1.6;">
+                Multiple filters are combined with AND logic. For example:
+              </p>
+              <code style="display: block; margin: var(--spacing-2) 0; padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control); color: var(--color-success);">
+                status:healthy owner:chen health>80
+              </code>
+              <p style="color: var(--color-clay); font-size: var(--font-size-sm);">
+                Returns only accounts where status IS healthy AND owner IS chen AND health GREATER THAN 80.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="na-h4">4️⃣ Governance Benefits</h4>
+              <ul style="color: var(--color-lux); line-height: 1.8; margin: var(--spacing-2) 0; padding-left: var(--spacing-3);">
+                <li><strong>Type-Safe:</strong> Only valid field names and operators are accepted</li>
+                <li><strong>Zero Latency:</strong> No server call needed; instant client-side filtering</li>
+                <li><strong>Auditable:</strong> Every filter is a readable command that can be logged or shared</li>
+                <li><strong>Learnable:</strong> CLI syntax teaches users the data model structure</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="na-h4">5️⃣ Files Involved</h4>
+              <div style="display: grid; gap: var(--spacing-2);">
+                <div style="padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control);">
+                  <div style="font-weight: 600; color: var(--color-lux);">lib/cli-parser.ts</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-clay);">Tokenizes input text</div>
+                </div>
+                <div style="padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control);">
+                  <div style="font-weight: 600; color: var(--color-lux);">lib/cli-filter-engine.ts</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-clay);">Applies filters to row data</div>
+                </div>
+                <div style="padding: var(--spacing-2); background: color-mix(in oklab, var(--color-void) 8%, var(--color-paper)); border-radius: var(--radius-control);">
+                  <div style="font-weight: 600; color: var(--color-lux);">prototypes/prototype-cli-filter-integrated.html</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-clay);">This demo with full integration</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== Simple implementations for demo =====
+
+    function parseSearchInput(input) {
+      const tokens = [];
+      const regex = /([a-zA-Z0-9_-]+)([:<>=!]*)([^"\s]+)/g;
+      let match;
+
+      while ((match = regex.exec(input)) !== null) {
+        const key = match[1];
+        const operator = match[2] || ':';
+        const value = match[3];
+
+        tokens.push({
+          type: 'key-value',
+          key: key.toLowerCase(),
+          operator,
+          value: value.toLowerCase(),
+          text: match[0]
+        });
+      }
+
+      return tokens;
+    }
+
+    function highlightCommand(input) {
+      if (!input) return '';
+
+      const tokens = parseSearchInput(input);
+      if (tokens.length === 0) return escapeHtml(input);
+
+      let html = '';
+      let lastEnd = 0;
+
+      for (const token of tokens) {
+        const textStart = input.indexOf(token.text, lastEnd);
+        if (textStart > lastEnd) {
+          html += escapeHtml(input.slice(lastEnd, textStart));
+        }
+
+        html += `<span class="syntax-key">${escapeHtml(token.key)}</span>`;
+        html += `<span class="syntax-op">${escapeHtml(token.operator)}</span>`;
+        html += `<span class="syntax-val">${escapeHtml(token.value)}</span>`;
+        
+        lastEnd = textStart + token.text.length;
+      }
+
+      if (lastEnd < input.length) {
+        html += escapeHtml(input.slice(lastEnd));
+      }
+
+      return html;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ===== Filter Engine =====
+
+    class FilterEngine {
+      parseFilters(input) {
+        return parseSearchInput(input);
+      }
+
+      applyFilters(rows, tokens) {
+        if (tokens.length === 0) return rows;
+
+        return rows.filter(row => {
+          return tokens.every(token => {
+            const { key, operator, value } = token;
+            const rowValue = String(row.dataset[key] || '').toLowerCase().trim();
+            const filterValue = String(value).toLowerCase().trim();
+
+            // Handle numeric operators
+            if (['>','<','>=','<=','=','!='].includes(operator)) {
+              const rowNum = parseFloat(rowValue);
+              const filterNum = parseFloat(filterValue);
+
+              if (!isNaN(rowNum) && !isNaN(filterNum)) {
+                switch (operator) {
+                  case '>': return rowNum > filterNum;
+                  case '<': return rowNum < filterNum;
+                  case '>=': return rowNum >= filterNum;
+                  case '<=': return rowNum <= filterNum;
+                  case '=': return rowNum === filterNum;
+                  case '!=': return rowNum !== filterNum;
+                }
+              }
+            }
+
+            // Handle string matching
+            return rowValue === filterValue || rowValue.includes(filterValue);
+          });
+        });
+      }
+
+      describeFilters(tokens) {
+        return tokens.map(t => {
+          const opSymbol = {
+            ':': 'is',
+            '=': 'equals',
+            '>': 'greater than',
+            '<': 'less than',
+            '>=': 'at least',
+            '<=': 'at most',
+            '!=': 'not equals',
+          }[t.operator || '='] || 'is';
+          return `${t.key} ${opSymbol} ${t.value}`;
+        }).join(' AND ');
+      }
+
+      // Calculate aggregate metrics from rows
+      aggregateMetrics(rows) {
+        if (rows.length === 0) {
+          return {
+            count: 0,
+            revenue: { total: 0, average: 0 },
+            health: { total: 0, average: 0, distribution: {} },
+            status: {},
+            riskLevel: 'low',
+            description: 'No data to analyze',
+          };
+        }
+
+        // Revenue metrics
+        const revenues = rows
+          .map(row => parseFloat(row.dataset.revenue || 0))
+          .filter(v => !isNaN(v));
+        const totalRevenue = revenues.reduce((sum, v) => sum + v, 0);
+        const avgRevenue = revenues.length > 0 ? totalRevenue / revenues.length : 0;
+
+        // Health metrics
+        const healths = rows
+          .map(row => parseFloat(row.dataset.health || 0))
+          .filter(v => !isNaN(v));
+        const totalHealth = healths.reduce((sum, v) => sum + v, 0);
+        const avgHealth = healths.length > 0 ? totalHealth / healths.length : 0;
+
+        // Status distribution
+        const statusCounts = {};
+        rows.forEach(row => {
+          const status = (row.dataset.status || 'unknown').toLowerCase();
+          statusCounts[status] = (statusCounts[status] || 0) + 1;
+        });
+
+        // Risk assessment
+        const watchCount = statusCounts['watch'] || 0;
+        const criticalCount = healths.filter(h => h < 40).length;
+        const riskScore = (watchCount * 0.5) + (criticalCount * 0.3);
+
+        let riskLevel = 'low';
+        if (riskScore >= 2) riskLevel = 'critical';
+        else if (riskScore >= 1.5) riskLevel = 'high';
+        else if (riskScore >= 0.75) riskLevel = 'medium';
+
+        // Trend indicator
+        const trend = avgRevenue > 0 ? (avgHealth / 100) > 0.8 ? '↗' : '↘' : '→';
+
+        return {
+          count: rows.length,
+          revenue: { total: totalRevenue, average: avgRevenue },
+          health: { total: totalHealth, average: avgHealth },
+          status: statusCounts,
+          riskLevel,
+          trend,
+          description: `${rows.length} accounts analyzed. ${avgHealth.toFixed(0)}% avg health. ${riskLevel === 'low' ? '✓ Clean' : `⚠ ${riskLevel.toUpperCase()}`}`,
+        };
+      }
+    }
+
+    // ===== DOM Wiring =====
+
+    const input = document.getElementById('cli-input');
+    const highlighter = document.getElementById('cli-highlighter');
+    const tableBody = document.getElementById('table-body');
+    const allRows = Array.from(tableBody.querySelectorAll('.dt-row'));
+    const filterStats = document.getElementById('filter-stats');
+    const matchCount = document.getElementById('match-count');
+    const totalCount = document.getElementById('total-count');
+    const emptyState = document.getElementById('empty-state');
+    const presetButtons = document.querySelectorAll('.dt-cli-presets button');
+    
+    // HUD elements
+    const hudSummary = document.getElementById('hud-summary');
+    const hudRevenue = document.getElementById('hud-revenue');
+    const hudRevenueSub = document.getElementById('hud-revenue-sub');
+    const hudHealth = document.getElementById('hud-health');
+    const hudTrend = document.getElementById('hud-trend');
+    const hudHealthSub = document.getElementById('hud-health-sub');
+    const hudRisk = document.getElementById('hud-risk');
+    const hudRiskSub = document.getElementById('hud-risk-sub');
+    const hudCount = document.getElementById('hud-count');
+    const hudDescription = document.getElementById('hud-description');
+
+    const engine = new FilterEngine();
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(value);
+    }
+
+    function updateTable() {
+      const query = input.value.trim();
+      const tokens = engine.parseFilters(query);
+
+      // Filter rows
+      const filteredRows = engine.applyFilters(allRows, tokens);
+
+      // Update visibility
+      allRows.forEach(row => {
+        row.classList.toggle('hidden', !filteredRows.includes(row));
+      });
+
+      // Update highlighting
+      highlighter.innerHTML = highlightCommand(query) || '<br>';
+
+      // Calculate aggregate metrics
+      const metrics = engine.aggregateMetrics(filteredRows);
+
+      // Update HUD
+      if (query) {
+        hudSummary.style.opacity = '1';
+        hudRevenue.textContent = formatCurrency(metrics.revenue.total);
+        hudRevenueSub.textContent = `avg: ${formatCurrency(metrics.revenue.average)}`;
+        
+        hudHealth.innerHTML = `${metrics.health.average.toFixed(0)}%<span class="hud-card-trend" id="hud-trend">${metrics.trend}</span>`;
+        hudHealthSub.textContent = `${Object.values(metrics.status).join(' ↔ ')} accounts`;
+        
+        hudRisk.innerHTML = `<span class="hud-badge ${metrics.riskLevel}"><span class="hud-dot"></span>${metrics.riskLevel.toUpperCase()}</span>`;
+        hudRiskSub.textContent = `${metrics.status.watch || 0} watch + ${metrics.status.error || 0} error`;
+        
+        hudCount.textContent = metrics.count;
+        hudDescription.textContent = metrics.description;
+      } else {
+        // Reset HUD when no filters
+        hudRevenue.textContent = '$0';
+        hudRevenueSub.textContent = 'avg: $0';
+        hudHealth.innerHTML = '0%<span class="hud-card-trend">→</span>';
+        hudHealthSub.textContent = '— accounts';
+        hudRisk.innerHTML = '<span class="hud-badge low"><span class="hud-dot"></span>CLEAN</span>';
+        hudRiskSub.textContent = 'No filters applied';
+        hudCount.textContent = '0';
+        hudDescription.textContent = 'No filters applied';
+      }
+
+      // Update stats
+      const filtered = filteredRows.length;
+      const total = allRows.length;
+
+      if (query) {
+        filterStats.style.display = 'flex';
+        matchCount.textContent = filtered;
+        totalCount.textContent = total;
+      } else {
+        filterStats.style.display = 'none';
+      }
+
+      // Show/hide empty state
+      if (query && filtered === 0) {
+        emptyState.style.display = 'grid';
+      } else {
+        emptyState.style.display = 'none';
+      }
+    }
+
+    input.addEventListener('input', updateTable);
+
+    // Preset buttons
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        input.value = btn.dataset.query;
+        input.focus();
+        updateTable();
+      });
+    });
+
+    // Sync scrolling
+    input.addEventListener('scroll', () => {
+      highlighter.scrollTop = input.scrollTop;
+      highlighter.scrollLeft = input.scrollLeft;
+    });
+
+    // Initialize
+    totalCount.textContent = allRows.length;
+    updateTable();
+  </script>
+</body>
+</html>

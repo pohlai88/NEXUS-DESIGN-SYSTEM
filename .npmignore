@@ -42,4 +42,13 @@ coverage/
 *.tmp
 *.temp
 .cache/
+transformed-dialog-debug.js
+
+# Storybook build output (not needed in npm package)
+storybook-static/
+test-results/
+
+# TypeScript build info
+*.tsbuildinfo
+dist/.tsbuildinfo
 

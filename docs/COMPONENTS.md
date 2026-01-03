@@ -1,7 +1,7 @@
 # Component Reference
 
 > **Auto-generated** from React component source files  
-> **Last updated**: 2026-01-03T09:49:26.341Z  
+> **Last updated**: 2026-01-03T15:00:40.803Z  
 > **Source**: `components/react/`
 
 ---

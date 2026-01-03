@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Æther — Kinetic Console (WOW Mode)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           WOW MODE: PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Advanced micro-interactions, spotlight effects, breathing animations
+           All base styles from style.css
+           ================================================================= */
+
+        /* Enhanced Background */
+        .wow-bg {
+            background:
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 60%),
+                radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.8) 0%, transparent 50%),
+                var(--color-void);
+        }
+
+        .wow-bg::after {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+        }
+
+        /* Spotlight Card Effect */
+        .wow-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 0%), rgba(255, 255, 255, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity var(--duration-300);
+            pointer-events: none;
+        }
+
+        .wow-card:hover::after {
+            opacity: 1;
+        }
+
+        .wow-card:hover {
+            transform: translateY(-4px) scale(1.005);
+            border-color: var(--color-stroke-strong);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* Breathing Chart Bars */
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scaleY(1.1);
+                opacity: 1;
+            }
+        }
+
+        .wow-bar.gold {
+            background: linear-gradient(to top, rgba(234, 179, 8, 0.2), var(--color-gold));
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
+            animation: breathe 4s infinite ease-in-out;
+        }
+
+        .wow-bar.gold:nth-child(odd) {
+            animation-duration: 3.2s;
+            animation-delay: 0.2s;
+        }
+
+        .wow-bar.gold:nth-child(even) {
+            animation-duration: 4.5s;
+            animation-delay: 0.5s;
+        }
+
+        /* Focus Mode on Search */
+        body:has(.wow-search-input:focus) .na-content,
+        body:has(.wow-search-input:focus) .na-sidebar {
+            filter: blur(4px) brightness(0.4);
+            pointer-events: none;
+        }
+
+        body:has(.wow-search-input:focus) .na-header {
+            background: transparent;
+            border-bottom-color: transparent;
+        }
+
+        .wow-search {
+            position: relative;
+            width: 320px;
+            transition: width var(--duration-300) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .wow-search:focus-within {
+            transform: scale(1.1);
+            z-index: 50;
+            width: 480px;
+        }
+
+        .wow-search-input:focus {
+            background: var(--color-void);
+            border-color: var(--color-gold);
+            box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.15), 0 20px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Chart Container with Scanline */
+        .wow-chart-container {
+            height: 160px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            padding-top: 24px;
+            background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px;
+        }
+
+        /* Modal Animation */
+        .wow-modal:target .na-modal-panel {
+            transform: scale(1);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            .wow-bar.gold,
+            .wow-card::after {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="na-app">
+    <a class="na-skip-link" href="#main-content">Skip to main content</a>
+    <div class="na-bg-grain wow-bg" aria-hidden="true"></div>
+
+    <div class="na-shell">
+        <aside class="na-sidebar na-scroll" aria-label="Primary navigation">
+            <div class="na-brand">
+                <div class="na-mark" aria-hidden="true">Æ</div>
+                <div>
+                    <div class="na-brand-title">Nexus Æther</div>
+                    <div class="na-metadata-small">Kinetic Console v4.0</div>
+                </div>
+            </div>
+
+            <nav class="na-nav" aria-label="Navigation">
+                <div class="na-nav-section">Control Plane</div>
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Dashboard</span>
+                    <span class="na-badge">LIVE</span>
+                </a>
+                <a href="#" class="na-nav-item">Mesh Topology</a>
+                <a href="#" class="na-nav-item">Routing Policies</a>
+
+                <div class="na-nav-section">Intelligence</div>
+                <a href="#" class="na-nav-item">Predictive Edge</a>
+                <a href="#" class="na-nav-item">
+                    <span>Anomalies</span>
+                    <span class="na-badge text-gold border-gold/20">2</span>
+                </a>
+                <a href="#" class="na-nav-item">Experiments</a>
+            </nav>
+
+            <div class="na-sidebar-footer">
+                <div class="na-card na-card-compact bg-paper/30">
+                    <div class="na-label">System Status</div>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="na-status ok">Operational</span>
+                        <span class="na-metadata-small text-clay">99.99%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="na-main" id="main-content">
+            <header class="na-header">
+                <div class="wow-search na-search">
+                    <input class="wow-search-input na-search-input" type="search"
+                        placeholder="Search nodes, routes, or trace IDs..." aria-label="Search" />
+                    <span class="na-search-icon" aria-hidden="true">⌕</span>
+                </div>
+
+                <div class="na-header-actions">
+                    <a href="#modal-deploy" class="na-btn na-btn-primary">Deploy</a>
+                    <button class="na-iconbtn" aria-label="Settings">⚙</button>
+                    <div class="na-avatar" aria-label="User profile"></div>
+                </div>
+            </header>
+
+            <div class="na-content">
+                <div class="na-page-header mb-8">
+                    <div>
+                        <div class="na-label text-gold">Global Pulse</div>
+                        <h1 class="na-h1 m-0">Network Overview</h1>
+                    </div>
+                    <div class="na-badge">Last updated: Live</div>
+                </div>
+
+                <div class="na-grid na-grid-kpi mb-8">
+                    <div class="na-card na-card-interactive wow-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">Global Latency (p95)</div>
+                            <div class="na-kpi-value na-data-large na-tabular">14<span
+                                    class="text-clay text-sm ml-1">ms</span></div>
+                            <div class="na-trend down">
+                                <span aria-hidden="true">▼</span>
+                                <span>12%</span>
+                            </div>
+                            <div class="na-progress-bar mt-4">
+                                <div class="na-progress-fill" style="width: 40%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="na-card na-card-interactive wow-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">AI Inference Hits</div>
+                            <div class="na-kpi-value na-data-large na-tabular">4.2<span
+                                    class="text-clay text-sm ml-1">B</span></div>
+                            <div class="na-trend up">
+                                <span aria-hidden="true">▲</span>
+                                <span>8.4%</span>
+                            </div>
+                            <div class="na-progress-bar mt-4">
+                                <div class="na-progress-fill bg-gold" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="na-card na-card-interactive wow-card">
+                        <div class="na-kpi">
+                            <div class="na-kpi-label">Active Nodes</div>
+                            <div class="na-kpi-value na-data-large na-tabular">892</div>
+                            <div class="na-trend">
+                                <span class="na-badge text-gold">3 Maint</span>
+                            </div>
+                            <div class="na-progress-bar mt-4">
+                                <div class="na-progress-fill bg-lux" style="width: 92%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="na-grid na-grid-chart mb-8">
+                    <div class="na-card">
+                        <div class="na-panel-head">
+                            <div>
+                                <div class="na-label">Traffic Evolution</div>
+                                <h3 class="na-h3 m-0 mt-1">Edge Compute vs. Static Origin</h3>
+                            </div>
+                            <div class="text-right">
+                                <div class="na-badge mb-1">Live Window</div>
+                                <div class="na-metadata-small text-gold na-tabular">14:00 — 14:45</div>
+                            </div>
+                        </div>
+
+                        <div class="wow-chart-container">
+                            <div class="na-bar wow-bar" style="height: 30%"></div>
+                            <div class="na-bar wow-bar" style="height: 40%"></div>
+                            <div class="na-bar wow-bar" style="height: 35%"></div>
+                            <div class="na-bar wow-bar" style="height: 50%"></div>
+                            <div class="na-bar wow-bar gold" style="height: 65%"></div>
+                            <div class="na-bar wow-bar gold" style="height: 85%"></div>
+                            <div class="na-bar wow-bar gold" style="height: 75%"></div>
+                            <div class="na-bar wow-bar gold" style="height: 95%"></div>
+                            <div class="na-bar wow-bar gold" style="height: 80%"></div>
+                            <div class="na-bar wow-bar" style="height: 60%"></div>
+                            <div class="na-bar wow-bar" style="height: 40%"></div>
+                            <div class="na-bar wow-bar" style="height: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="na-card bg-paper-2">
+                        <div class="na-label">Pending Decision</div>
+                        <h3 class="na-h4 mt-2 mb-4">Routing Policy #8821</h3>
+                        <p class="na-metadata-small text-clay mb-6">
+                            Shift 25% of traffic from US-EAST to EU-CENTRAL. Predicted latency improvement:
+                            <strong>12ms</strong>.
+                        </p>
+                        <div class="na-stack gap-3">
+                            <button class="na-btn na-btn-primary">Approve Shift</button>
+                            <button class="na-btn">Reject</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="na-card p-0">
+                    <div class="na-panel-head border-b border-stroke">
+                        <span class="na-label">High Velocity Nodes</span>
+                        <div class="flex gap-3 text-xs text-clay">
+                            <span>Sort: <span class="text-lux">Impact</span></span>
+                            <span>Filter: <span class="text-lux">All</span></span>
+                        </div>
+                    </div>
+                    <div class="na-table-wrap">
+                        <table class="na-table">
+                            <thead>
+                                <tr>
+                                    <th class="na-th">Node ID</th>
+                                    <th class="na-th">Region</th>
+                                    <th class="na-th">Throughput</th>
+                                    <th class="na-th">Latency</th>
+                                    <th class="na-th">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis na-tabular">HK-091</span>
+                                    </td>
+                                    <td class="na-td">Hong Kong</td>
+                                    <td class="na-td na-tabular">840 GB/s</td>
+                                    <td class="na-td na-tabular text-success">4ms</td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis na-tabular">SG-221</span>
+                                    </td>
+                                    <td class="na-td">Singapore</td>
+                                    <td class="na-td na-tabular">1.2 TB/s</td>
+                                    <td class="na-td na-tabular text-success">8ms</td>
+                                    <td class="na-td"><span class="na-status ok">Active</span></td>
+                                </tr>
+                                <tr class="na-tr na-tr-interactive">
+                                    <td class="na-td"><span class="na-data na-data-emphasis na-tabular">VN-HCM</span>
+                                    </td>
+                                    <td class="na-td">Ho Chi Minh</td>
+                                    <td class="na-td na-tabular">410 GB/s</td>
+                                    <td class="na-td na-tabular text-warning">24ms</td>
+                                    <td class="na-td"><span class="na-status warn">Rerouting</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-deploy" class="na-modal wow-modal">
+        <div class="na-modal-panel">
+            <div class="na-panel-head mb-6">
+                <div>
+                    <div class="na-label text-gold">Production</div>
+                    <h2 class="na-h2 m-0">Deploy Configuration</h2>
+                </div>
+                <a href="#" class="na-iconbtn" aria-label="Close modal">&times;</a>
+            </div>
+
+            <div class="na-field mb-6">
+                <label class="na-label">Change Log</label>
+                <input class="na-input font-mono" type="text" value="feat(routing): enable predictive prefetch v2" />
+            </div>
+
+            <div class="na-alert na-alert-warning mb-6">
+                <div class="na-alert-title">⚠️ Impact Analysis</div>
+                <div class="na-alert-desc">
+                    This will trigger a cache purge for <strong>128 nodes</strong>.
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <a href="#" class="na-btn">Cancel</a>
+                <a href="#" class="na-btn na-btn-primary">Confirm Deploy</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Spotlight effect on cards
+        const cards = document.querySelectorAll('.wow-card');
+        cards.forEach(card => {
+            card.onmousemove = e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            };
+        });
+    </script>
+</body>
+
+</html>

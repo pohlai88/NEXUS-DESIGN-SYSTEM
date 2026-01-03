@@ -1,6 +1,6 @@
 {
   "name": "@aibos/design-system",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Enterprise-grade design system with 245 tokens, 171 semantic classes, 24 React components, and Beast Mode patterns. Includes Storybook documentation. Zero framework overhead, 100% Figma compliant.",
   "type": "module",
   "keywords": [
@@ -157,9 +157,8 @@
     "dist/**/*",
     "README.md",
     "docs/API_REFERENCE.md",
-    "docs/EXTERNAL_USAGE.md",
-    "docs/QUICK_REFERENCE.md",
-    "docs/INTEGRATION_GUIDE.md",
+    "docs/COMPONENTS.md",
+    "docs/TOKEN_REFERENCE.md",
     "LICENSE"
   ],
   "peerDependencies": {

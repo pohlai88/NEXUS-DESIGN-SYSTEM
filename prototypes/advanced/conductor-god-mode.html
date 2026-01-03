@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÆXUS // GOD VIEW</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =================================================================
+           GOD VIEW: PROTOTYPE-SPECIFIC ENHANCEMENTS
+           Ultra-dense monospace interface with frozen panes
+           All base styles from style.css
+           ================================================================= */
+
+        body {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        /* God View Shell - 3-pane grid layout */
+        .god-shell {
+            display: grid;
+            grid-template-areas:
+                "head head head"
+                "rail main insp"
+                "foot foot foot";
+            grid-template-columns: 280px 1fr 360px;
+            grid-template-rows: 56px 1fr 32px;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Header */
+        .god-head {
+            grid-area: head;
+            background: rgba(9, 9, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-stroke);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 50;
+        }
+
+        /* Ticker Animation */
+        .god-ticker {
+            display: flex;
+            gap: 24px;
+            color: var(--color-clay);
+            font-size: 11px;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+        }
+
+        .val-up {
+            color: var(--color-success);
+        }
+
+        .val-down {
+            color: var(--color-error);
+        }
+
+        /* Rail (Sidebar) */
+        .god-rail {
+            grid-area: rail;
+            background: var(--color-paper-2);
+            border-right: 1px solid var(--color-stroke);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .god-search-box {
+            padding: 12px;
+            border-bottom: 1px solid var(--color-stroke);
+        }
+
+        .god-input {
+            width: 100%;
+            background: var(--color-paper);
+            border: 1px solid var(--color-stroke);
+            color: var(--color-lux);
+            padding: 6px 10px;
+            border-radius: var(--radius-control);
+            font-family: inherit;
+            font-size: 11px;
+            transition: all var(--duration-200);
+        }
+
+        .god-input:focus {
+            border-color: var(--color-gold);
+            box-shadow: 0 0 0 1px var(--color-gold);
+        }
+
+        /* Tree Navigation */
+        .god-tree {
+            overflow-y: auto;
+            flex: 1;
+            padding: 12px 0;
+        }
+
+        .god-tree details {
+            padding-left: 14px;
+            position: relative;
+        }
+
+        .god-tree details::before {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--color-stroke);
+        }
+
+        .god-tree>details::before {
+            display: none;
+        }
+
+        .god-tree>details {
+            padding-left: 0;
+        }
+
+        .god-tree summary {
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-clay);
+            font-size: 11px;
+            position: relative;
+            z-index: 2;
+            transition: all var(--duration-100);
+            list-style: none;
+        }
+
+        .god-tree summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .god-tree summary:hover {
+            color: var(--color-lux);
+            background: var(--color-paper);
+        }
+
+        .god-tree details>summary::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            width: 8px;
+            height: 1px;
+            background: var(--color-stroke);
+        }
+
+        .god-tree>details>summary::before {
+            display: none;
+        }
+
+        /* Status LEDs */
+        .god-led {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--color-clay);
+            box-shadow: 0 0 4px var(--color-clay);
+        }
+
+        .god-led.on {
+            background: var(--color-success);
+            box-shadow: 0 0 6px var(--color-success);
+        }
+
+        .god-led.warn {
+            background: var(--color-gold);
+            box-shadow: 0 0 6px var(--color-gold);
+        }
+
+        .god-led.err {
+            background: var(--color-error);
+            box-shadow: 0 0 6px var(--color-error);
+        }
+
+        /* Main Grid Area */
+        .god-main {
+            grid-area: main;
+            background: var(--color-void);
+            overflow: auto;
+            position: relative;
+        }
+
+        /* Ultra-dense Frozen Table */
+        .god-table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .god-table th,
+        .god-table td {
+            height: 36px;
+            padding: 0 12px;
+            border-right: 1px solid var(--color-stroke);
+            border-bottom: 1px solid var(--color-stroke);
+            white-space: nowrap;
+            font-size: 11px;
+            background: var(--color-void);
+        }
+
+        .god-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--color-paper-2);
+            font-weight: 700;
+            color: var(--color-clay);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--color-stroke-strong);
+        }
+
+        .god-table th:first-child,
+        .god-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            border-right: 2px solid var(--color-stroke);
+            background: var(--color-void);
+            font-weight: 700;
+            color: var(--color-info);
+        }
+
+        .god-table thead th:first-child {
+            z-index: 20;
+            background: var(--color-paper-2);
+        }
+
+        .god-table tr:hover td {
+            background: var(--color-paper);
+        }
+
+        /* Visualizations */
+        .god-viz-bar {
+            width: 60px;
+            height: 12px;
+            background: var(--color-paper);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .god-viz-bar-fill {
+            height: 100%;
+            width: var(--p);
+            background: linear-gradient(90deg, var(--color-info), #06b6d4);
+        }
+
+        .god-viz-heat {
+            background-color: color-mix(in srgb, var(--color-error) var(--p), transparent);
+            border-radius: 2px;
+            padding: 2px 6px;
+        }
+
+        /* Inspector Panel */
+        .god-insp {
+            grid-area: insp;
+            background: var(--color-paper-2);
+            border-left: 1px solid var(--color-stroke);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .god-insp-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--color-stroke);
+        }
+
+        /* Gantt Grid */
+        .god-gantt-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 1px;
+            background: var(--color-stroke);
+            margin-top: 12px;
+            border: 1px solid var(--color-stroke);
+        }
+
+        .god-gantt-seg {
+            height: 16px;
+            background: var(--color-paper);
+        }
+
+        .god-gantt-seg.active {
+            background: var(--color-gold);
+            opacity: 0.8;
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+        }
+
+        /* Footer */
+        .god-foot {
+            grid-area: foot;
+            background: var(--color-paper);
+            border-top: 1px solid var(--color-stroke);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 10px;
+            color: var(--color-clay);
+        }
+
+        /* Command Palette */
+        .god-command-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--duration-200);
+        }
+
+        .god-command-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .god-command-box {
+            width: 600px;
+            background: var(--color-paper-2);
+            border: 1px solid var(--color-stroke-strong);
+            box-shadow: var(--shadow-lift), 0 0 0 1px var(--color-stroke-strong);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform var(--duration-200) var(--ease-premium);
+        }
+
+        .god-command-overlay.open .god-command-box {
+            transform: scale(1);
+        }
+
+        .god-cmd-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            color: var(--color-lux);
+            border-bottom: 1px solid var(--color-stroke);
+        }
+
+        .god-cmd-list {
+            padding: 8px;
+        }
+
+        .god-cmd-item {
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--color-clay);
+            border-radius: var(--radius-control);
+            cursor: pointer;
+            transition: background var(--duration-150);
+        }
+
+        .god-cmd-item:hover {
+            background: var(--color-paper);
+        }
+
+        .god-cmd-item.active {
+            background: var(--color-gold);
+            color: var(--color-void);
+        }
+
+        .god-cmd-key {
+            border: 1px solid currentColor;
+            border-radius: 3px;
+            padding: 1px 4px;
+            font-size: 9px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body class="na-app">
+    <a class="na-skip-link" href="#main-content">Skip to main content</a>
+    <div class="na-bg-grain" aria-hidden="true"></div>
+
+    <div class="god-shell">
+        <header class="god-head">
+            <div class="flex items-center gap-3">
+                <div class="na-mark" aria-hidden="true">N</div>
+                <span class="na-h5 m-0">AETHELGARD</span>
+                <span class="na-metadata-small text-clay">// v9.0.4 [GOD_MODE]</span>
+            </div>
+
+            <div class="god-ticker">
+                <div class="flex gap-1.5">
+                    <span>CPU</span>
+                    <span class="val-up">12%</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <span>MEM</span>
+                    <span class="val-up">4.2GB</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <span>NET</span>
+                    <span class="val-down">840Mb/s</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <span>ERR</span>
+                    <span class="text-lux">0</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button class="na-btn" onclick="toggleCmd()">⌘K</button>
+                <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            </div>
+        </header>
+
+        <aside class="god-rail" aria-label="Navigation">
+            <div class="god-search-box">
+                <input class="god-input" type="search" placeholder="Filter nodes..." aria-label="Filter nodes" />
+            </div>
+            <div class="god-tree">
+                <details open>
+                    <summary>
+                        <div class="god-led on"></div>
+                        <strong>CLUSTER-ALPHA</strong>
+                    </summary>
+
+                    <details open>
+                        <summary>primary_shard_01</summary>
+                        <details>
+                            <summary>tbl_users_raw</summary>
+                        </details>
+                        <details>
+                            <summary>tbl_events_stream</summary>
+                        </details>
+                    </details>
+
+                    <details>
+                        <summary>replica_shard_02</summary>
+                        <details>
+                            <summary>tbl_audit_logs</summary>
+                        </details>
+                    </details>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="god-led warn"></div>
+                        <strong>CLUSTER-BETA</strong>
+                    </summary>
+                    <details open>
+                        <summary>analytics_engine</summary>
+                        <details>
+                            <summary class="text-warning">! job_batch_fail</summary>
+                        </details>
+                    </details>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="god-led err"></div>
+                        <strong>CLUSTER-GAMMA</strong>
+                    </summary>
+                    <summary style="padding-left: 28px; color: var(--color-error);">Connection Refused</summary>
+                </details>
+            </div>
+        </aside>
+
+        <main class="god-main" id="main-content">
+            <div class="na-table-wrap">
+                <table class="god-table" role="table" aria-label="Trace data table">
+                    <thead>
+                        <tr>
+                            <th style="width: 140px;">Trace ID</th>
+                            <th style="width: 120px;">Timestamp</th>
+                            <th>Node Origin</th>
+                            <th>Load (%)</th>
+                            <th>Latency (ms)</th>
+                            <th>Risk Factor</th>
+                            <th>Payload Hash</th>
+                            <th>Throughput</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="grid-body"></tbody>
+                </table>
+            </div>
+        </main>
+
+        <aside class="god-insp" aria-label="Inspector panel">
+            <div class="god-insp-header">
+                <div class="na-label">Active Selection</div>
+                <h2 class="na-h4 m-0 mt-1">TRACE-9921-X</h2>
+                <span class="na-status ok mt-2">AUTHENTICATED</span>
+            </div>
+
+            <div class="p-4">
+                <div class="na-label mb-1">EXECUTION TIMELINE</div>
+                <div class="god-gantt-grid">
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg active"></div>
+                    <div class="god-gantt-seg"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-clay text-xs">
+                    <span>0ms</span>
+                    <span>50ms</span>
+                    <span>100ms</span>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-stroke">
+                <div class="na-label mb-2">METADATA</div>
+                <div class="na-grid grid-cols-2 gap-2">
+                    <div class="na-card-compact bg-paper">
+                        <div class="na-metadata-small text-clay">CLIENT</div>
+                        <div class="na-data">Apex_Financial</div>
+                    </div>
+                    <div class="na-card-compact bg-paper">
+                        <div class="na-metadata-small text-clay">PROTOCOL</div>
+                        <div class="na-data text-info">gRPC/v2</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <footer class="god-foot">
+            <div class="flex gap-4">
+                <span>SOCKET: <span class="text-success">CONNECTED</span></span>
+                <span>LATENCY: 14ms</span>
+            </div>
+            <div>
+                <span>BUFFER: 92%</span>
+            </div>
+        </footer>
+    </div>
+
+    <div class="god-command-overlay" id="cmd-overlay" role="dialog" aria-label="Command palette" aria-modal="true">
+        <div class="god-command-box">
+            <input class="god-cmd-input" type="text" placeholder="Type a command..." id="cmd-input"
+                aria-label="Command input" />
+            <div class="god-cmd-list">
+                <div class="god-cmd-item active">
+                    <span>Jump to Namespace...</span>
+                    <span class="god-cmd-key">↵</span>
+                </div>
+                <div class="god-cmd-item">
+                    <span>Export Current View (CSV)</span>
+                    <span class="god-cmd-key">⌘E</span>
+                </div>
+                <div class="god-cmd-item">
+                    <span>Reset Layout</span>
+                    <span class="god-cmd-key">⌘R</span>
+                </div>
+                <div class="god-cmd-item text-error">
+                    <span>Terminate Cluster...</span>
+                    <span class="god-cmd-key">Del</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate High-Density Grid Data
+        const tbody = document.getElementById('grid-body');
+        const statuses = ['OK', 'OK', 'OK', 'WARN', 'OK', 'CRIT'];
+
+        function renderGrid() {
+            let html = '';
+            for (let i = 0; i < 50; i++) {
+                const id = `TRC-${Math.floor(Math.random() * 9000) + 1000}-X`;
+                const load = Math.floor(Math.random() * 100);
+                const latency = Math.floor(Math.random() * 200);
+                const risk = Math.floor(Math.random() * 100);
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+                let riskColor = `rgba(16, 185, 129, 0.2)`;
+                if (risk > 50) riskColor = `rgba(234, 179, 8, 0.4)`;
+                if (risk > 80) riskColor = `rgba(244, 63, 94, 0.6)`;
+
+                let pillClass = status === 'OK' ? 'ok' : 'warn';
+                if (status === 'CRIT') pillClass = 'warn';
+
+                html += `
+                <tr>
+                    <td style="color: var(--color-info); font-family: var(--font-mono);">${id}</td>
+                    <td class="text-clay">2025-01-27 14:42:${i < 10 ? '0' + i : i}</td>
+                    <td>us-east-1a</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="god-viz-bar"><div class="god-viz-bar-fill" style="--p: ${load}%"></div></div>
+                            <span class="text-xs" style="width: 24px;">${load}%</span>
+                        </div>
+                    </td>
+                    <td class="text-right na-tabular">${latency}ms</td>
+                    <td><div class="god-viz-heat" style="width: 100%; height: 100%; background: ${riskColor}; color:white; text-align:center;">${risk}</div></td>
+                    <td class="font-mono text-clay">0x${Math.floor(Math.random() * 16777215).toString(16)}...</td>
+                    <td class="text-right">${(Math.random() * 10).toFixed(2)} MB/s</td>
+                    <td><span class="na-status ${pillClass}">${status}</span></td>
+                </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        renderGrid();
+
+        // Command Palette Logic
+        const overlay = document.getElementById('cmd-overlay');
+        const input = document.getElementById('cmd-input');
+
+        function toggleCmd() {
+            const isOpen = overlay.classList.contains('open');
+            if (isOpen) {
+                overlay.classList.remove('open');
+            } else {
+                overlay.classList.add('open');
+                input.focus();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleCmd();
+            }
+            if (e.key === 'Escape') {
+                overlay.classList.remove('open');
+            }
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) toggleCmd();
+        });
+    </script>
+</body>
+
+</html>

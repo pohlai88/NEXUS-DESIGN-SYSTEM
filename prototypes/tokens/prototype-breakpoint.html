@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-Analog — Breakpoint Scale (Myna UI)</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Breakpoint scale derived from Figma node 2976:2340 */
+    :root {
+      --bp-sm: 640px;   /* 40rem */
+      --bp-md: 768px;   /* 48rem */
+      --bp-lg: 1024px;  /* 64rem */
+      --bp-xl: 1280px;  /* 80rem */
+      --bp-2xl: 1536px; /* 96rem */
+    }
+
+    /* Semantic helpers (hook style) */
+    .na-bp-sm { --na-bp: var(--bp-sm); }
+    .na-bp-md { --na-bp: var(--bp-md); }
+    .na-bp-lg { --na-bp: var(--bp-lg); }
+    .na-bp-xl { --na-bp: var(--bp-xl); }
+    .na-bp-2xl { --na-bp: var(--bp-2xl); }
+
+    /* Media helpers: use as attribute selectors in CSS snippets */
+    .bp-demo {
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      padding: var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .bar-grid {
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 60px 100px 1fr 86px;
+      align-items: center;
+      gap: var(--spacing-3);
+      border: 1px solid var(--color-stroke);
+      border-radius: var(--radius-panel);
+      padding: var(--spacing-3);
+      background: var(--color-paper-2);
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: var(--radius-control);
+      background: linear-gradient(90deg, var(--color-info), var(--color-gold));
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-stroke) 70%, var(--color-lux) 30%);
+      width: calc(var(--na-bp, var(--bp-sm)) / 8);
+      max-width: 100%;
+    }
+
+    .bar-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-clay);
+      letter-spacing: 0.02em;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--spacing-6);
+    }
+
+    .usage-card {
+      padding: var(--spacing-6);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding-inline: var(--spacing-3);
+      padding-block: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--color-stroke);
+      background: var(--color-paper-2);
+      font-size: 12px;
+      color: var(--color-void);
+    }
+  </style>
+</head>
+<body class="na-app na-density-comfort">
+  <a class="na-skip-link" href="#main">Skip to main content</a>
+  <div class="na-shell">
+    <aside class="na-sidebar" aria-label="Primary navigation">
+      <div class="na-brand">
+        <div class="na-mark" aria-hidden="true">📶</div>
+        <div>
+          <div class="na-brand-title">Breakpoint Scale</div>
+          <div class="na-metadata-small">Myna UI • Figma 2976:2340</div>
+        </div>
+      </div>
+      <div class="na-nav-section" role="heading" aria-level="2">Sections</div>
+      <a class="na-nav-item is-active" href="#scale" aria-current="page">Scale</a>
+      <a class="na-nav-item" href="#usage">Usage</a>
+      <a class="na-nav-item" href="#tokens">Tokens</a>
+      <div class="na-sidebar-footer">
+        <div class="na-card na-card-compact">
+          <div class="na-label">Status</div>
+          <div class="na-status-indicator">
+            <div class="na-status-dot na-status-dot-success" aria-hidden="true"></div>
+            <span class="na-mono na-status-text-success">Production Ready</span>
+          </div>
+        </div>
+        <div class="na-divider na-my-3"></div>
+        <div class="na-muted na-text-sm">Headless • Semantic • Drift-Proof</div>
+      </div>
+    </aside>
+
+    <main class="na-main" id="main">
+      <header class="na-header">
+        <div class="na-content">
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+            <h1 class="na-h2">Breakpoint Scale</h1>
+            <p class="na-metadata">Tailwind-aligned breakpoints mapped to Neo-Analog semantic helpers</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scale -->
+      <section class="na-content" id="scale">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Breakpoint Bars</h2>
+              <p class="na-metadata">Each row shows token, px/rem value, and a proportional bar</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="bar-grid">
+            <div class="bar-row na-bp-sm">
+              <span class="na-label">bp-sm</span>
+              <span class="na-metadata">640px / 40rem</span>
+              <div class="bar"></div>
+              <span class="bar-label">sm</span>
+            </div>
+            <div class="bar-row na-bp-md">
+              <span class="na-label">bp-md</span>
+              <span class="na-metadata">768px / 48rem</span>
+              <div class="bar"></div>
+              <span class="bar-label">md</span>
+            </div>
+            <div class="bar-row na-bp-lg">
+              <span class="na-label">bp-lg</span>
+              <span class="na-metadata">1024px / 64rem</span>
+              <div class="bar"></div>
+              <span class="bar-label">lg</span>
+            </div>
+            <div class="bar-row na-bp-xl">
+              <span class="na-label">bp-xl</span>
+              <span class="na-metadata">1280px / 80rem</span>
+              <div class="bar"></div>
+              <span class="bar-label">xl</span>
+            </div>
+            <div class="bar-row na-bp-2xl">
+              <span class="na-label">bp-2xl</span>
+              <span class="na-metadata">1536px / 96rem</span>
+              <div class="bar"></div>
+              <span class="bar-label">2xl</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage -->
+      <section class="na-content" id="usage">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Usage Patterns</h2>
+              <p class="na-metadata">Apply breakpoints to layout, grids, and visibility</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="usage-grid">
+            <div class="usage-card">
+              <h4 class="na-h5">Layout Shell</h4>
+              <p class="na-metadata">Clamp main content width per breakpoint.</p>
+              <div class="na-panel" style="background: var(--color-paper-2);">
+                <p class="na-body">Use <span class="pill">.na-bp-lg</span> with <span class="pill">max-width: var(--na-bp);</span> on layout containers.</p>
+              </div>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Grid Columns</h4>
+              <p class="na-metadata">Change columns at breakpoints.</p>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>.cards {
+  display: grid;
+  gap: var(--spacing-4);
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+@media (min-width: var(--bp-md)) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: var(--bp-xl)) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}</code></pre>
+            </div>
+
+            <div class="usage-card">
+              <h4 class="na-h5">Visibility</h4>
+              <p class="na-metadata">Toggle UI below or above breakpoints.</p>
+              <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>.hide-mobile { display: none; }
+@media (min-width: var(--bp-sm)) {
+  .hide-mobile { display: inline-flex; }
+}
+
+.hide-desktop { display: inline-flex; }
+@media (min-width: var(--bp-lg)) {
+  .hide-desktop { display: none; }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tokens -->
+      <section class="na-content" id="tokens">
+        <div class="na-card">
+          <div class="na-panel-head">
+            <div>
+              <h2 class="na-h3">Design Tokens</h2>
+              <p class="na-metadata">Breakpoint variables and semantic hooks</p>
+            </div>
+          </div>
+          <div class="na-divider na-my-3_5"></div>
+
+          <div class="na-panel">
+            <h4 class="na-h5">CSS Variables</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>--bp-sm: 640px;   /* 40rem */
+--bp-md: 768px;   /* 48rem */
+--bp-lg: 1024px;  /* 64rem */
+--bp-xl: 1280px;  /* 80rem */
+--bp-2xl: 1536px; /* 96rem */</code></pre>
+          </div>
+
+          <div class="na-panel" style="margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Semantic Classes</h4>
+            <pre style="overflow-x: auto; padding: var(--spacing-4); background: var(--color-void); border-radius: var(--radius-control); color: var(--color-lux); font-size: 13px; line-height: 1.6; border: 1px solid var(--color-stroke);"><code>&lt;div class="na-bp-xl" style="max-width: var(--na-bp);"&gt;
+  Shell capped at xl
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <div class="na-panel" style="background: color-mix(in oklab, var(--color-gold) 12%, var(--color-paper) 88%); border-color: var(--color-gold); margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Figma → Neo-Analog</h4>
+            <div class="na-metadata" style="margin-top: var(--spacing-2);">❌ max-w-[1280px] → ✅ .na-bp-xl + max-width: var(--na-bp)</div>
+            <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ @media (min-width: 768px) → ✅ @media (min-width: var(--bp-md))</div>
+            <div class="na-metadata" style="margin-top: var(--spacing-1_5);">❌ container mx-auto w-full max-w-2xl → ✅ width: 100% + margin-inline: auto + .na-bp-2xl</div>
+          </div>
+
+          <div class="na-panel" style="margin-top: var(--spacing-4);">
+            <h4 class="na-h5">Compliance Checklist</h4>
+            <div class="na-metadata">✓ Semantic utilities • ✓ Design tokens • ✓ No arbitrary Tailwind values • ✓ Matches Figma 2976:2340</div>
+          </div>
+        </div>
+      </section>
+
+      <footer style="padding: var(--spacing-8); border-top: 1px solid var(--color-stroke); text-align: center; color: var(--color-clay);">
+        <p class="na-metadata-small">Neo-Analog Design System • Breakpoints • v1.0</p>
+        <p class="na-metadata-small">Extracted from Myna UI Kit • Drift-Proof</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

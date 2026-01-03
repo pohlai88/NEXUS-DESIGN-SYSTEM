@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialog Web Component Example - Neo-Analog Design System</title>
+  
+  <!-- Global Design System Styles -->
+  <link rel="stylesheet" href="../../../style.css">
+  
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+      background: var(--na-bg-primary, #0a0a0a);
+      color: var(--na-text-primary, #ffffff);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .demo-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--na-bg-secondary, #1a1a1a);
+      border-radius: 8px;
+      border: 1px solid var(--na-border-primary, #333);
+    }
+    
+    .demo-section h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    /* Dialog overlay styles */
+    na-dialog[open] {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.8);
+    }
+    
+    na-dialog:not([open]) {
+      display: none;
+    }
+    
+    /* Dialog content */
+    na-dialog[open] .dialog-content {
+      background: var(--na-bg-primary, #1a1a1a);
+      border: 1px solid var(--na-border-primary, #333);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .dialog-header {
+      margin-bottom: 1.5rem;
+    }
+    
+    .dialog-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--na-text-primary, #ffffff);
+    }
+    
+    .dialog-description {
+      color: var(--na-text-secondary, #999);
+      margin: 0;
+    }
+    
+    .dialog-footer {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--na-text-secondary, #999);
+      cursor: pointer;
+      font-size: 1.5rem;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    
+    .close-button:hover {
+      background: var(--na-bg-secondary, #2a2a2a);
+      color: var(--na-text-primary, #ffffff);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dialog Web Component Examples</h1>
+    
+    <!-- Basic Dialog Example -->
+    <div class="demo-section">
+      <h2>Basic Dialog</h2>
+      <p>Click the button to open a basic dialog modal.</p>
+      <div class="button-group">
+        <na-button id="open-dialog-1" variant="primary">Open Dialog</na-button>
+      </div>
+      
+      <na-dialog id="dialog-1" variant="default">
+        <div class="dialog-content">
+          <button class="close-button" onclick="document.getElementById('dialog-1').close()">×</button>
+          <div class="dialog-header">
+            <h3 class="dialog-title">Basic Dialog</h3>
+            <p class="dialog-description">This is a basic dialog example using the Web Component.</p>
+          </div>
+          <div class="dialog-body">
+            <p>This dialog demonstrates the basic functionality of the Dialog Web Component. It uses Light DOM to inherit global design system styles.</p>
+            <p>Features:</p>
+            <ul>
+              <li>Focus trap when open</li>
+              <li>ESC key to close</li>
+              <li>ARIA attributes for accessibility</li>
+              <li>Light DOM for style inheritance</li>
+            </ul>
+          </div>
+          <div class="dialog-footer">
+            <na-button variant="secondary" onclick="document.getElementById('dialog-1').close()">Cancel</na-button>
+            <na-button variant="primary" onclick="document.getElementById('dialog-1').close()">Confirm</na-button>
+          </div>
+        </div>
+      </na-dialog>
+    </div>
+    
+    <!-- Centered Dialog Example -->
+    <div class="demo-section">
+      <h2>Centered Dialog</h2>
+      <p>Dialog with center variant styling.</p>
+      <div class="button-group">
+        <na-button id="open-dialog-2" variant="primary">Open Centered Dialog</na-button>
+      </div>
+      
+      <na-dialog id="dialog-2" variant="center">
+        <div class="dialog-content">
+          <button class="close-button" onclick="document.getElementById('dialog-2').close()">×</button>
+          <div class="dialog-header">
+            <h3 class="dialog-title">Centered Dialog</h3>
+            <p class="dialog-description">This dialog uses the center variant.</p>
+          </div>
+          <div class="dialog-body">
+            <p>The center variant applies additional styling to center the dialog content.</p>
+          </div>
+          <div class="dialog-footer">
+            <na-button variant="secondary" onclick="document.getElementById('dialog-2').close()">Close</na-button>
+          </div>
+        </div>
+      </na-dialog>
+    </div>
+    
+    <!-- Event Logging Example -->
+    <div class="demo-section">
+      <h2>Event Logging</h2>
+      <p>Dialog with event listeners to demonstrate event system.</p>
+      <div class="button-group">
+        <na-button id="open-dialog-3" variant="primary">Open Dialog with Events</na-button>
+      </div>
+      
+      <div id="event-log" style="margin-top: 1rem; padding: 1rem; background: var(--na-bg-primary, #0a0a0a); border-radius: 4px; font-family: monospace; font-size: 0.875rem; max-height: 200px; overflow-y: auto;">
+        <div style="color: var(--na-text-secondary, #999); margin-bottom: 0.5rem;">Event Log:</div>
+        <div id="event-log-content"></div>
+      </div>
+      
+      <na-dialog id="dialog-3" variant="default">
+        <div class="dialog-content">
+          <button class="close-button" onclick="document.getElementById('dialog-3').close()">×</button>
+          <div class="dialog-header">
+            <h3 class="dialog-title">Event Demo Dialog</h3>
+            <p class="dialog-description">Watch the event log below to see events fire.</p>
+          </div>
+          <div class="dialog-body">
+            <p>This dialog demonstrates the event system. Open and close it to see events logged.</p>
+          </div>
+          <div class="dialog-footer">
+            <na-button variant="primary" onclick="document.getElementById('dialog-3').close()">Close</na-button>
+          </div>
+        </div>
+      </na-dialog>
+    </div>
+  </div>
+  
+  <!-- Import Web Components -->
+  <script type="module" src="../../../dist/adapters/vanilla/button.js"></script>
+  <script type="module" src="../../../dist/adapters/vanilla/dialog.js"></script>
+  
+  <script>
+    // Wait for components to be defined
+    customElements.whenDefined('na-button').then(() => {
+      customElements.whenDefined('na-dialog').then(() => {
+        // Basic Dialog
+        const openBtn1 = document.getElementById('open-dialog-1');
+        const dialog1 = document.getElementById('dialog-1');
+        
+        openBtn1.addEventListener('click', () => {
+          dialog1.open();
+        });
+        
+        // Centered Dialog
+        const openBtn2 = document.getElementById('open-dialog-2');
+        const dialog2 = document.getElementById('dialog-2');
+        
+        openBtn2.addEventListener('click', () => {
+          dialog2.open();
+        });
+        
+        // Event Logging Dialog
+        const openBtn3 = document.getElementById('open-dialog-3');
+        const dialog3 = document.getElementById('dialog-3');
+        const eventLog = document.getElementById('event-log-content');
+        
+        function logEvent(eventName, detail) {
+          const time = new Date().toLocaleTimeString();
+          const logEntry = document.createElement('div');
+          logEntry.style.marginBottom = '0.25rem';
+          logEntry.style.color = 'var(--na-text-primary, #ffffff)';
+          logEntry.textContent = `[${time}] ${eventName}: ${JSON.stringify(detail || {})}`;
+          eventLog.appendChild(logEntry);
+          eventLog.scrollTop = eventLog.scrollHeight;
+        }
+        
+        openBtn3.addEventListener('click', () => {
+          dialog3.open();
+        });
+        
+        // Listen to all Dialog events
+        dialog3.addEventListener('na-open', (e) => {
+          logEvent('na-open', e.detail);
+        });
+        
+        dialog3.addEventListener('na-close', (e) => {
+          logEvent('na-close', e.detail);
+        });
+        
+        dialog3.addEventListener('na-open-change', (e) => {
+          logEvent('na-open-change', e.detail);
+        });
+        
+        dialog3.addEventListener('na-error', (e) => {
+          logEvent('na-error', e.detail);
+        });
+        
+        // Handle ESC key globally for all dialogs
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            const openDialogs = document.querySelectorAll('na-dialog[open]');
+            openDialogs.forEach(dialog => {
+              if (dialog.hasAttribute('open')) {
+                dialog.close();
+              }
+            });
+          }
+        });
+        
+        console.log('✅ Dialog Web Components loaded and ready!');
+      });
+    });
+  </script>
+</body>
+</html>
+

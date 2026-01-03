@@ -1,0 +1,46 @@
+/* input.css */
+
+/* ========================================================================
+   CSS FILE ORGANIZATION RULE (Forever-Proof Decision Rule)
+   
+   This is the single source of truth for where CSS code belongs.
+   Follow this rule to prevent drift and maintain system integrity.
+   
+   * Tailwind config + scanning → 00-tailwind.css
+   * Named design decisions (tokens: color/type/space/motion/z/overlays) → 10-tokens.css
+   * Motion implementation (keyframes + reduced-motion) → 20-animations.css
+   * Global defaults (resets, body type, focus/selection, textures) → 30-base.css
+   * Tiny helpers (1-purpose utilities like sr-only, shimmer, stagger, scrollbars) → 40-utilities.css
+   * Reusable UI roles + shell layout systems (cards/buttons/tables/modals/shells) → 50-components.css
+   * Final consumed entrypoint (import order SSOT) → input.css
+   
+   LAYOUT CONSTRAINT:
+   * Shell/page layout primitives (app chrome, regions, scaffolds) → 50-components.css
+   * Local layout inside a component (like a card internal grid) can stay inside 
+     that component's block in 50-components.css, but don't create a separate 
+     "layout utilities" file unless it becomes generic.
+   
+   TOKEN OR LOCAL? DECISION RULE:
+   * If it has a name in Figma (KPI Value, Filament, Backdrop, Sidebar Width), 
+     it must be a token.
+   * Examples: --kpi-value-*, --na-filament-*, --color-overlay-backdrop, --w-sidebar
+   ======================================================================== */
+
+/* 1. Setup & Config */
+@import "./00-tailwind.css";
+
+/* 2. Design Tokens (Theme Variables) */
+@import "./10-tokens.css";
+
+/* 3. Global Keyframes & Motion definitions */
+@import "./20-animations.css";
+
+/* 4. Element Resets & Typography Base */
+@import "./30-base.css";
+
+/* 5. Helper Classes */
+@import "./40-utilities.css";
+
+/* 6. Component Classes */
+@import "./50-components.css";
+

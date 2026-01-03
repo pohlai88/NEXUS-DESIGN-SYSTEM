@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="na-app na-mode-doc">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stacked Shell - Neo-Analog Design System</title>
+    <!-- Design System: Core Styles -->
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="na-skip-link">Skip to main content</a>
+
+    <!-- Stacked Shell: Horizontal Navigation -->
+    <div class="na-content">
+        <!-- Top Navigation Bar -->
+        <header class="mb-8 pb-6 border-b border-stroke">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="na-mark" aria-hidden="true">NA</div>
+                    <div>
+                        <h1 class="na-h1 m-0">Application Name</h1>
+                        <div class="na-metadata-small">Horizontal navigation layout</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="na-search" role="search">
+                        <label for="stacked-search" class="sr-only">Search</label>
+                        <input type="search" id="stacked-search" class="na-search-input" placeholder="Search..."
+                            aria-label="Search">
+                        <span class="na-search-icon" aria-hidden="true">⌕</span>
+                    </div>
+                    <div class="na-avatar" aria-label="User profile"></div>
+                </div>
+            </div>
+
+            <!-- Horizontal Navigation -->
+            <nav aria-label="Primary navigation" class="flex gap-2">
+                <a href="#" class="na-nav-item is-active" aria-current="page">
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Billing</span>
+                </a>
+                <a href="#" class="na-nav-item">
+                    <span>Security</span>
+                </a>
+            </nav>
+        </header>
+
+        <!-- Main Content (Constrained Width) -->
+        <main id="main-content" role="main">
+            <!-- Your page content goes here -->
+            <div class="max-w-4xl">
+                <h2 class="na-h2 mb-4">Page Title</h2>
+                <p class="na-body mb-6 text-lux-dim">
+                    This layout is perfect for consumer-facing applications, settings pages,
+                    and content-focused interfaces with horizontal navigation.
+                </p>
+
+                <!-- Example Content -->
+                <div class="space-y-6">
+                    <div class="na-card">
+                        <h3 class="na-h4 mb-2">Section 1</h3>
+                        <p class="na-body-sm text-lux-dim">Content goes here</p>
+                    </div>
+                    <div class="na-card">
+                        <h3 class="na-h4 mb-2">Section 2</h3>
+                        <p class="na-body-sm text-lux-dim">Content goes here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-24 pt-8 border-t border-stroke">
+            <div class="text-center">
+                <p class="na-metadata-small text-clay">
+                    © 2025 Neo-Analog Design System • Stacked Shell Template
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
