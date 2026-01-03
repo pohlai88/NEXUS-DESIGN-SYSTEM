@@ -1,7 +1,7 @@
 {
   "name": "@aibos/design-system",
   "version": "1.1.0",
-  "description": "Enterprise-grade design system with 254 tokens, 171 semantic classes, and Beast Mode patterns. Includes React components for Next.js integration. Zero framework overhead, 100% Figma compliant.",
+  "description": "Enterprise-grade design system with 245 tokens, 171 semantic classes, 24 React components, and Beast Mode patterns. Includes Storybook documentation. Zero framework overhead, 100% Figma compliant.",
   "type": "module",
   "keywords": [
     "design-system",
@@ -28,7 +28,7 @@
     "url": "https://github.com/pohlai88/AIBOS-DESIGN-SYSTEM/issues"
   },
   "scripts": {
-    "build": "pnpm build:css && pnpm build:ts && pnpm extract:tokens && pnpm extract:api-docs && pnpm extract:css-data && pnpm extract:validation-rules && pnpm extract:helpers-docs && pnpm extract:eslint-config && pnpm extract:shadcn-map && pnpm generate:specs && pnpm generate:adapter all --framework react",
+    "build": "pnpm build:css && pnpm build:ts && pnpm extract:tokens && pnpm extract:api-docs && pnpm extract:css-data && pnpm extract:validation-rules && pnpm extract:helpers-docs && pnpm extract:eslint-config && pnpm extract:shadcn-map && pnpm generate:specs && pnpm generate:adapter all --framework react && pnpm generate:docs",
     "build:fast": "pnpm build:css && pnpm build:ts && pnpm extract:tokens && pnpm extract:api-docs && pnpm extract:css-data && pnpm extract:validation-rules && pnpm extract:helpers-docs && pnpm extract:eslint-config && pnpm extract:shadcn-map",
     "build:prod": "node scripts/build-prod.js",
     "build:css": "pnpm exec postcss input.css -o style.css",
@@ -46,6 +46,10 @@
     "generate:specs": "node scripts/generate-component-specs.js",
     "generate:adapter": "node scripts/generate-adapter.js",
     "generate:types": "node scripts/generate-types.js",
+    "generate:docs": "node scripts/generate-all-docs.js",
+    "generate:api-reference": "node scripts/generate-api-reference-md.js",
+    "cleanup:docs": "node scripts/cleanup-docs.js",
+    "cleanup:docs:dry-run": "node scripts/cleanup-docs.js --dry-run",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",

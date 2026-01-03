@@ -1,8 +1,8 @@
-# Neo-Analog Design System v2.0
+# Neo-Analog Design System v1.1.0
 
-**Version**: 2.0  
-**Last Updated**: 2025-01-27  
-**Status**: ✅ **Production-Ready | Beast Mode Enabled | Theme System Complete | shadcn/ui Integrated**
+**Version**: 1.1.0  
+**Last Updated**: 2026-01-03  
+**Status**: ✅ **Production-Ready | Beast Mode Enabled | Theme System Complete | shadcn/ui Integrated | React Components Available**
 
 ---
 
@@ -12,7 +12,8 @@ The Neo-Analog Design System is an enterprise-grade, production-ready design sys
 
 ### Key Features
 
-- ✅ **254 Design Tokens** - Comprehensive token system (colors, typography, spacing, shadows, motion)
+- ✅ **245 Design Tokens** - Comprehensive token system (colors, typography, spacing, shadows, motion)
+- ✅ **24 React Components** - Production-ready React components with TypeScript support
 - ✅ **171 Semantic Classes** - Reusable `.na-*` component classes
 - ✅ **10 Production Themes** - From default dark to GitHub-inspired themes
 - ✅ **Theme Engine** - Enterprise-grade theme system with SSR support
@@ -41,10 +42,15 @@ import '@aibos/design-system';
 
 # Use classes
 <div className="na-card na-p-6">Content</div>
+
+# Or use React components
+import { Card, Button } from '@aibos/design-system/react';
 ```
 
-📖 **See [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md) for complete external usage guide**  
-📋 **See [API_REFERENCE.md](./API_REFERENCE.md) for typography, spacing, and component reference**
+📖 **See [External Usage Guide](./docs/archive/EXTERNAL_USAGE.md) for complete external usage guide** (archived)  
+📋 **See [API Reference](./docs/API_REFERENCE.md) for typography, spacing, and component reference** (auto-generated)  
+📦 **See [Component Reference](./docs/COMPONENTS.md) for React components** (auto-generated)  
+🎨 **See [Token Reference](./docs/TOKEN_REFERENCE.md) for design tokens** (auto-generated)
 
 ### 📋 Quick Reference for npm Users
 
@@ -67,7 +73,7 @@ import '@aibos/design-system';
 - Buttons: `.na-btn na-btn-primary`
 - Status: `.na-status na-status-ok`
 
-👉 **Full details in [API_REFERENCE.md](./API_REFERENCE.md)**
+👉 **Full details in [API Reference](./docs/API_REFERENCE.md)** (auto-generated)
 
 ### For Developers (Local Development)
 
@@ -79,10 +85,18 @@ pnpm install
 ### Build
 
 ```bash
-pnpm build      # Compile CSS from input.css
+pnpm build      # Compile CSS, TypeScript, extract tokens, generate docs
 pnpm watch      # Watch mode for development
 pnpm dev        # Development mode (watch)
 ```
+
+**Build Process Includes:**
+- CSS compilation from `input.css`
+- TypeScript compilation
+- Token extraction
+- API documentation generation
+- Auto-generated documentation (API Reference, Token Reference, Component Reference)
+- React adapter generation
 
 ### Quality Control
 
@@ -98,63 +112,61 @@ pnpm validate:all   # Combined validation
 
 ## Documentation
 
-### For npm Package Users
+### Auto-Generated Documentation ⭐ **ALWAYS UP-TO-DATE**
 
-1. **[API Reference](./API_REFERENCE.md)** ⭐ **QUICK REFERENCE**
+These documents are automatically generated from the codebase and are always current:
+
+1. **[API Reference](./docs/API_REFERENCE.md)** ⭐ **QUICK REFERENCE**
    - Typography hierarchy (sizes, weights, usage)
    - Spacing & padding scale
    - Component classes
    - Color tokens
    - Complete API reference
+   - *Auto-generated from `dist/api-docs.json`*
 
-2. **[External Usage Guide](./EXTERNAL_USAGE.md)** ⭐ **GETTING STARTED**
-   - Installation instructions
-   - Framework examples (React, Vue, Svelte)
-   - Common patterns
-   - Troubleshooting
-
-### Theme System ⭐ **NEW**
-
-3. **[Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md)** ⭐ **START HERE**
-   - Complete theme system documentation
-   - All 10 production-ready themes
-   - Architecture and API reference
-   - Next.js SSR integration
-   - Tailwind v4 & ShadCN compatibility
-
-4. **[Themes Index](./docs/THEMES_INDEX.md)** ⭐ **QUICK NAVIGATION**
-   - All themes overview
-   - Quick links to theme guides
+2. **[Component Reference](./docs/COMPONENTS.md)** ⭐ **REACT COMPONENTS**
+   - 24 production-ready React components
+   - TypeScript definitions
    - Usage examples
-   - Testing guide
+   - Props documentation
+   - *Auto-generated from `components/react/`*
 
-### Essential Guides
+3. **[Token Reference](./docs/TOKEN_REFERENCE.md)** ⭐ **DESIGN TOKENS**
+   - Complete design token reference
+   - All 245 tokens documented
+   - Color, typography, spacing, shadows, motion
+   - *Auto-generated from `dist/tokens.json`*
 
-5. **[Design System Guide](./docs/DESIGN_SYSTEM.md)** ⭐ **COMPLETE REFERENCE**
+**Documentation Generation:**
+- Run `pnpm generate:docs` to regenerate all documentation
+- Documentation is automatically generated during `pnpm build`
+- See [Documentation Evaluation](./docs/DOCUMENTATION_EVALUATION.md) for quality metrics
+
+### Manual Documentation
+
+4. **[Design System Guide](./docs/DESIGN_SYSTEM.md)** ⭐ **COMPLETE REFERENCE**
    - Complete design system reference
    - All tokens, components, and patterns
    - Usage guidelines and examples
 
-6. **[Advanced Patterns](./docs/ADVANCED_PATTERNS.md)** 🚀 **BEAST MODE**
+5. **[Advanced Patterns](./docs/ADVANCED_PATTERNS.md)** 🚀 **BEAST MODE**
    - Radio Button State Machine (0ms latency view switching)
    - Bi-directional Sticky Grid (Frozen panes)
    - Omni Shell Layout (Grid-based application shell)
    - Status Select Component
 
-7. **[Quick Start Guide](./docs/QUICK_START_GUIDE.md)**
+6. **[Quick Start Guide](./adapters/QUICK_START_GUIDE.md)**
    - Single repository setup
    - Monorepo integration
    - Framework integration examples
 
-8. **[Color System Reference](./docs/COLOR_SYSTEM_REFERENCE.md)**
-   - Complete color token reference
-   - Semantic color mappings
-   - Usage examples
+### Archived Documentation 📦
 
-9. **[Headless Architecture](./docs/HEADLESS_ARCHITECTURE_STRATEGY.md)**
-   - Platform-agnostic design API
-   - Headless map extraction
-   - Cross-platform usage
+Many documentation files have been archived in [`docs/archive/`](./docs/archive/) for reference:
+- Theme System guides (moved to archive)
+- External Usage Guide (moved to archive)
+- IDE Integration guides (moved to archive)
+- Historical documentation and migration guides
 
 ### AI Agent Protocol
 
@@ -197,6 +209,40 @@ See [`prototypes/README.md`](./prototypes/README.md) for complete prototype docu
 
 ---
 
+## Storybook ⭐ **COMPONENT DOCUMENTATION**
+
+The design system includes a **Storybook** instance for interactive component documentation and testing.
+
+### Quick Start
+
+```bash
+# Start Storybook dev server (if configured)
+pnpm storybook
+
+# Build Storybook for production
+pnpm build:storybook
+```
+
+### Storybook Build Output
+
+The built Storybook is available in the `storybook-static/` directory:
+- **Self-contained**: All HTML, CSS, JS, and assets included
+- **Independent**: Can be deployed separately from the main application
+- **Static**: No server required, works with any static hosting
+
+### Deployment
+
+Storybook can be deployed independently to:
+- **Vercel**: Zero-config deployment with automatic HTTPS
+- **Netlify**: Static site hosting with CI/CD
+- **GitHub Pages**: Free hosting for public repositories
+- **Any static hosting**: Just upload the `storybook-static/` folder
+
+📖 **See [Storybook Deployment Guide](./docs/archive/STORYBOOK_DEPLOYMENT_GUIDE.md) for detailed deployment instructions** (archived)  
+📖 **See [Storybook Setup Guide](./docs/archive/STORYBOOK_SETUP_AND_OPTIMIZATION.md) for configuration details** (archived)
+
+---
+
 ## File Structure
 
 ```
@@ -208,37 +254,79 @@ design_system/
 ├── package.json                 # Dependencies and scripts
 ├── tailwind.config.js           # Tailwind configuration
 ├── postcss.config.js            # PostCSS configuration
-├── .stylelintrc.json            # CSS linting rules
 ├── eslint.config.js             # JavaScript linting
 ├── docs/                        # Documentation
-│   ├── DESIGN_SYSTEM.md         # ⭐ Main documentation
+│   ├── API_REFERENCE.md         # ⭐ Auto-generated API reference
+│   ├── COMPONENTS.md            # ⭐ Auto-generated component reference
+│   ├── TOKEN_REFERENCE.md       # ⭐ Auto-generated token reference
+│   ├── DESIGN_SYSTEM.md         # Main documentation
 │   ├── ADVANCED_PATTERNS.md     # 🚀 Beast Mode patterns
-│   ├── QUICK_START_GUIDE.md     # Getting started
-│   ├── COLOR_SYSTEM_REFERENCE.md # Color reference
-│   ├── HEADLESS_ARCHITECTURE_STRATEGY.md # Headless API
-│   └── archive/                 # Archived documentation
+│   ├── DOCUMENTATION_EVALUATION.md # Documentation quality metrics
+│   └── archive/                 # Archived documentation (90+ files)
+├── components/                  # Component implementations
+│   ├── react/                  # React components (24 components)
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── shells/             # Shell components
+│   │   ├── contexts/           # React contexts
+│   │   └── hooks/              # Custom hooks
+│   ├── html/                   # HTML component examples
+│   ├── web-components/         # Web component implementations
+│   └── ui/                     # UI component utilities
+├── adapters/                    # Framework adapters
+│   ├── react/                  # React adapter
+│   ├── universal/              # Universal adapter
+│   └── web/                    # Web adapter
+├── themes/                      # Theme system (29 theme files)
+│   ├── index.ts                # Theme exports
+│   ├── light-theme.ts
+│   ├── attractive-theme.ts
+│   └── ...                     # Additional themes
 ├── prototypes/                  # Production prototypes
 │   ├── index.html              # 🚀 System Launcher
 │   ├── omni-erp-integrated.html # ⚡ Gold Standard
-│   ├── prototype-*.html        # Official prototypes
+│   ├── prototype-*.html        # Official prototypes (30+ files)
+│   ├── advanced/               # Advanced prototypes
+│   ├── core/                   # Core prototypes
+│   ├── demos/                  # Demo prototypes
+│   ├── features/               # Feature prototypes
+│   ├── tokens/                 # Token prototypes
 │   ├── README.md               # Prototype documentation
 │   └── archive/                # Archived prototypes
+├── storybook-static/            # Storybook build output
+│   ├── index.html              # Storybook entry point
+│   ├── iframe.html             # Storybook iframe
+│   ├── chunks/                 # JavaScript chunks
+│   ├── assets/                 # CSS, images, fonts
+│   └── sb-common-assets/       # Storybook assets
 ├── scripts/                     # Build and validation scripts
 │   ├── enforce-semantics.cjs   # Drift detection
 │   ├── extract-headless-map.cjs # Headless map extraction
 │   ├── extract-tokens.js        # Token extraction
 │   ├── generate-shadcn-map.js  # shadcn/ui mapping generator
+│   ├── generate-all-docs.js    # Documentation generator
+│   ├── generate-api-reference-md.js # API reference generator
+│   ├── cleanup-docs.js         # Documentation cleanup
 │   └── validate-design-tokens.js # Token validation
-├── components.json               # shadcn/ui configuration
+├── specs/                       # Component specifications
+│   ├── components/             # Component specs (JSON)
+│   └── examples/               # Spec examples
+├── components.json              # shadcn/ui configuration
 └── dist/                        # Generated files
     ├── tokens.json              # Extracted tokens
     ├── headless-map.json        # Headless design map
     ├── shadcn-map.json          # shadcn/ui component mapping
     ├── api-docs.json            # API documentation
+    ├── component-specs.json     # Component specifications
     ├── css-custom-data.json     # VS Code IntelliSense data
-    └── types/                   # TypeScript definitions
-        ├── index.d.ts           # Main types export
-        └── shadcn-map.d.ts      # shadcn mapping types
+    ├── validation-rules.json    # Validation rules
+    ├── helpers-docs.json        # Helper documentation
+    ├── eslint-config.json       # ESLint configuration
+    ├── components/              # Compiled components
+    ├── adapters/                # Compiled adapters
+    ├── lib/                     # Compiled library code
+    ├── types/                   # TypeScript definitions
+    └── web/                     # Web build output
 ```
 
 ---
@@ -287,7 +375,7 @@ function ThemeSwitcher() {
 }
 ```
 
-📖 **See [Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md) for full documentation**
+📖 **See [Theme System Complete Guide](./docs/archive/THEME_SYSTEM_COMPLETE_GUIDE.md) for full documentation** (archived)
 
 ### Beast Mode Patterns
 
@@ -315,18 +403,33 @@ function ThemeSwitcher() {
 
 | Command | Description |
 |---------|-------------|
-| `pnpm build` | Compile CSS from input.css |
+| `pnpm build` | Full build (CSS, TypeScript, tokens, docs, adapters) |
+| `pnpm build:fast` | Fast build (skip documentation generation) |
+| `pnpm build:css` | Compile CSS from input.css |
+| `pnpm build:ts` | Compile TypeScript |
 | `pnpm watch` | Watch mode for development |
 | `pnpm dev` | Development mode (watch) |
 | `pnpm extract:tokens` | Extract design tokens to JSON |
 | `pnpm extract:headless` | Generate headless design map |
 | `pnpm extract:shadcn-map` | Generate shadcn/ui component mapping |
+| `pnpm extract:api-docs` | Generate API documentation JSON |
+| `pnpm extract:css-data` | Generate CSS custom data for IntelliSense |
+| `pnpm generate:docs` | Generate all documentation (API, Components, Tokens) |
+| `pnpm generate:api-reference` | Generate API reference markdown |
+| `pnpm generate:specs` | Generate component specifications |
+| `pnpm generate:adapter` | Generate framework adapters |
+| `pnpm cleanup:docs` | Cleanup documentation files |
+| `pnpm cleanup:docs:dry-run` | Preview documentation cleanup (dry run) |
 | `pnpm enforce:semantics` | Run drift detection |
 | `pnpm validate` | Validate design tokens |
 | `pnpm validate:all` | Run all validations |
 | `pnpm quality` | Run complete quality check |
 | `pnpm lint` | Run linting |
 | `pnpm lint:fix` | Fix linting issues |
+| `pnpm test` | Run tests |
+| `pnpm test:coverage` | Run tests with coverage |
+| `pnpm storybook` | Start Storybook dev server (if configured) |
+| `pnpm build:storybook` | Build Storybook for production |
 
 ---
 
@@ -489,49 +592,85 @@ The mapping includes IDE-friendly metadata for VS Code, WebStorm, and TypeScript
 - **Hover Documentation**: Detailed descriptions for each component
 - **Usage Examples**: Code snippets for each component
 
-See [IDE_INTEGRATION.md](./docs/IDE_INTEGRATION.md) for complete IDE setup guide.
+See [IDE Integration Guide](./docs/archive/IDE_INTEGRATION.md) for complete IDE setup guide (archived).
 
 ---
 
-## Documentation
+## React Components ⭐ **NEW**
 
-### For External Users
+The design system includes **24 production-ready React components** with full TypeScript support:
 
-- **[EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md)** ⭐ **START HERE** - How to install and use as npm package
-- **[API_REFERENCE.md](./API_REFERENCE.md)** - Complete typography, spacing, and component reference
-- **[NPM Publishing Guide](./docs/NPM_PUBLISHING_GUIDE.md)** - How to publish to npm via GitHub Actions
-- **[Publishing Guide](./docs/PUBLISHING_GUIDE.md)** - Manual publishing instructions
+### Available Components
 
-### For Developers
+- **Layout Components**: Card, Shell components (CommandCenter, Sidebar, MasterDetail, etc.)
+- **Interactive Components**: Button, StatusIndicator
+- **Context Providers**: AuthContext, KeyboardManager
+- **Custom Hooks**: useDebounce, useIntersectionObserver, useVirtualScroll
 
-- **[Design System Guide](./docs/DESIGN_SYSTEM.md)** - Complete design system reference
-- **[Advanced Patterns](./docs/ADVANCED_PATTERNS.md)** - Beast Mode patterns documentation
-- **[Quick Start Guide](./docs/QUICK_START_GUIDE.md)** - Development setup
+### Quick Start with React
+
+```bash
+# Install
+npm install @aibos/design-system
+```
+
+```tsx
+// Import React components
+import { Button, Card } from '@aibos/design-system/react';
+import '@aibos/design-system/css';
+
+// Use components
+function App() {
+  return (
+    <Card>
+      <h3 className="na-h4">Card Title</h3>
+      <Button className="na-btn na-btn-primary">
+        Click me
+      </Button>
+    </Card>
+  );
+}
+```
+
+### Next.js Integration
+
+The React components are fully compatible with Next.js and support SSR:
+
+```tsx
+// app/layout.tsx or pages/_app.tsx
+import '@aibos/design-system/css';
+import { ThemeProvider } from '@aibos/design-system/themes';
+```
+
+📖 **See [Component Reference](./docs/COMPONENTS.md) for complete React component documentation** (auto-generated)
 
 ## Support
 
 For questions or issues:
 
-1. **Theme System**: Check [Theme System Complete Guide](./docs/THEME_SYSTEM_COMPLETE_GUIDE.md) first
-2. **External users**: Check [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md) first
-3. **Developers**: Check [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) first
-4. **Theme Implementation**: Check [Developer Guide - Themes](./docs/DEVELOPER_GUIDE_THEMES.md)
-5. Review [ADVANCED_PATTERNS.md](./docs/ADVANCED_PATTERNS.md) for Beast Mode patterns
-6. Run `pnpm quality` to check for issues
-7. Review validation output
+1. **Auto-Generated Docs**: Check [API Reference](./docs/API_REFERENCE.md), [Component Reference](./docs/COMPONENTS.md), or [Token Reference](./docs/TOKEN_REFERENCE.md) first
+2. **Theme System**: Check [Theme System Complete Guide](./docs/archive/THEME_SYSTEM_COMPLETE_GUIDE.md) (archived)
+3. **External users**: Check [External Usage Guide](./docs/archive/EXTERNAL_USAGE.md) (archived)
+4. **Developers**: Check [Design System Guide](./docs/DESIGN_SYSTEM.md) first
+5. **Documentation Quality**: See [Documentation Evaluation](./docs/DOCUMENTATION_EVALUATION.md) for metrics
+6. Review [Advanced Patterns](./docs/ADVANCED_PATTERNS.md) for Beast Mode patterns
+7. Run `pnpm quality` to check for issues
+8. Review validation output
 
 ---
 
 ## Status
 
-**Version**: 2.0  
-**Last Updated**: 2025-01-27  
+**Version**: 1.1.0  
+**Last Updated**: 2026-01-03  
 **Status**: ✅ **Production Ready**  
 **Beast Mode**: ✅ **Enabled**  
 **Theme System**: ✅ **10 production themes**  
+**React Components**: ✅ **24 production-ready components**  
 **shadcn/ui Integration**: ✅ **54 components mapped (872 mappings)**  
-**Prototypes**: 8 production-ready modules  
-**Documentation**: ✅ **Complete and organized**
+**Storybook**: ✅ **Component documentation available**  
+**Prototypes**: 30+ production-ready modules  
+**Documentation**: ✅ **Complete with auto-generated docs**
 
 ---
 

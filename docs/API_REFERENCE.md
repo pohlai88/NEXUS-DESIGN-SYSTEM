@@ -1,379 +1,246 @@
-# Neo-Analog Design System - API Reference
+# API Reference
 
-**Quick Reference Guide for npm Package Users**
-
-This document provides a complete reference for all typography, spacing, colors, and component classes available in the Neo-Analog Design System.
-
----
-
-## 📖 Table of Contents
-
-1. [Typography Hierarchy](#typography-hierarchy)
-2. [Spacing & Padding](#spacing--padding)
-3. [Component Classes](#component-classes)
-4. [Color Tokens](#color-tokens)
-5. [Layout Classes](#layout-classes)
-6. [Using Design Tokens](#using-design-tokens)
+> **Auto-generated** from `dist/api-docs.json`  
+> **Last updated**: 2026-01-03T09:49:26.160Z  
+> **Source**: Design system classes and components
 
 ---
 
-## Typography Hierarchy
+## Overview
 
-**⚠️ Important**: Always use semantic classes (`.na-h1` through `.na-h6`) instead of hardcoding font sizes. This prevents design drift.
+This document provides a complete API reference for the Neo-Analog Design System.
 
-### Heading Classes
+**Design System**: Neo-Analog Design System v2.0.0  
+**Description**: Enterprise-grade design system with 254 tokens, 171 semantic classes
+
+---
+
+## Typography
+
+### Headings
 
 | Class | Size | Weight | Line Height | Usage |
 |-------|------|--------|-------------|-------|
-| `.na-h1` | **32px** (2rem) | **700** (bold) | 1.2 | Page titles (unique H1 per page) |
-| `.na-h2` | **24px** (1.5rem) | **600** (semibold) | 1.3 | Section titles (major page divisions) |
-| `.na-h3` | **20px** (1.25rem) | **600** (semibold) | 1.4 | Subsection titles (within sections) |
-| `.na-h4` | **18px** (1.125rem) | **600** (semibold) | 1.4 | Card titles (inside `.na-card`) |
-| `.na-h5` | **16px** (1rem) | **600** (semibold) | 1.5 | Small titles (minor groupings) |
-| `.na-h6` | **14px** (0.875rem) | **600** (semibold) | 1.5 | Micro titles (tooltips, tiny headers) |
+| `na-h1` | 32px | 700 | 1.2 | Page titles (unique H1 per page) |
+| `na-h2` | 24px | 600 | 1.3 | Section titles (major page divisions) |
+| `na-h3` | 20px | 600 | 1.4 | Subsection titles (within sections) |
+| `na-h4` | 18px | 600 | 1.4 | Card titles (inside .na-card) |
+| `na-h5` | 16px | 600 | 1.5 | Small titles (minor groupings) |
+| `na-h6` | 14px | 600 | 1.5 | Micro titles (tooltips, tiny headers) |
 
-### Data & Metadata Classes
+### Data & Metadata
 
 | Class | Size | Weight | Font | Usage |
 |-------|------|--------|------|-------|
-| `.na-data` | **14px** (0.875rem) | **400** (normal) | Monospace | Primary data values, table cells, user input |
-| `.na-data-large` | **30px** (1.875rem) | **500** (medium) | Serif | KPI values, hero numbers, dashboard stats |
-| `.na-metadata` | **11px** (0.6875rem) | **500** (medium) | Sans | Field labels, column headers (uppercase, tracked) |
-| `.na-metadata-small` | **10px** (0.625rem) | **400** (normal) | Sans | Timestamps, IDs, footnotes, secondary info |
+| `na-data` | 14px | 400 | Monospace | Primary data values, table cells, user input |
+| `na-data-large` | 30px | 500 | Serif | KPI values, hero numbers, dashboard stats |
+| `na-metadata` | 11px | 500 | Sans | Field labels, column headers (uppercase, tracked) |
+| `na-metadata-small` | 10px | 400 | Sans | Timestamps, IDs, footnotes, secondary info |
 
-### Typography Examples
+## Components
 
-```tsx
-// Headings
-<h1 className="na-h1">Page Title</h1>
-<h2 className="na-h2">Section Title</h2>
-<h3 className="na-h3">Subsection</h3>
-<h4 className="na-h4">Card Title</h4>
+### Cards
 
-// Data & Metadata
-<div className="na-data">$12,450.00</div>
-<div className="na-data-large">1,234,567</div>
-<div className="na-metadata">PO-88219 • Feed Supply</div>
-<div className="na-metadata-small">Updated 2m ago</div>
-```
-
----
-
-## Spacing & Padding
-
-The design system uses a **standard Tailwind spacing scale**. Use Tailwind's standard padding/margin classes (e.g., `p-4`, `p-6`, `m-8`).
-
-### Standard Spacing Scale
-
-| Class | Value | Pixels |
-|-------|-------|--------|
-| `p-0`, `m-0` | 0 | 0px |
-| `p-1`, `m-1` | 0.25rem | 4px |
-| `p-2`, `m-2` | 0.5rem | 8px |
-| `p-4`, `m-4` | 1rem | **16px** |
-| `p-6`, `m-6` | 1.5rem | **24px** (standard) |
-| `p-8`, `m-8` | 2rem | **32px** |
-| `p-12`, `m-12` | 3rem | 48px |
-| `p-16`, `m-16` | 4rem | 64px |
-| `p-24`, `m-24` | 6rem | 96px |
-
-### Common Spacing Patterns
-
-```tsx
-// Standard card padding
-<div className="na-card p-6">Content</div>
-
-// Standard content padding
-<div className="na-content p-8">Content</div>
-
-// Spacing between elements
-<div className="space-y-6">
-  <div>Item 1</div>
-  <div>Item 2</div>
-</div>
-
-// Grid with standard gap
-<div className="na-grid gap-6">
-  <div>Item 1</div>
-  <div>Item 2</div>
-</div>
-```
-
-### Directional Spacing
-
-Use Tailwind's directional utilities:
-- `pt-*`, `pb-*`, `pl-*`, `pr-*` (padding)
-- `mt-*`, `mb-*`, `ml-*`, `mr-*` (margin)
-- `px-*`, `py-*` (padding horizontal/vertical)
-- `mx-*`, `my-*` (margin horizontal/vertical)
-
-```tsx
-<div className="na-card p-6 mb-8">Card with bottom margin</div>
-<div className="flex gap-4">Items with gap</div>
-```
-
----
-
-## Component Classes
-
-### Cards & Surfaces
-
-| Class | Description |
-|-------|-------------|
-| `.na-card` | Paper background, shadow, filament top border |
-| `.na-panel` | Muted background, internal separation |
-| `.na-content` | Standard 32px padding container |
+| Class | Description | Example |
+|-------|-------------|---------|
+| `na-card` | Paper background, shadow, filament top border | `<div class="na-card na-p-6">Content</div>` |
+| `na-panel` | Muted background, internal separation | `<div class="na-panel na-p-4">Panel</div>` |
 
 ### Buttons
 
-| Class | Description |
-|-------|-------------|
-| `.na-btn` | Standard button |
-| `.na-btn-primary` | Primary action button |
-| `.na-btn-secondary` | Secondary button |
-| `.na-iconbtn` | Icon-only button |
+| Class | Description | Example |
+|-------|-------------|---------|
+| `na-btn` | Standard button | `<button class="na-btn">Click</button>` |
+| `na-btn-primary` | Primary action button | `<button class="na-btn-primary">Submit</button>` |
+| `na-btn-secondary` | Secondary button | `<button class="na-btn-secondary">Cancel</button>` |
 
-### Inputs
+### Status
 
-| Class | Description |
-|-------|-------------|
-| `.na-input` | Text input (never use default borders) |
+| Class | Description | Example |
+|-------|-------------|---------|
+| `na-status` | Status indicator base | `<div class="na-status ok">Active</div>` |
+| `na-status-ok` | Success status | `<div class="na-status ok">Success</div>` |
+| `na-status-pending` | Pending status | `<div class="na-status pending">Pending</div>` |
+| `na-status-bad` | Error status | `<div class="na-status bad">Error</div>` |
 
-### Status Indicators
+## Layout
 
-| Class | Description |
-|-------|-------------|
-| `.na-status` | Base status badge |
-| `.na-status-ok` | Success status (green) |
-| `.na-status-pending` | Pending status (yellow) |
-| `.na-status-bad` | Error status (red) |
+### Shell
 
-### Tables
+| Class | Description | Example |
+|-------|-------------|---------|
+| `na-shell` | Sidebar + Main area grid | `<div class="na-shell">...</div>` |
+| `na-shell-omni` | Omni shell layout (grid-based) | `<div class="na-shell-omni">...</div>` |
+| `na-shell-head` | Shell header | `<header class="na-shell-head">Header</header>` |
+| `na-shell-rail` | Shell sidebar | `<aside class="na-shell-rail">Sidebar</aside>` |
+| `na-shell-main` | Shell main content area | `<main class="na-shell-main">Content</main>` |
 
-| Class | Description |
-|-------|-------------|
-| `.na-table-wrap` | Table container with scrolling |
-| `.na-table` | Table element |
-| `.na-th` | Table header cell |
-| `.na-td` | Table data cell |
-| `.na-tr` | Table row |
-| `.na-tabular` | Tabular numbers (for alignment) |
+### Grid
 
-### Component Examples
+| Class | Description | Example |
+|-------|-------------|---------|
+| `na-grid` | Standard grid with 24px gap | `<div class="na-grid gap-6">...</div>` |
+| `na-grid-frozen` | Bi-directional sticky grid (frozen panes) | `<div class="na-grid-frozen">...</div>` |
+| `na-table-frozen` | Frozen table (sticky columns/rows) | `<table class="na-table-frozen">...</table>` |
 
-```tsx
-// Card
-<div className="na-card p-6">
-  <h3 className="na-h4">Card Title</h3>
-  <div className="na-data">Content</div>
-</div>
-
-// Button
-<button className="na-btn na-btn-primary">Click Me</button>
-
-// Status
-<span className="na-status na-status-ok">Active</span>
-
-// Table
-<div className="na-table-wrap">
-  <table className="na-table">
-    <thead>
-      <tr>
-        <th className="na-th">Name</th>
-        <th className="na-th">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr className="na-tr">
-        <td className="na-td">Product</td>
-        <td className="na-td na-tabular">$1,234.56</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-```
-
----
-
-## Color Tokens
+## Design Tokens
 
 ### Base Colors
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--color-void` | `#09090b` | Main background (Zinc-950) |
-| `--color-paper` | `#121214` | Panel background (Zinc-900) |
-| `--color-paper-2` | `#18181b` | Hover/Input background (Zinc-800) |
-| `--color-lux` | `#f4f4f5` | Primary text (Zinc-50) |
-| `--color-lux-dim` | `#a1a1aa` | Secondary text (Zinc-400) |
-| `--color-clay` | `#71717a` | Meta/Label text (Zinc-500) |
-| `--color-gold` | `#eab308` | Accent color (Amber-500) |
+| `--color-void` | `#09090b` | Main background (dark) |
+| `--color-paper` | `#121214` | Panel background |
+| `--color-paper-2` | `#18181b` | Hover state / input |
+| `--color-lux` | `#f4f4f5` | Primary text (light) |
+| `--color-lux-dim` | `#a1a1aa` | Secondary text |
+| `--color-clay` | `#71717a` | Metadata / labels |
+| `--color-gold` | `#eab308` | Primary accent |
 
 ### Status Colors
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--color-success` | `#10b981` | Success states (Emerald-500) |
-| `--color-warning` | `#f59e0b` | Warning states (Amber-500) |
-| `--color-error` | `#f43f5e` | Error states (Rose-500) |
-| `--color-info` | `#3b82f6` | Info states (Blue-500) |
+| `--color-success` | `#10b981` | Success / positive |
+| `--color-warning` | `#f59e0b` | Warning / attention |
+| `--color-error` | `#f43f5e` | Error / destructive |
+| `--color-info` | `#3b82f6` | Info / neutral |
 
-### Using Color Tokens
+## Utility Classes
 
-```tsx
-// In CSS/CSS-in-JS
-import '@aibos/design-system/css';
+| Class | Category | Description |
+|-------|----------|-------------|
+| `na-shimmer` | utility | AIBOS design system class: na-shimmer |
+| `na-mode-app` | utility | AIBOS design system class: na-mode-app |
+| `na-mode-doc` | utility | AIBOS design system class: na-mode-doc |
+| `na-bg-grain` | utility | AIBOS design system class: na-bg-grain |
+| `na-shell-main` | layout | AIBOS design system class: na-shell-main |
+| `na-panel` | component | AIBOS design system class: na-panel |
+| `na-clickable` | utility | AIBOS design system class: na-clickable |
+| `na-select-all` | utility | AIBOS design system class: na-select-all |
+| `na-select-none` | utility | AIBOS design system class: na-select-none |
+| `na-h1` | typography | Page title (32px bold) |
+| `na-h2` | typography | Section title (24px semibold) |
+| `na-h3` | typography | Subsection title (20px semibold) |
+| `na-h4` | typography | Card title (18px semibold) |
+| `na-h5` | typography | AIBOS design system class: na-h5 |
+| `na-h6` | typography | AIBOS design system class: na-h6 |
+| `na-balance` | utility | AIBOS design system class: na-balance |
+| `na-pretty` | utility | AIBOS design system class: na-pretty |
+| `na-data` | typography | Primary data values, table cells |
+| `na-data-large` | typography | KPI values, hero numbers |
+| `na-metadata` | typography | Field labels, column headers |
+| `na-metadata-small` | typography | AIBOS design system class: na-metadata-small |
+| `na-body` | utility | AIBOS design system class: na-body |
+| `na-body-sm` | utility | AIBOS design system class: na-body-sm |
+| `na-label` | utility | AIBOS design system class: na-label |
+| `na-field` | utility | AIBOS design system class: na-field |
+| `na-tabular` | utility | AIBOS design system class: na-tabular |
+| `na-muted` | utility | AIBOS design system class: na-muted |
+| `na-truncate` | utility | AIBOS design system class: na-truncate |
+| `na-clamp-2` | utility | AIBOS design system class: na-clamp-2 |
+| `na-clamp-3` | utility | AIBOS design system class: na-clamp-3 |
+| `na-z-base` | utility | AIBOS design system class: na-z-base |
+| `na-z-sticky` | utility | AIBOS design system class: na-z-sticky |
+| `na-z-drawer` | utility | AIBOS design system class: na-z-drawer |
+| `na-z-overlay` | utility | AIBOS design system class: na-z-overlay |
+| `na-z-modal` | utility | AIBOS design system class: na-z-modal |
+| `na-z-toast` | utility | AIBOS design system class: na-z-toast |
+| `na-divider` | utility | AIBOS design system class: na-divider |
+| `na-pulse-success` | utility | AIBOS design system class: na-pulse-success |
+| `na-pulse-warning` | utility | AIBOS design system class: na-pulse-warning |
+| `na-pulse-error` | utility | AIBOS design system class: na-pulse-error |
+| `na-pulse-info` | utility | AIBOS design system class: na-pulse-info |
+| `na-pulse-gold` | utility | AIBOS design system class: na-pulse-gold |
+| `na-scroll` | utility | AIBOS design system class: na-scroll |
+| `na-app` | utility | AIBOS design system class: na-app |
+| `na-content` | utility | AIBOS design system class: na-content |
+| `na-skip-link` | utility | AIBOS design system class: na-skip-link |
+| `na-shell` | layout | Sidebar + Main area grid |
+| `na-shell-omni` | layout | AIBOS design system class: na-shell-omni |
+| `na-shell-head` | layout | AIBOS design system class: na-shell-head |
+| `na-shell-rail` | layout | AIBOS design system class: na-shell-rail |
+| `na-shell-foot` | layout | AIBOS design system class: na-shell-foot |
+| `na-shell-drawer` | layout | AIBOS design system class: na-shell-drawer |
+| `na-sidebar` | utility | AIBOS design system class: na-sidebar |
+| `na-brand` | utility | AIBOS design system class: na-brand |
+| `na-mark` | utility | AIBOS design system class: na-mark |
+| `na-nav-section` | utility | AIBOS design system class: na-nav-section |
+| `na-nav-item` | utility | AIBOS design system class: na-nav-item |
+| `na-header` | typography | AIBOS design system class: na-header |
+| `na-search` | utility | AIBOS design system class: na-search |
+| `na-search-input` | utility | AIBOS design system class: na-search-input |
+| `na-search-icon` | utility | AIBOS design system class: na-search-icon |
+| `na-card` | component | Paper background, shadow, filament top border |
+| `na-card-interactive` | component | AIBOS design system class: na-card-interactive |
+| `na-kpi` | utility | AIBOS design system class: na-kpi |
+| `na-kpi-value` | utility | AIBOS design system class: na-kpi-value |
+| `na-kpi-label` | utility | AIBOS design system class: na-kpi-label |
+| `na-kpi-icon` | utility | AIBOS design system class: na-kpi-icon |
+| `na-trend` | utility | AIBOS design system class: na-trend |
+| `na-chart` | utility | AIBOS design system class: na-chart |
+| `na-bars` | utility | AIBOS design system class: na-bars |
+| `na-bar` | utility | AIBOS design system class: na-bar |
+| `na-table-wrap` | utility | AIBOS design system class: na-table-wrap |
+| `na-table` | utility | AIBOS design system class: na-table |
+| `na-th` | utility | AIBOS design system class: na-th |
+| `na-td` | utility | AIBOS design system class: na-td |
+| `na-tr-interactive` | utility | AIBOS design system class: na-tr-interactive |
+| `na-btn` | button | Standard button |
+| `na-btn-primary` | button | Primary action button |
+| `na-btn-ghost` | button | AIBOS design system class: na-btn-ghost |
+| `na-btn-destructive` | button | AIBOS design system class: na-btn-destructive |
+| `na-iconbtn` | utility | AIBOS design system class: na-iconbtn |
+| `na-dot` | utility | AIBOS design system class: na-dot |
+| `na-input` | utility | AIBOS design system class: na-input |
+| `na-status` | status | AIBOS design system class: na-status |
+| `na-avatar` | utility | AIBOS design system class: na-avatar |
+| `na-switch` | utility | AIBOS design system class: na-switch |
+| `na-switch-thumb` | utility | AIBOS design system class: na-switch-thumb |
+| `na-dropdown` | utility | AIBOS design system class: na-dropdown |
+| `na-dropdown-menu` | utility | AIBOS design system class: na-dropdown-menu |
+| `na-modal` | utility | AIBOS design system class: na-modal |
+| `na-tooltip` | utility | AIBOS design system class: na-tooltip |
+| `na-toasts` | utility | AIBOS design system class: na-toasts |
+| `na-toast` | utility | AIBOS design system class: na-toast |
+| `na-skeleton` | utility | AIBOS design system class: na-skeleton |
+| `na-empty` | utility | AIBOS design system class: na-empty |
+| `na-empty-illustration` | utility | AIBOS design system class: na-empty-illustration |
 
-const style = {
-  backgroundColor: 'var(--color-paper)',
-  color: 'var(--color-lux)',
-  borderColor: 'var(--color-stroke)',
-};
+## Package Exports
 
-// In TypeScript/JavaScript
-import tokens from '@aibos/design-system/tokens';
+| Export | Description |
+|--------|-------------|
+| `@aibos/design-system/css` | Main CSS file |
+| `@aibos/design-system/tokens` | Design tokens JSON |
+| `@aibos/design-system/tokens/typescript` | Design tokens TypeScript types |
+| `@aibos/design-system/react` | React components |
+| `@aibos/design-system/types` | TypeScript type definitions |
+| `@aibos/design-system/utils` | Utility functions |
+| `@aibos/design-system/cli` | CLI tools |
 
-const style = {
-  backgroundColor: tokens.color.paper,
-  color: tokens.color.lux,
-};
-```
 
 ---
 
-## Layout Classes
+## Usage
 
-### Shell Layout
+### CSS Classes
 
-| Class | Description |
-|-------|-------------|
-| `.na-shell` | Sidebar + Main area grid |
-| `.na-shell-omni` | Omni shell layout (grid-based) |
-| `.na-shell-head` | Shell header |
-| `.na-shell-rail` | Shell sidebar |
-| `.na-shell-main` | Shell main content area |
+All classes can be used directly in HTML:
 
-### Grid & Layout
-
-| Class | Description |
-|-------|-------------|
-| `.na-grid` | Standard grid with 24px gap |
-| `.na-grid-frozen` | Bi-directional sticky grid (frozen panes) |
-| `.na-table-frozen` | Frozen table (sticky columns/rows) |
-
-### Layout Examples
-
-```tsx
-// Standard shell
-<div className="na-shell">
-  <aside className="na-shell-rail">Sidebar</aside>
-  <main className="na-shell-main">Content</main>
-</div>
-
-// Standard grid
-<div className="na-grid gap-6">
-  <div className="na-card p-6">Card 1</div>
-  <div className="na-card p-6">Card 2</div>
-</div>
+```html
+<h1 class="na-h1">Page Title</h1>
+<div class="na-card na-p-6">Card Content</div>
+<button class="na-btn-primary">Submit</button>
 ```
 
----
-
-## Using Design Tokens
-
-### Import Tokens
+### JavaScript/TypeScript
 
 ```typescript
-// CSS (main export)
-import '@aibos/design-system/css';
-
-// Tokens (JSON)
-import tokens from '@aibos/design-system/tokens';
-
-// Tokens (TypeScript)
-import type { DesignTokens } from '@aibos/design-system/tokens/typescript';
-```
-
-### Access Token Values
-
-```typescript
-import tokens from '@aibos/design-system/tokens';
-
-// Colors
-tokens.color.void        // '#09090b'
-tokens.color.paper       // '#121214'
-tokens.color.lux         // '#f4f4f5'
-tokens.color.gold        // '#eab308'
-
-// Spacing
-tokens.spacing[4]        // '1rem' (16px)
-tokens.spacing[6]        // '1.5rem' (24px)
-tokens.spacing[8]        // '2rem' (32px)
-
-// Typography
-tokens.typography.heading1.size  // '2rem'
-tokens.typography.heading1.weight // 700
-
-// Border Radius
-tokens.radius.card      // '0.75rem'
-tokens.radius.panel     // '1rem'
-```
-
-### Using in Components
-
-```tsx
-import tokens from '@aibos/design-system/tokens';
-
-export function CustomButton() {
-  return (
-    <button
-      className="na-btn"
-      style={{
-        backgroundColor: tokens.color.gold,
-        padding: `${tokens.spacing[4]} ${tokens.spacing[6]}`,
-        borderRadius: tokens.radius.control,
-      }}
-    >
-      Custom Button
-    </button>
-  );
-}
+import { Button, Card } from '@aibos/design-system/react';
 ```
 
 ---
 
-## Quick Reference Cheat Sheet
-
-### Typography
-- **Page Title**: `.na-h1` (32px bold)
-- **Section**: `.na-h2` (24px semibold)
-- **Subsection**: `.na-h3` (20px semibold)
-- **Card Title**: `.na-h4` (18px semibold)
-- **Data**: `.na-data` (14px monospace)
-- **KPI**: `.na-data-large` (30px serif)
-- **Label**: `.na-metadata` (11px uppercase)
-- **Footnote**: `.na-metadata-small` (10px)
-
-### Spacing
-- **Standard padding**: `p-6` (24px)
-- **Content padding**: `p-8` (32px)
-- **Standard gap**: `gap-6` (24px)
-
-### Components
-- **Card**: `.na-card p-6`
-- **Button**: `.na-btn na-btn-primary`
-- **Status**: `.na-status na-status-ok`
-- **Input**: `.na-input`
-
----
-
-## 📚 Additional Resources
-
-- **Full Documentation**: See [README.md](./README.md) for complete guide
-- **External Usage**: See [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md) for framework examples
-- **GitHub**: https://github.com/pohlai88/AIBOS-DESIGN-SYSTEM
-
----
-
-**Need Help?** Check the [README.md](./README.md) or open an issue on GitHub.
-
+**Generated by**: `scripts/generate-api-reference-md.js`  
+**Source**: `dist/api-docs.json`
